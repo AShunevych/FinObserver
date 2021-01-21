@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashunevich.finobserver.R;
-import com.ashunevich.finobserver.UtilPackage.CustomSpinnerAdapter;
+import com.ashunevich.finobserver.UtilsPackage.CustomSpinnerAdapter;
 import com.ashunevich.finobserver.databinding.DashboardNewAccountDialogBinding;
 
 import org.greenrobot.eventbus.EventBus;

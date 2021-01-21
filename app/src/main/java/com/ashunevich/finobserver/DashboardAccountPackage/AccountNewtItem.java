@@ -3,8 +3,8 @@ package com.ashunevich.finobserver.DashboardAccountPackage;
 import android.graphics.drawable.Drawable;
 
 public class AccountNewtItem {
-    public String accountType;
-    public Double accountValue;
+     String accountType;
+     Double accountValue;
 
     public String getAccountType() {
         return accountType;
@@ -22,8 +22,8 @@ public class AccountNewtItem {
         return image;
     }
 
-    public String accountCurrency;
-    public  Drawable image;
+     String accountCurrency;
+      Drawable image;
 
     public AccountNewtItem(Drawable image, String accountType, Double accountValue, String accountCurrency) {
         this.image = image;

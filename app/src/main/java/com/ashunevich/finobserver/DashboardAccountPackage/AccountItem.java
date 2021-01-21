@@ -8,25 +8,9 @@ public class AccountItem {
      String accountCurrency;
      Drawable image;
 
-    public Double getTotalBalance() {
-        return totalBalance;
-    }
-
-    public void setTotalBalance(Double totalBalance) {
-        this.totalBalance = totalBalance;
-    }
-
-    Double totalBalance;
 
     public AccountItem() {
 
-    }
-
-    public AccountItem(Drawable image, String accountType, Double accountValue, String accountCurrency) {
-        this.image = image;
-        this.accountType = accountType;
-        this.accountValue = accountValue;
-        this.accountCurrency = accountCurrency;
     }
 
 

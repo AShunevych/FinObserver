@@ -11,11 +11,9 @@
         android:theme="@style/Theme.FinObserver">
 
         <activity
-            android:name=".TransactionsPackage.TransactionNew"
-            android:parentActivityName=".MainActivity"
+            android:name=".TransactionsPackage.TransactionSetNew"
             android:screenOrientation="portrait"
             android:label="New transaction"
-            android:launchMode="singleTop"
             android:theme="@style/Theme.FinObserver">
         </activity>
 

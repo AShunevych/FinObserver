@@ -1,25 +1,19 @@
 package com.ashunevich.finobserver.DashboardAccountPackage;
 
-import android.content.res.Resources;
-import android.os.Message;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class AccountRecyclerViewAdapter extends RecyclerView.Adapter<AccountRecyclerViewAdapter.MyViewHolder>  {
+public class DashboardAccRecViewAdapter extends RecyclerView.Adapter<DashboardAccRecViewAdapter.MyViewHolder>  {
     private ArrayList<AccountItem> pad_list;
- //   private PassBalanceValue mListerner;
-    public AccountRecyclerViewAdapter(ArrayList<AccountItem> data){
+
+    public DashboardAccRecViewAdapter(ArrayList<AccountItem> data){
         this.pad_list = data;
     }
     //This method inflates view present in the RecyclerView
