@@ -10,32 +10,32 @@
         android:id="@+id/newTransactionDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="72dp"
         android:text="+ Add transaction"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toStartOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="24dp"
         android:text="Month balance: "
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/view"
-        app:layout_constraintStart_toStartOf="@+id/accountView" />
+        app:layout_constraintStart_toStartOf="@+id/accountView"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Accounts :"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toBottomOf="@+id/newAccount"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/newAccount"
         tools:text="Accounts :" />
 
     <TextView
@@ -127,11 +127,11 @@
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="80dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/rectangle_transp"
-        app:layout_constraintBottom_toTopOf="@+id/newTransactionDialog"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
-        app:layout_constraintStart_toStartOf="@+id/accountView" />
+        app:layout_constraintStart_toStartOf="@+id/accountView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <View
         android:id="@+id/divider"
@@ -145,34 +145,39 @@
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/accountView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="48dp"
         android:background="@drawable/rectangle_transp"
-        app:layout_constraintBottom_toTopOf="@+id/textView18"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
-        tools:itemCount="3"
+        app:layout_constraintTop_toBottomOf="@+id/newAccount"
+        tools:itemCount="12"
         tools:listitem="@layout/dashboard_account_item" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
         android:clickable="true"
         app:fabCustomSize="55dp"
         app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@+id/textView12"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
-        app:layout_constraintTop_toTopOf="@+id/accountView"
+        app:layout_constraintTop_toTopOf="parent"
         app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_round_note_add_24" />
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 
 import com.ashunevich.finobserver.DashboardAccountPackage.DashboardFragment;
@@ -31,7 +32,6 @@ public class TransactionSetNew extends AppCompatActivity {
     String categoryChip = null;
     Double valueChip = 0.0;
     String transactionAccount;
-    private ArrayList<String> arrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,8 @@ public class TransactionSetNew extends AppCompatActivity {
 
         String [] incomeArray = new String[] {"Salary","Investment","Credit","Other"};
         String [] expendituresArray = new String[] {"Lifestyle","Mobile Phone","Car","Food","Cafe","Internet","Housing","Investment","Banking","Other"};
-        arrayList = getIntent().getStringArrayListExtra("AccountTypes");
+
+        ArrayList<String> arrayList = getIntent().getStringArrayListExtra("AccountTypes");
 
         createChips(incomeArray,binding.IncomeChipGroup);
         createChips(expendituresArray,binding.SpendingChipGroup);
@@ -51,7 +52,12 @@ public class TransactionSetNew extends AppCompatActivity {
         setChipsGroupListener();
         binding.resumeDialog.setOnClickListener(v -> onOkResult());
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
-        setSpinner(arrayList);
+        if(arrayList != null){
+            setSpinner(arrayList);
+        }
+        else{
+            Toast.makeText(this,"Accounts not found",Toast.LENGTH_SHORT).show();
+        }
     }
 
     private int returnActiveChipId(ChipGroup chipGroup){
@@ -66,8 +72,8 @@ public class TransactionSetNew extends AppCompatActivity {
 
      // (TODO) adapter should fill from DashBoarddFragmentValues.
     private void setSpinner(ArrayList<String> array){
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, array);
-        binding.ActiveAccounts.setAdapter(adapter);
+           ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, array);
+           binding.ActiveAccounts.setAdapter(adapter);
     }
 
     // TEST DELETE LATER

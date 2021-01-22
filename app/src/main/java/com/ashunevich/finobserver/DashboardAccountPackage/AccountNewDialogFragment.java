@@ -2,6 +2,8 @@ package com.ashunevich.finobserver.DashboardAccountPackage;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,6 +35,7 @@ public class AccountNewDialogFragment extends DialogFragment {
         // Inflate the layout for this fragment
         assert inflater != null;
         binding = DashboardNewAccountDialogBinding.inflate(inflater, container, false);
+        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));
         binding.okButton.setOnClickListener(view -> onDismiss(Objects.requireNonNull(getDialog())));
         fillSpinner();

@@ -2,7 +2,9 @@ package com.ashunevich.finobserver.DashboardAccountPackage;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
 
 import java.util.ArrayList;
@@ -62,18 +64,4 @@ public class DashboardAccRecViewAdapter extends RecyclerView.Adapter<DashboardAc
             this.binding = binding;
         }
     }
-
-    protected Double summAllItemsValue(ArrayList<AccountItem> items){
-        double totalPrice = 0;
-        for (int i = 0; i<items.size(); i++)
-        {
-            totalPrice += items.get(i).getAccountValue();
-        }
-        return totalPrice;
-    }
-/*
-    public interface PassBalanceValue {
-        void passData(Double value);
-    }
-*/
 }
