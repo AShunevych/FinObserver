@@ -64,4 +64,16 @@ public class DashboardAccRecViewAdapter extends RecyclerView.Adapter<DashboardAc
             this.binding = binding;
         }
     }
+
+    protected String summAllItemsValue(RecyclerView viewRec){
+        double totalPrice = 0;
+        for (int i = 0; i<viewRec.getChildCount(); i++)
+        {
+            RecyclerView.ViewHolder holder = viewRec.getChildViewHolder(viewRec.getChildAt(i));
+            TextView view = holder.itemView.findViewById(R.id.accountValue);
+            totalPrice += Double.parseDouble(view.getText().toString());
+        }
+
+        return String.valueOf(totalPrice);
+    }
 }

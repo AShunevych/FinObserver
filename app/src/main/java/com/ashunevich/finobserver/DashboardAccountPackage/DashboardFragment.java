@@ -4,6 +4,7 @@ package com.ashunevich.finobserver.DashboardAccountPackage;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -40,11 +42,12 @@ public class DashboardFragment extends Fragment {
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
     private final ArrayList<AccountItem> listContentArr = new ArrayList<>();
-    AccountItem newItem = new AccountItem() ;
     DashboardAccRecViewAdapter adapter;
     private Double incomeValue;
     private Double expValue;
     private Double balanceValue;
+    Handler handler = new Handler();
+
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -97,15 +100,24 @@ public class DashboardFragment extends Fragment {
             binding.expendView.setText(String.valueOf(0.0));
             binding.balanceView.setText(String.valueOf(0.0));
         }
-
-
         bus = EventBus.getDefault();
+        handler.post(updateLog);
+
         return binding.getRoot();
     }
 
+    private final Runnable updateLog = new Runnable() {
+        public void run() {
+            try {
+                binding.balanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+                handler.postDelayed(this, 1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
-
-    public void newTransaction(){
+            public void newTransaction(){
         Intent intent = new Intent(getContext(), TransactionSetNew.class);
         ArrayList<String> arrayList = new ArrayList<>();
            for (int i=0;i <binding.accountView.getChildCount();i++) {
@@ -127,31 +139,32 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onDetach() {
      EventBus.getDefault().unregister(this);
+        handler.removeCallbacksAndMessages(null);
         super.onDetach();
     }
 
     @Override
     public void onDestroyView() {
+        handler.removeCallbacksAndMessages(null);
         binding = null;
         super.onDestroyView();
     }
-
 
 
     private Double stringToDouble(TextView view){
         return Double.parseDouble(view.getText().toString());
     }
 
-    //     Toast.makeText(getContext(),String.valueOf(adapter.summAllItemsValue(binding.accountView)),Toast.LENGTH_SHORT).show();
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setRecyclerViewItem(AccountNewtItem receivedItem)  {
-        newItem.setImage(receivedItem.getImage());
-        newItem.setAccountType(receivedItem.getAccountType());
-        newItem.setAccountValue(receivedItem.getAccountValue());
-        newItem.setAccountCurrency(receivedItem.getAccountCurrency());
-        listContentArr.add(newItem);
+        AccountItem newAccountItem = new AccountItem() ;
+        newAccountItem.setImage(receivedItem.getImage());
+        newAccountItem.setAccountType(receivedItem.getAccountType());
+        newAccountItem.setAccountValue(receivedItem.getAccountValue());
+        newAccountItem.setAccountCurrency(receivedItem.getAccountCurrency());
+        listContentArr.add(newAccountItem);
          adapter.notifyItemChanged(adapter.getItemCount());
-
     }
 
     @Override
@@ -197,8 +210,8 @@ public class DashboardFragment extends Fragment {
  */
 
 
-    // POSSIBILITIES (1.2) Count all accounts balance
-    // POSSIBILITIES (1.2.1) Count accounts balance when account removed
+    // DONE (1.2) Count all accounts balance
+    // DONE (1.2.1) Count accounts balance when account removed
     /*
     private void sumBalance(Double Value){
         Double balance = Double.parseDouble(binding.balanceSum.getText().toString())+Value;

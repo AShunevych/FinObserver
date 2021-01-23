@@ -17,8 +17,6 @@ import com.ashunevich.finobserver.databinding.TransactionDialogBinding;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,6 @@ import androidx.core.content.ContextCompat;
 
 public class TransactionSetNew extends AppCompatActivity {
     private TransactionDialogBinding binding;
-    EventBus bus;
     String typeChip = null;
     String categoryChip = null;
     Double valueChip = 0.0;
@@ -86,7 +83,6 @@ public class TransactionSetNew extends AppCompatActivity {
         previousScreen.putExtra("Value",valueChip);
         previousScreen.putExtra("Category",categoryChip);
         previousScreen.putExtra("Account",transactionAccount);
-        postValue(String.valueOf(valueChip),transactionAccount,categoryChip,typeChip);
         setResult(1000,previousScreen);
         finish();
     }
@@ -160,12 +156,5 @@ public class TransactionSetNew extends AppCompatActivity {
             chipGroup.addView(mChip);
         }
     }
-
-    public void postValue(String transactionValue, String transactionAccount, String transactionCategory,String transactionType ) {
-        //   (TODO) send values to parent activity.
-        bus.post(new TransactionNewItem(transactionValue,transactionAccount,transactionCategory,transactionType));
-    }
-
-
 
 }
