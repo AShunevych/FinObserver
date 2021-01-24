@@ -79,13 +79,20 @@ public class TransactionSetNew extends AppCompatActivity {
         valueChip = Double.valueOf(binding.transactionEstimate.getText().toString());
        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
-        previousScreen.putExtra("Type",typeChip);
-        previousScreen.putExtra("Value",valueChip);
-        previousScreen.putExtra("Category",categoryChip);
-        previousScreen.putExtra("Account",transactionAccount);
-        setResult(1000,previousScreen);
-        finish();
+        if(typeChip != null && valueChip !=null && transactionAccount != null && categoryChip != null){
+            previousScreen.putExtra("Type",typeChip);
+            previousScreen.putExtra("Value",valueChip);
+            previousScreen.putExtra("Category",categoryChip);
+            previousScreen.putExtra("Account",transactionAccount);
+            setResult(1000,previousScreen);
+            finish();
+        }
+        else{
+            Toast.makeText(this,"Some field is empty please.Please check!",Toast.LENGTH_SHORT).show();
+        }
     }
+
+
 
     private void onCancelResult(){
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);

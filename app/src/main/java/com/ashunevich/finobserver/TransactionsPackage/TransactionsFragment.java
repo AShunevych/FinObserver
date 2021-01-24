@@ -3,6 +3,7 @@ package com.ashunevich.finobserver.TransactionsPackage;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.ashunevich.finobserver.DashboardAccountPackage.AccountItem;
 import com.ashunevich.finobserver.DashboardAccountPackage.AccountNewtItem;
 import com.ashunevich.finobserver.DashboardAccountPackage.DashboardAccRecViewAdapter;
 import com.ashunevich.finobserver.R;
+import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
+import com.ashunevich.finobserver.UtilsPackage.Utils;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
@@ -29,6 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -36,9 +41,9 @@ import static android.app.Activity.RESULT_CANCELED;
 public class TransactionsFragment extends Fragment {
     private TransactionsFragmentBinding binding;
     private final ArrayList<TransactionItem> listContentArr = new ArrayList<>();
-    TransactionItem item = new TransactionItem() ;
     TransactionRecViewAdapter adapter;
     EventBus bus;
+    TransactionViewModel model;
 
 
     public TransactionsFragment() {
@@ -50,23 +55,59 @@ public class TransactionsFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    private String getDate(){
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat format = new SimpleDateFormat("yyyy-MMM-dd");
-        return format.format(Calendar.getInstance());
+
+    //, String account, String transactionCategory, Double value
+
+    private Drawable Image(String type){
+        Drawable drawable;
+        if(type.matches("Income")){
+           drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_up);
+        }
+        else {
+            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_down);
+        }
+        return drawable;
     }
+
 
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = TransactionsFragmentBinding.inflate(inflater, container, false);
+
+        bus = EventBus.getDefault();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        initObserve();
+        initRecView();
+       super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void initRecView(){
         binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new TransactionRecViewAdapter(listContentArr);
         adapter.setListContent(listContentArr);
         binding.transactionView.setAdapter(adapter);
-        bus = EventBus.getDefault();
-        return binding.getRoot();
     }
+
+    private void initObserve(){
+        model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
+        model.getSelected().observe(getViewLifecycleOwner(), item -> {
+            TransactionItem newAccountItem = new TransactionItem() ;
+            newAccountItem.setImage(Image(item.getTransactionType()));
+            newAccountItem.setTransactionValue(item.getTransactionValue());
+            newAccountItem.setTransactionCurrency("UAH");
+            newAccountItem.setTransactionCategory(item.getTransactionCategory());
+            newAccountItem.setTransactionAccount(item.getTransactionAccount());
+            listContentArr.add(newAccountItem);
+            adapter.notifyDataSetChanged();
+        });
+
+        }
 
     @Override
     public void onDestroyView() {

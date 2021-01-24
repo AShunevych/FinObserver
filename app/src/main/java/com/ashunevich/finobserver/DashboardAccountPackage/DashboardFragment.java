@@ -14,7 +14,10 @@ import android.widget.TextView;
 
 
 import com.ashunevich.finobserver.R;
+import com.ashunevich.finobserver.TransactionsPackage.TransactionNewItem;
 import com.ashunevich.finobserver.TransactionsPackage.TransactionSetNew;
+import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
+import com.ashunevich.finobserver.UtilsPackage.Utils;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -31,6 +34,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,6 +52,8 @@ public class DashboardFragment extends Fragment {
     private Double expValue;
     private Double balanceValue;
     Handler handler = new Handler();
+    TransactionViewModel model;
+
 
 
     public DashboardFragment() {
@@ -69,6 +76,7 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
     }
 
     @Override
@@ -117,7 +125,7 @@ public class DashboardFragment extends Fragment {
         }
     };
 
-            public void newTransaction(){
+    public void newTransaction(){
         Intent intent = new Intent(getContext(), TransactionSetNew.class);
         ArrayList<String> arrayList = new ArrayList<>();
            for (int i=0;i <binding.accountView.getChildCount();i++) {
@@ -130,10 +138,8 @@ public class DashboardFragment extends Fragment {
                    Log.d("List is ", String.valueOf(arrayList.size()));
                }
            }
-
                 startActivityForResult(intent,1000);
     }
-
 
 
     @Override
@@ -179,11 +185,9 @@ public class DashboardFragment extends Fragment {
             expValue = stringToDouble(binding.expendView);
             balanceValue = stringToDouble(binding.balanceView);
 
-            Bundle result = new Bundle();
-            result.putString("bundleType",typeTransaction );
-            result.putString("accountTransaction",accountTransaction );
-            result.putString("categoryAccount",categoryAccount );
-            result.putDouble("bundleType",getDouble );
+            TransactionNewItem item = new TransactionNewItem(String.valueOf(getDouble),categoryAccount,accountTransaction,typeTransaction);
+            model.setSelected(item);
+
 
             if (typeTransaction.matches("Income")) {
                 binding.incomeView.setText(String.valueOf(getDouble + incomeValue));
@@ -192,9 +196,8 @@ public class DashboardFragment extends Fragment {
                 binding.expendView.setText(String.valueOf(getDouble + expValue));
                 binding.balanceView.setText(String.valueOf(balanceValue - getDouble));
             }
-
         }
-        else{
+        else {
             Snackbar.make(binding.DashboardLayout,"Transaction cancelled", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
 
