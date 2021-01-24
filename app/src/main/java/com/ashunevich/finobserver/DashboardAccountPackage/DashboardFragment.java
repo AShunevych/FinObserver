@@ -32,6 +32,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -114,6 +115,12 @@ public class DashboardFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        testItem();
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     private final Runnable updateLog = new Runnable() {
         public void run() {
             try {
@@ -161,6 +168,16 @@ public class DashboardFragment extends Fragment {
         return Double.parseDouble(view.getText().toString());
     }
 
+    //TEST
+    private void testItem(){
+        AccountItem newAccountItem = new AccountItem() ;
+        newAccountItem.setImage(ContextCompat.getDrawable(requireContext(),R.drawable.ic_bank_balance));
+        newAccountItem.setAccountType("PrivatBank");
+        newAccountItem.setAccountValue(250.00);
+        newAccountItem.setAccountCurrency("UAH");
+        listContentArr.add(newAccountItem);
+        adapter.notifyItemChanged(adapter.getItemCount());
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void setRecyclerViewItem(AccountNewtItem receivedItem)  {
@@ -185,13 +202,12 @@ public class DashboardFragment extends Fragment {
             expValue = stringToDouble(binding.expendView);
             balanceValue = stringToDouble(binding.balanceView);
 
-            TransactionNewItem item = new TransactionNewItem(String.valueOf(getDouble),categoryAccount,accountTransaction,typeTransaction);
+            TransactionNewItem item = new TransactionNewItem(String.valueOf(getDouble),accountTransaction,categoryAccount,typeTransaction);
             model.setSelected(item);
-
 
             if (typeTransaction.matches("Income")) {
                 binding.incomeView.setText(String.valueOf(getDouble + incomeValue));
-                binding.balanceView.setText(String.valueOf(getDouble + incomeValue));
+                binding.balanceView.setText(String.valueOf(balanceValue + getDouble));
             } else {
                 binding.expendView.setText(String.valueOf(getDouble + expValue));
                 binding.balanceView.setText(String.valueOf(balanceValue - getDouble));
@@ -200,8 +216,6 @@ public class DashboardFragment extends Fragment {
         else {
             Snackbar.make(binding.DashboardLayout,"Transaction cancelled", BaseTransientBottomBar.LENGTH_SHORT).show();
         }
-
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 /*

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_CANCELED;
 
@@ -42,7 +44,6 @@ public class TransactionsFragment extends Fragment {
     private TransactionsFragmentBinding binding;
     private final ArrayList<TransactionItem> listContentArr = new ArrayList<>();
     TransactionRecViewAdapter adapter;
-    EventBus bus;
     TransactionViewModel model;
 
 
@@ -58,35 +59,22 @@ public class TransactionsFragment extends Fragment {
 
     //, String account, String transactionCategory, Double value
 
-    private Drawable Image(String type){
-        Drawable drawable;
-        if(type.matches("Income")){
-           drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_up);
-        }
-        else {
-            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_down);
-        }
-        return drawable;
-    }
-
 
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = TransactionsFragmentBinding.inflate(inflater, container, false);
-
-        bus = EventBus.getDefault();
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initObserve();
         initRecView();
+        initObserve();
        super.onViewCreated(view, savedInstanceState);
     }
-
+    //init RecyclerView
     private void initRecView(){
         binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new TransactionRecViewAdapter(listContentArr);
@@ -94,6 +82,7 @@ public class TransactionsFragment extends Fragment {
         binding.transactionView.setAdapter(adapter);
     }
 
+    //observe data from Fragment A and create object based on it
     private void initObserve(){
         model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
         model.getSelected().observe(getViewLifecycleOwner(), item -> {
@@ -103,11 +92,22 @@ public class TransactionsFragment extends Fragment {
             newAccountItem.setTransactionCurrency("UAH");
             newAccountItem.setTransactionCategory(item.getTransactionCategory());
             newAccountItem.setTransactionAccount(item.getTransactionAccount());
-            listContentArr.add(newAccountItem);
+            listContentArr.add(0,newAccountItem);
             adapter.notifyDataSetChanged();
         });
-
         }
+
+
+    private Drawable Image(String type){
+        Drawable drawable;
+        if(type.matches("Income")){
+            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_up);
+        }
+        else {
+            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_down);
+        }
+        return drawable;
+    }
 
     @Override
     public void onDestroyView() {

@@ -1,6 +1,5 @@
 package com.ashunevich.finobserver.UtilsPackage;
 
-import com.ashunevich.finobserver.TransactionsPackage.TransactionItem;
 import com.ashunevich.finobserver.TransactionsPackage.TransactionNewItem;
 
 import androidx.lifecycle.LiveData;
@@ -19,7 +18,4 @@ public class TransactionViewModel extends ViewModel {
     public LiveData<TransactionNewItem> getSelected() {
         return selected;
     }
-
-
-
 }
