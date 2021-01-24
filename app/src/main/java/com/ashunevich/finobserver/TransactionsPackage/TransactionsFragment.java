@@ -71,7 +71,10 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initRecView();
-        initObserve();
+        model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
+        Observer<TransactionNewItem> observer = this::initObserve;
+                model.getSelected().observeForever(observer);
+
        super.onViewCreated(view, savedInstanceState);
     }
     //init RecyclerView
@@ -83,9 +86,11 @@ public class TransactionsFragment extends Fragment {
     }
 
     //observe data from Fragment A and create object based on it
-    private void initObserve(){
+    private void initObserve(TransactionNewItem item){
+        /*
         model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
         model.getSelected().observe(getViewLifecycleOwner(), item -> {
+            */
             TransactionItem newAccountItem = new TransactionItem() ;
             newAccountItem.setImage(Image(item.getTransactionType()));
             newAccountItem.setTransactionValue(item.getTransactionValue());
@@ -94,7 +99,7 @@ public class TransactionsFragment extends Fragment {
             newAccountItem.setTransactionAccount(item.getTransactionAccount());
             listContentArr.add(0,newAccountItem);
             adapter.notifyDataSetChanged();
-        });
+       // });
         }
 
 

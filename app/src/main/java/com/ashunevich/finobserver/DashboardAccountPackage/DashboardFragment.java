@@ -17,7 +17,6 @@ import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.TransactionsPackage.TransactionNewItem;
 import com.ashunevich.finobserver.TransactionsPackage.TransactionSetNew;
 import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
-import com.ashunevich.finobserver.UtilsPackage.Utils;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,7 +35,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,9 +47,9 @@ public class DashboardFragment extends Fragment {
     DialogFragment newAccountDialogFragment;
     private final ArrayList<AccountItem> listContentArr = new ArrayList<>();
     DashboardAccRecViewAdapter adapter;
-    private Double incomeValue;
-    private Double expValue;
-    private Double balanceValue;
+     Double incomeValue;
+     Double expValue;
+     Double balanceValue;
     Handler handler = new Handler();
     TransactionViewModel model;
 
@@ -94,21 +92,14 @@ public class DashboardFragment extends Fragment {
         binding.accountView.setAdapter(adapter);
 
         binding.newAccount.setOnClickListener(view -> {
-            assert getFragmentManager() != null;
             newAccountDialogFragment = new AccountNewDialogFragment();
-            newAccountDialogFragment.show(getFragmentManager(), "newAccountDialogFragment");
+            newAccountDialogFragment.show(getActivity().getSupportFragmentManager(), "newAccountDialogFragment");
         });
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
-        if(incomeValue != null && expValue != null && balanceValue !=null ){
-            binding.incomeView.setText(String.valueOf(incomeValue));
-            binding.expendView.setText(String.valueOf(expValue));
-            binding.balanceView.setText(String.valueOf(balanceValue));
-        }
-        else{
             binding.incomeView.setText(String.valueOf(0.0));
             binding.expendView.setText(String.valueOf(0.0));
             binding.balanceView.setText(String.valueOf(0.0));
-        }
+
         bus = EventBus.getDefault();
         handler.post(updateLog);
 
@@ -169,6 +160,7 @@ public class DashboardFragment extends Fragment {
     }
 
     //TEST
+    //DELETE LATER
     private void testItem(){
         AccountItem newAccountItem = new AccountItem() ;
         newAccountItem.setImage(ContextCompat.getDrawable(requireContext(),R.drawable.ic_bank_balance));
@@ -218,13 +210,7 @@ public class DashboardFragment extends Fragment {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-/*
-    public void postValue(String transactionValue, String transactionAccount, String transactionCategory,String transactionType ) {
-        //   (TODO) send values to parent activity.
-        bus.post(new TransactionNewItem(transactionValue,transactionAccount,transactionCategory,transactionType));
-    }
 
- */
 
 
     // DONE (1.2) Count all accounts balance
@@ -246,7 +232,8 @@ public class DashboardFragment extends Fragment {
     // TODO (1) Implement account mechanism :
     // DONE  (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
     // TODO  (1.3) Permanent account holder
-    // TODO  (1.4) LiveData to TransactionFragment
+    // DONE  (1.4) LiveData to TransactionFragment
+    //TODO  (1.5) Make LiveData observe pernament
 
 
 
