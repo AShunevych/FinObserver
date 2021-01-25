@@ -3,11 +3,14 @@ package com.ashunevich.finobserver.TransactionsPackage;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.ashunevich.finobserver.DashboardAccountPackage.AccountItem;
+import com.ashunevich.finobserver.UtilsPackage.TransactionDiffUtilCallback;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class TransactionRecViewAdapter extends RecyclerView.Adapter<TransactionRecViewAdapter.MyViewHolder>  {
@@ -28,6 +31,7 @@ public class TransactionRecViewAdapter extends RecyclerView.Adapter<TransactionR
     @Override
     public void onBindViewHolder(final TransactionRecViewAdapter.MyViewHolder holder, int position) {
         final TransactionItem item  = pad_list.get(position);
+        holder.binding.transactionID.setText(String.valueOf(item.getItemIID()));
         holder.binding.transactionTypeImage.setImageDrawable(item.getImage());
         holder.binding.transactionValue.setText(item.getTransactionValue());
         holder.binding.transactionCurrency.setText(String.valueOf(item.getTransactionCurrency()));
@@ -54,6 +58,15 @@ public class TransactionRecViewAdapter extends RecyclerView.Adapter<TransactionR
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    public void updateItemList(ArrayList<TransactionItem> items){
+        final TransactionDiffUtilCallback diffCallback = new TransactionDiffUtilCallback(this.pad_list, items);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.pad_list.clear();
+        this.pad_list.addAll(items);
+        diffResult.dispatchUpdatesTo(this);
     }
 
 /*

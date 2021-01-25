@@ -5,6 +5,29 @@ import android.graphics.drawable.Drawable;
 public class TransactionItem {
     String transactionDate;
     String transactionAccount;
+
+    public TransactionItem(String transactionDate, String transactionAccount,
+                           String transactionCurrency, String transactionValue,
+                           String transactionCategory, Drawable image, int itemIID) {
+        this.transactionDate = transactionDate;
+        this.transactionAccount = transactionAccount;
+        this.transactionCurrency = transactionCurrency;
+        this.transactionValue = transactionValue;
+        this.transactionCategory = transactionCategory;
+        this.image = image;
+        this.itemIID = itemIID;
+    }
+
+    public int getItemIID() {
+        return itemIID;
+    }
+
+    public void setItemIID(int itemIID) {
+        this.itemIID = itemIID;
+    }
+
+    int itemIID;
+
     String transactionCurrency;
     String transactionValue;
     String transactionCategory;

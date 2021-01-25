@@ -3,6 +3,7 @@ package com.ashunevich.finobserver.DashboardAccountPackage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 
 import com.ashunevich.finobserver.R;
+import com.ashunevich.finobserver.TransactionsPackage.TransactionItem;
 import com.ashunevich.finobserver.TransactionsPackage.TransactionNewItem;
 import com.ashunevich.finobserver.TransactionsPackage.TransactionSetNew;
 import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
@@ -46,6 +48,7 @@ public class DashboardFragment extends Fragment {
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
     private final ArrayList<AccountItem> listContentArr = new ArrayList<>();
+    ArrayList<TransactionItem> listTransactions = new ArrayList<>();
     DashboardAccRecViewAdapter adapter;
      Double incomeValue;
      Double expValue;
@@ -193,9 +196,13 @@ public class DashboardFragment extends Fragment {
             incomeValue = stringToDouble(binding.incomeView);
             expValue = stringToDouble(binding.expendView);
             balanceValue = stringToDouble(binding.balanceView);
-
-            TransactionNewItem item = new TransactionNewItem(String.valueOf(getDouble),accountTransaction,categoryAccount,typeTransaction);
-            model.setSelected(item);
+            int transactionID = listTransactions.size()+1;
+//String transactionDate,
+// String transactionAccount, String transactionCurrency, String transactionValue, String transactionCategory, Drawable image
+            TransactionItem item = new TransactionItem(null,accountTransaction,"UAH",
+                    String.valueOf(getDouble),categoryAccount,getTypeImage(typeTransaction),transactionID);
+            listTransactions.add(0,item);
+            model.setSelected(listTransactions);
 
             if (typeTransaction.matches("Income")) {
                 binding.incomeView.setText(String.valueOf(getDouble + incomeValue));
@@ -211,6 +218,16 @@ public class DashboardFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private Drawable getTypeImage(String type){
+        Drawable drawable;
+        if(type.matches("Income")){
+            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_up);
+        }
+        else {
+            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_down);
+        }
+        return drawable;
+    }
 
 
     // DONE (1.2) Count all accounts balance

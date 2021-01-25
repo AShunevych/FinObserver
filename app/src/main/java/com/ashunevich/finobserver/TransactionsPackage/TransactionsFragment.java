@@ -72,10 +72,9 @@ public class TransactionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initRecView();
         model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
-        Observer<TransactionNewItem> observer = this::initObserve;
-                model.getSelected().observeForever(observer);
-
-       super.onViewCreated(view, savedInstanceState);
+        Observer<ArrayList<TransactionItem>> observer = (Observer<ArrayList<TransactionItem>>) this::initObserve;
+        model.getSelected().observeForever(observer);
+        super.onViewCreated(view, savedInstanceState);
     }
     //init RecyclerView
     private void initRecView(){
@@ -86,11 +85,14 @@ public class TransactionsFragment extends Fragment {
     }
 
     //observe data from Fragment A and create object based on it
-    private void initObserve(TransactionNewItem item){
+    private void initObserve(ArrayList<TransactionItem> list){
+        adapter.updateItemList(list);
+
+
         /*
         model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
         model.getSelected().observe(getViewLifecycleOwner(), item -> {
-            */
+
             TransactionItem newAccountItem = new TransactionItem() ;
             newAccountItem.setImage(Image(item.getTransactionType()));
             newAccountItem.setTransactionValue(item.getTransactionValue());
@@ -99,20 +101,10 @@ public class TransactionsFragment extends Fragment {
             newAccountItem.setTransactionAccount(item.getTransactionAccount());
             listContentArr.add(0,newAccountItem);
             adapter.notifyDataSetChanged();
+             */
        // });
         }
 
-
-    private Drawable Image(String type){
-        Drawable drawable;
-        if(type.matches("Income")){
-            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_up);
-        }
-        else {
-            drawable = ContextCompat.getDrawable(getContext(),R.drawable.ic_arrow_drop_down);
-        }
-        return drawable;
-    }
 
     @Override
     public void onDestroyView() {
