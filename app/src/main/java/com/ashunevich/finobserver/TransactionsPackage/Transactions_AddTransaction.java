@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
-import com.ashunevich.finobserver.DashboardAccountPackage.DashboardFragment;
+import com.ashunevich.finobserver.DashboardAccountPackage.Dashboard_Fragment;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionDialogBinding;
 import com.google.android.material.chip.Chip;
@@ -23,7 +23,7 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-public class TransactionSetNew extends AppCompatActivity {
+public class Transactions_AddTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip = null;
     String categoryChip = null;
@@ -78,7 +78,7 @@ public class TransactionSetNew extends AppCompatActivity {
         typeChip = returnChipText(binding.transactionType);
         valueChip = Double.valueOf(binding.transactionEstimate.getText().toString());
        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
-        Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
+        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
         if(typeChip != null && valueChip !=null && transactionAccount != null && categoryChip != null){
             previousScreen.putExtra("Type",typeChip);
             previousScreen.putExtra("Value",valueChip);
@@ -95,7 +95,7 @@ public class TransactionSetNew extends AppCompatActivity {
 
 
     private void onCancelResult(){
-        Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
+        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
         setResult(RESULT_CANCELED,previousScreen);
         finish();
     }

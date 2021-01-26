@@ -1,53 +1,30 @@
 package com.ashunevich.finobserver.TransactionsPackage;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashunevich.finobserver.DashboardAccountPackage.AccountItem;
-import com.ashunevich.finobserver.DashboardAccountPackage.AccountNewtItem;
-import com.ashunevich.finobserver.DashboardAccountPackage.DashboardAccRecViewAdapter;
-import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
-import com.ashunevich.finobserver.UtilsPackage.Utils;
-import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import static android.app.Activity.RESULT_CANCELED;
-
-public class TransactionsFragment extends Fragment {
+public class Transactions_Fragment extends Fragment {
     private TransactionsFragmentBinding binding;
-    private final ArrayList<TransactionItem> listContentArr = new ArrayList<>();
-    TransactionRecViewAdapter adapter;
+    private final ArrayList<Transaction_Item> listContentArr = new ArrayList<>();
+    Transaction_RecyclerViewAdapter adapter;
     TransactionViewModel model;
 
 
-    public TransactionsFragment() {
+    public Transactions_Fragment() {
         // Required empty public constructor
     }
 
@@ -72,20 +49,20 @@ public class TransactionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initRecView();
         model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
-        Observer<ArrayList<TransactionItem>> observer = (Observer<ArrayList<TransactionItem>>) this::initObserve;
+        Observer<ArrayList<Transaction_Item>> observer = (Observer<ArrayList<Transaction_Item>>) this::initObserve;
         model.getSelected().observeForever(observer);
         super.onViewCreated(view, savedInstanceState);
     }
     //init RecyclerView
     private void initRecView(){
         binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new TransactionRecViewAdapter(listContentArr);
+        adapter = new Transaction_RecyclerViewAdapter(listContentArr);
         adapter.setListContent(listContentArr);
         binding.transactionView.setAdapter(adapter);
     }
 
     //observe data from Fragment A and create object based on it
-    private void initObserve(ArrayList<TransactionItem> list){
+    private void initObserve(ArrayList<Transaction_Item> list){
         adapter.updateItemList(list);
 
 

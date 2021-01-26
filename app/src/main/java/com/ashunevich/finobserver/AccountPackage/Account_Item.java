@@ -1,15 +1,15 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.AccountPackage;
 
 import android.graphics.drawable.Drawable;
 
-public class AccountItem {
+public class Account_Item {
      String accountType;
      Double accountValue;
      String accountCurrency;
      Drawable image;
 
 
-    public AccountItem() {
+    public Account_Item() {
 
     }
 

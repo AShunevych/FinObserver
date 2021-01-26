@@ -13,22 +13,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-
+import com.ashunevich.finobserver.AccountPackage.Account_Item;
+import com.ashunevich.finobserver.AccountPackage.Account_NewItemDialog;
+import com.ashunevich.finobserver.AccountPackage.Account_NewtItem;
 import com.ashunevich.finobserver.R;
-import com.ashunevich.finobserver.TransactionsPackage.TransactionItem;
-import com.ashunevich.finobserver.TransactionsPackage.TransactionNewItem;
-import com.ashunevich.finobserver.TransactionsPackage.TransactionSetNew;
+import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
+import com.ashunevich.finobserver.TransactionsPackage.Transactions_AddTransaction;
 import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-
+import java.util.Objects;
 
 
 import androidx.annotation.NonNull;
@@ -37,19 +36,20 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_CANCELED;
 
 
-public class DashboardFragment extends Fragment {
+public class Dashboard_Fragment extends Fragment {
     EventBus bus;
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
-    private final ArrayList<AccountItem> listContentArr = new ArrayList<>();
-    ArrayList<TransactionItem> listTransactions = new ArrayList<>();
-    DashboardAccRecViewAdapter adapter;
+    private final ArrayList<Account_Item> listContentArr = new ArrayList<>();
+    ArrayList<Transaction_Item> listTransactions = new ArrayList<>();
+    Dashboard_RecyclevrViewAdapter adapter;
      Double incomeValue;
      Double expValue;
      Double balanceValue;
@@ -58,7 +58,7 @@ public class DashboardFragment extends Fragment {
 
 
 
-    public DashboardFragment() {
+    public Dashboard_Fragment() {
         // Required empty public constructor
     }
 
@@ -90,13 +90,16 @@ public class DashboardFragment extends Fragment {
 
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new DashboardAccRecViewAdapter(listContentArr);
+        adapter = new Dashboard_RecyclevrViewAdapter(listContentArr);
         adapter.setListContent(listContentArr);
         binding.accountView.setAdapter(adapter);
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(new Dashboard_RecyclerViewSwipeAdapter(adapter));
+        itemTouchHelper.attachToRecyclerView(binding.accountView);
 
         binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new AccountNewDialogFragment();
-            newAccountDialogFragment.show(getActivity().getSupportFragmentManager(), "newAccountDialogFragment");
+            newAccountDialogFragment = new Account_NewItemDialog();
+            newAccountDialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "newAccountDialogFragment");
         });
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
             binding.incomeView.setText(String.valueOf(0.0));
@@ -127,7 +130,7 @@ public class DashboardFragment extends Fragment {
     };
 
     public void newTransaction(){
-        Intent intent = new Intent(getContext(), TransactionSetNew.class);
+        Intent intent = new Intent(getContext(), Transactions_AddTransaction.class);
         ArrayList<String> arrayList = new ArrayList<>();
            for (int i=0;i <binding.accountView.getChildCount();i++) {
                RecyclerView.ViewHolder holder = binding.accountView.getChildViewHolder(binding.accountView.getChildAt(i));
@@ -165,7 +168,7 @@ public class DashboardFragment extends Fragment {
     //TEST
     //DELETE LATER
     private void testItem(){
-        AccountItem newAccountItem = new AccountItem() ;
+        Account_Item newAccountItem = new Account_Item() ;
         newAccountItem.setImage(ContextCompat.getDrawable(requireContext(),R.drawable.ic_bank_balance));
         newAccountItem.setAccountType("PrivatBank");
         newAccountItem.setAccountValue(250.00);
@@ -175,14 +178,14 @@ public class DashboardFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void setRecyclerViewItem(AccountNewtItem receivedItem)  {
-        AccountItem newAccountItem = new AccountItem() ;
+    public void setRecyclerViewItem(Account_NewtItem receivedItem)  {
+        Account_Item newAccountItem = new Account_Item() ;
         newAccountItem.setImage(receivedItem.getImage());
         newAccountItem.setAccountType(receivedItem.getAccountType());
         newAccountItem.setAccountValue(receivedItem.getAccountValue());
         newAccountItem.setAccountCurrency(receivedItem.getAccountCurrency());
         listContentArr.add(newAccountItem);
-         adapter.notifyItemChanged(adapter.getItemCount());
+        adapter.notifyItemChanged(adapter.getItemCount());
     }
 
     @Override
@@ -196,11 +199,10 @@ public class DashboardFragment extends Fragment {
             incomeValue = stringToDouble(binding.incomeView);
             expValue = stringToDouble(binding.expendView);
             balanceValue = stringToDouble(binding.balanceView);
-            int transactionID = listTransactions.size()+1;
-//String transactionDate,
-// String transactionAccount, String transactionCurrency, String transactionValue, String transactionCategory, Drawable image
-            TransactionItem item = new TransactionItem(null,accountTransaction,"UAH",
-                    String.valueOf(getDouble),categoryAccount,getTypeImage(typeTransaction),transactionID);
+
+
+            Transaction_Item item = new Transaction_Item(null,accountTransaction,"UAH",
+                    String.valueOf(getDouble),categoryAccount,getTypeImage(typeTransaction),listTransactions.size()+1);
             listTransactions.add(0,item);
             model.setSelected(listTransactions);
 
@@ -212,9 +214,7 @@ public class DashboardFragment extends Fragment {
                 binding.balanceView.setText(String.valueOf(balanceValue - getDouble));
             }
         }
-        else {
-            Snackbar.make(binding.DashboardLayout,"Transaction cancelled", BaseTransientBottomBar.LENGTH_SHORT).show();
-        }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -250,7 +250,7 @@ public class DashboardFragment extends Fragment {
     // DONE  (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
     // TODO  (1.3) Permanent account holder
     // DONE  (1.4) LiveData to TransactionFragment
-    //TODO  (1.5) Make LiveData observe pernament
+    //DONE  (1.5) Make LiveData observe pernament
 
 
 

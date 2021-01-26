@@ -1,8 +1,8 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.AccountPackage;
 
 import android.graphics.drawable.Drawable;
 
-public class AccountNewtItem {
+public class Account_NewtItem {
      String accountType;
      Double accountValue;
 
@@ -25,7 +25,7 @@ public class AccountNewtItem {
      String accountCurrency;
       Drawable image;
 
-    public AccountNewtItem(Drawable image, String accountType, Double accountValue, String accountCurrency) {
+    public Account_NewtItem(Drawable image, String accountType, Double accountValue, String accountCurrency) {
         this.image = image;
         this.accountType = accountType;
         this.accountValue = accountValue;

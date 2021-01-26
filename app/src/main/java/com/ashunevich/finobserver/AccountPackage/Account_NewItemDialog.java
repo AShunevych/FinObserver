@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.AccountPackage;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -24,7 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-public class AccountNewDialogFragment extends DialogFragment {
+public class Account_NewItemDialog extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
     ArrayList<Drawable> images;
     EventBus bus;
@@ -47,7 +47,7 @@ public class AccountNewDialogFragment extends DialogFragment {
 
 
     public void postValue(Drawable drawable, String accountName,Double accountValue,String accountCurrency) {
-        bus.post(new AccountNewtItem(drawable, accountName,accountValue,accountCurrency));
+        bus.post(new Account_NewtItem(drawable, accountName,accountValue,accountCurrency));
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

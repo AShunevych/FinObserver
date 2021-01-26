@@ -3,7 +3,6 @@ package com.ashunevich.finobserver.TransactionsPackage;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.ashunevich.finobserver.DashboardAccountPackage.AccountItem;
 import com.ashunevich.finobserver.UtilsPackage.TransactionDiffUtilCallback;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
 
@@ -13,24 +12,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TransactionRecViewAdapter extends RecyclerView.Adapter<TransactionRecViewAdapter.MyViewHolder>  {
-    private ArrayList<TransactionItem> pad_list;
+public class Transaction_RecyclerViewAdapter extends RecyclerView.Adapter<Transaction_RecyclerViewAdapter.MyViewHolder>  {
+    private ArrayList<Transaction_Item> pad_list;
     //   private PassBalanceValue mListerner;
-    public TransactionRecViewAdapter(ArrayList<TransactionItem> data){
+    public Transaction_RecyclerViewAdapter(ArrayList<Transaction_Item> data){
         this.pad_list = data;
     }
     //This method inflates view present in the RecyclerView
     @NonNull
     @Override
-    public TransactionRecViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new TransactionRecViewAdapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+    public Transaction_RecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new Transaction_RecyclerViewAdapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
     //Binding the data using get() method of POJO object
     @Override
-    public void onBindViewHolder(final TransactionRecViewAdapter.MyViewHolder holder, int position) {
-        final TransactionItem item  = pad_list.get(position);
+    public void onBindViewHolder(final Transaction_RecyclerViewAdapter.MyViewHolder holder, int position) {
+        final Transaction_Item item  = pad_list.get(position);
         holder.binding.transactionID.setText(String.valueOf(item.getItemIID()));
         holder.binding.transactionTypeImage.setImageDrawable(item.getImage());
         holder.binding.transactionValue.setText(item.getTransactionValue());
@@ -42,7 +41,7 @@ public class TransactionRecViewAdapter extends RecyclerView.Adapter<TransactionR
 
 
     //Setting the arraylist
-    public void setListContent(ArrayList <TransactionItem> pad_list) {
+    public void setListContent(ArrayList <Transaction_Item> pad_list) {
         this.pad_list = pad_list;
     }
 
@@ -60,7 +59,7 @@ public class TransactionRecViewAdapter extends RecyclerView.Adapter<TransactionR
         }
     }
 
-    public void updateItemList(ArrayList<TransactionItem> items){
+    public void updateItemList(ArrayList<Transaction_Item> items){
         final TransactionDiffUtilCallback diffCallback = new TransactionDiffUtilCallback(this.pad_list, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 

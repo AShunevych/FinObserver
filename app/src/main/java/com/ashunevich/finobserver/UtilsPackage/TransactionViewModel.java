@@ -1,7 +1,6 @@
 package com.ashunevich.finobserver.UtilsPackage;
 
-import com.ashunevich.finobserver.TransactionsPackage.TransactionItem;
-import com.ashunevich.finobserver.TransactionsPackage.TransactionNewItem;
+import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
 
 import java.util.ArrayList;
 
@@ -11,14 +10,14 @@ import androidx.lifecycle.ViewModel;
 
 public class TransactionViewModel extends ViewModel {
 
-    private final MutableLiveData<ArrayList<TransactionItem>> selected = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Transaction_Item>> selected = new MutableLiveData<>();
 
 
-    public void setSelected (ArrayList<TransactionItem> arrayList){
+    public void setSelected (ArrayList<Transaction_Item> arrayList){
         selected.setValue(arrayList);
     }
 
-    public LiveData<ArrayList<TransactionItem>> getSelected() {
+    public LiveData<ArrayList<Transaction_Item>> getSelected() {
         return selected;
     }
 }
