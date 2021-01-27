@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashunevich.finobserver.UtilsPackage.TransactionViewModel;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
 import java.util.ArrayList;
@@ -17,14 +16,14 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-public class Transactions_Fragment extends Fragment {
+public class Transaction_Fragment extends Fragment {
     private TransactionsFragmentBinding binding;
     private final ArrayList<Transaction_Item> listContentArr = new ArrayList<>();
     Transaction_RecyclerViewAdapter adapter;
-    TransactionViewModel model;
+    Transaction_ViewModel model;
 
 
-    public Transactions_Fragment() {
+    public Transaction_Fragment() {
         // Required empty public constructor
     }
 
@@ -41,6 +40,7 @@ public class Transactions_Fragment extends Fragment {
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        assert inflater != null;
         binding = TransactionsFragmentBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -48,8 +48,8 @@ public class Transactions_Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initRecView();
-        model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
-        Observer<ArrayList<Transaction_Item>> observer = (Observer<ArrayList<Transaction_Item>>) this::initObserve;
+        model = new ViewModelProvider(requireActivity()).get(Transaction_ViewModel.class);
+        Observer<ArrayList<Transaction_Item>> observer = this::initObserve;
         model.getSelected().observeForever(observer);
         super.onViewCreated(view, savedInstanceState);
     }
@@ -64,22 +64,6 @@ public class Transactions_Fragment extends Fragment {
     //observe data from Fragment A and create object based on it
     private void initObserve(ArrayList<Transaction_Item> list){
         adapter.updateItemList(list);
-
-
-        /*
-        model = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
-        model.getSelected().observe(getViewLifecycleOwner(), item -> {
-
-            TransactionItem newAccountItem = new TransactionItem() ;
-            newAccountItem.setImage(Image(item.getTransactionType()));
-            newAccountItem.setTransactionValue(item.getTransactionValue());
-            newAccountItem.setTransactionCurrency("UAH");
-            newAccountItem.setTransactionCategory(item.getTransactionCategory());
-            newAccountItem.setTransactionAccount(item.getTransactionAccount());
-            listContentArr.add(0,newAccountItem);
-            adapter.notifyDataSetChanged();
-             */
-       // });
         }
 
 

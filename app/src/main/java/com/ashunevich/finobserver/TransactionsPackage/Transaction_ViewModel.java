@@ -1,6 +1,6 @@
-package com.ashunevich.finobserver.UtilsPackage;
+package com.ashunevich.finobserver.TransactionsPackage;
 
-import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
+
 
 import java.util.ArrayList;
 
@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class TransactionViewModel extends ViewModel {
+public class Transaction_ViewModel extends ViewModel {
 
     private final MutableLiveData<ArrayList<Transaction_Item>> selected = new MutableLiveData<>();
 

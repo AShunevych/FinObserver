@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.UtilsPackage;
+package com.ashunevich.finobserver.TransactionsPackage;
 
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
 
@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-public class TransactionDiffUtilCallback extends DiffUtil.Callback {
+public class Transaction_DiffUtilCallback extends DiffUtil.Callback {
 
     ArrayList<Transaction_Item> oldList;
 
-    public TransactionDiffUtilCallback(ArrayList<Transaction_Item> oldList, ArrayList<Transaction_Item> newList) {
+    public Transaction_DiffUtilCallback(ArrayList<Transaction_Item> oldList, ArrayList<Transaction_Item> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }

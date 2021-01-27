@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="incomeCategory">
+        <item>Salary</item>
+        <item>Investment</item>
+        <item>Credit</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="expendituresCategory">
+        <item>Lifestyle</item>
+        <item>Mobile Phone</item>
+        <item>Car</item>
+        <item>Food</item>
+        <item>Cafe</item>
+        <item>Internet</item>
+        <item>Housing</item>
+        <item>Investment</item>
+        <item>Banking</item>
+        <item>Other</item>
+    </string-array>
+
+
+
+</resources>

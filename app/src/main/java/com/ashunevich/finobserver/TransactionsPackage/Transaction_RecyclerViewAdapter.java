@@ -3,7 +3,6 @@ package com.ashunevich.finobserver.TransactionsPackage;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.ashunevich.finobserver.UtilsPackage.TransactionDiffUtilCallback;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class Transaction_RecyclerViewAdapter extends RecyclerView.Adapter<Transa
     }
 
     public void updateItemList(ArrayList<Transaction_Item> items){
-        final TransactionDiffUtilCallback diffCallback = new TransactionDiffUtilCallback(this.pad_list, items);
+        final Transaction_DiffUtilCallback diffCallback = new Transaction_DiffUtilCallback(this.pad_list, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();

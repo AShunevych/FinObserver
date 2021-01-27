@@ -23,7 +23,7 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-public class Transactions_AddTransaction extends AppCompatActivity {
+public class Transaction_AddTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip = null;
     String categoryChip = null;
@@ -35,13 +35,10 @@ public class Transactions_AddTransaction extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = TransactionDialogBinding.inflate(getLayoutInflater());
 
-        String [] incomeArray = new String[] {"Salary","Investment","Credit","Other"};
-        String [] expendituresArray = new String[] {"Lifestyle","Mobile Phone","Car","Food","Cafe","Internet","Housing","Investment","Banking","Other"};
-
         ArrayList<String> arrayList = getIntent().getStringArrayListExtra("AccountTypes");
 
-        createChips(incomeArray,binding.IncomeChipGroup);
-        createChips(expendituresArray,binding.SpendingChipGroup);
+        createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
+        createChips(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
         binding.IncomeChipGroup.setVisibility(View.GONE);
         binding.SpendingChipGroup.setVisibility(View.GONE);
         View view = binding.getRoot();
@@ -57,15 +54,6 @@ public class Transactions_AddTransaction extends AppCompatActivity {
         }
     }
 
-    private int returnActiveChipId(ChipGroup chipGroup){
-        int idChip = 0;
-        List<Integer> ids = chipGroup.getCheckedChipIds();
-            for (Integer id:ids){
-                Chip chip = chipGroup.findViewById(id);
-                idChip = chip.getId();
-            }
-        return idChip;
-    }
 
      // (TODO) adapter should fill from DashBoarddFragmentValues.
     private void setSpinner(ArrayList<String> array){
@@ -88,18 +76,15 @@ public class Transactions_AddTransaction extends AppCompatActivity {
             finish();
         }
         else{
-            Toast.makeText(this,"Some field is empty please.Please check!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Some fields are empty please.Please check!",Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     private void onCancelResult(){
         Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
         setResult(RESULT_CANCELED,previousScreen);
         finish();
     }
-
 
     private String returnChipText(ChipGroup chipGroup){
         String text = null;
@@ -109,6 +94,16 @@ public class Transactions_AddTransaction extends AppCompatActivity {
             text = chip.getText().toString();
         }
         return text;
+    }
+
+    private int returnActiveChipId(ChipGroup chipGroup){
+        int idChip = 0;
+        List<Integer> ids = chipGroup.getCheckedChipIds();
+        for (Integer id:ids){
+            Chip chip = chipGroup.findViewById(id);
+            idChip = chip.getId();
+        }
+        return idChip;
     }
 
     private void setChipsGroupListener(){
@@ -138,15 +133,15 @@ public class Transactions_AddTransaction extends AppCompatActivity {
             categoryChip = returnChipText(group);
         });
     }
+
     private void setChipGroupUncheck(ChipGroup chipGroup){
        chipGroup.clearCheck();
     }
 
-
-
-    private void createChips(String [] categories,ChipGroup chipGroup){
+    private void createChips( String [] list,ChipGroup chipGroup){
         for (String category :
-                categories) {
+                list)
+        {
             @SuppressLint("InflateParams") Chip mChip = (Chip) this.getLayoutInflater().inflate(R.layout.transaction_chip_item, null, false);
             mChip.setText(category);
             int paddingDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()
