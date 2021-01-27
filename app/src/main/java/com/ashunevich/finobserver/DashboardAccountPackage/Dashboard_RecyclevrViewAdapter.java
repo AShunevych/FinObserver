@@ -1,23 +1,22 @@
 package com.ashunevich.finobserver.DashboardAccountPackage;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ashunevich.finobserver.AccountPackage.Account_Item;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
-import com.google.android.material.snackbar.Snackbar;
+
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboard_RecyclevrViewAdapter.MyViewHolder>  {
     private ArrayList<Account_Item> pad_list;
-    Account_Item thisItem;
 
     public Dashboard_RecyclevrViewAdapter(ArrayList<Account_Item> data){
         this.pad_list = data;
@@ -38,17 +37,7 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
         holder.binding.accountType.setText(item.getAccountType());
         holder.binding.accountValue.setText(String.valueOf(item.getAccountValue()));
         holder.binding.accountCurrency.setText(item.getAccountCurrency());
-            /*
-        holder.binding.deleteAccount.setOnClickListener(view -> {
-           // Log.d("Value at this pos",String.valueOf(thisItem.getAccountValue()));
-            deleteItem(position);
-        });
 
-             */
-
-
-
-        ///когда отнимается через интерефес отправляется новое значение в фрагнмент
     }
 
     protected void deleteItem (int position){
@@ -56,10 +45,6 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
         notifyItemRemoved(position);
        // notifyItemRangeChanged(position,pad_list.size());
     }
-
-
-
-
 
     //Setting the arraylist
     public void setListContent(ArrayList <Account_Item> pad_list) {
@@ -80,8 +65,7 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
         }
     }
 //TODO  (1.6) Update item when accountValue change
-
-
+    
     protected String summAllItemsValue(RecyclerView viewRec){
         double totalPrice = 0;
         for (int i = 0; i<viewRec.getChildCount(); i++)
@@ -93,4 +77,5 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
 
         return String.valueOf(totalPrice);
     }
+
 }

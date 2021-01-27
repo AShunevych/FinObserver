@@ -52,7 +52,7 @@ public class Dashboard_Fragment extends Fragment {
     EventBus bus;
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
-    private final ArrayList<Account_Item> listContentArr = new ArrayList<>();
+    private final ArrayList<Account_Item> AccountItemList = new ArrayList<>();
     ArrayList<Transaction_Item> listTransactions = new ArrayList<>();
     Dashboard_RecyclevrViewAdapter adapter;
      Double incomeValue;
@@ -82,6 +82,8 @@ public class Dashboard_Fragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
     }
 
@@ -91,12 +93,11 @@ public class Dashboard_Fragment extends Fragment {
         // Inflate the layout for this fragment
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
-
-
         binding.newAccount.setOnClickListener(view -> {
             newAccountDialogFragment = new Account_NewItemDialog();
             newAccountDialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "newAccountDialogFragment");
         });
+
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
             binding.incomeView.setText(String.valueOf(0.0));
             binding.expendView.setText(String.valueOf(0.0));
@@ -112,15 +113,16 @@ public class Dashboard_Fragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         model = new ViewModelProvider(requireActivity()).get(Transaction_ViewModel.class);
         setRecyclerView();
-        testItem();
+     //   testItem();
         super.onViewCreated(view, savedInstanceState);
     }
 
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new Dashboard_RecyclevrViewAdapter(listContentArr);
-        adapter.setListContent(listContentArr);
+        adapter = new Dashboard_RecyclevrViewAdapter(AccountItemList);
+        adapter.setListContent(AccountItemList);
         binding.accountView.setAdapter(adapter);
+
         ItemTouchHelper itemTouchHelper = new
                 ItemTouchHelper(new Dashboard_RecyclerViewSwipeAdapter(adapter));
         itemTouchHelper.attachToRecyclerView(binding.accountView);
@@ -146,6 +148,11 @@ public class Dashboard_Fragment extends Fragment {
 
 
     @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onDetach() {
      EventBus.getDefault().unregister(this);
         handler.removeCallbacksAndMessages(null);
@@ -160,8 +167,6 @@ public class Dashboard_Fragment extends Fragment {
     }
 
 
-
-
     //TEST
     //DELETE LATER
     private void testItem(){
@@ -170,7 +175,7 @@ public class Dashboard_Fragment extends Fragment {
         newAccountItem.setAccountType("PrivatBank");
         newAccountItem.setAccountValue(250.00);
         newAccountItem.setAccountCurrency("UAH");
-        listContentArr.add(newAccountItem);
+        AccountItemList.add(newAccountItem);
         adapter.notifyItemChanged(adapter.getItemCount());
     }
 
@@ -181,7 +186,7 @@ public class Dashboard_Fragment extends Fragment {
         newAccountItem.setAccountType(receivedItem.getAccountType());
         newAccountItem.setAccountValue(receivedItem.getAccountValue());
         newAccountItem.setAccountCurrency(receivedItem.getAccountCurrency());
-        listContentArr.add(newAccountItem);
+        AccountItemList.add(newAccountItem);
         adapter.notifyItemChanged(adapter.getItemCount());
     }
 
