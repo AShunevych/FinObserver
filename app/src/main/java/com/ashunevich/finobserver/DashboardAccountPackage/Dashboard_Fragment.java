@@ -4,10 +4,9 @@ package com.ashunevich.finobserver.DashboardAccountPackage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,19 +21,17 @@ import com.ashunevich.finobserver.TransactionsPackage.Transaction_ViewModel;
 
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;;
+
 
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -81,8 +78,9 @@ public class Dashboard_Fragment extends Fragment  {
 
                         setResult (transactionType,transactionValue);
 
-                        Transaction_Item item = new Transaction_Item(getDate(),transactionAccount,"UAH",
-                                String.valueOf(transactionValue),transactionCategory,getTypeImage(transactionType),listTransactions.size()+1);
+                        Transaction_Item item = new Transaction_Item(Dashboard_FragmentUtils.getDate(),transactionAccount,"UAH",
+                                String.valueOf(transactionValue),transactionCategory,
+                                Dashboard_FragmentUtils.getTypeImage(transactionType,requireContext()),listTransactions.size()+1);
                         listTransactions.add(0,item);
                         model.setSelected(listTransactions);
                     }
@@ -113,9 +111,7 @@ public class Dashboard_Fragment extends Fragment  {
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "newAccountDialogFragment");
         });
 
-        binding.buttonDelete.setOnClickListener(view -> {
-            dashboardViewModel.deleteAll();
-        });
+        binding.buttonDelete.setOnClickListener(view -> dashboardViewModel.deleteAll());
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
             binding.incomeView.setText(String.valueOf(0.0));
@@ -149,9 +145,7 @@ public class Dashboard_Fragment extends Fragment  {
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new Dashboard_RecyclevrViewAdapter(AccountItemList);
-        dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> {
-            adapter.setListContent(accounts);
-        });
+        dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.setListContent(accounts));
         binding.accountView.setAdapter(adapter);
 
         setupItemTouchHelper();
@@ -215,21 +209,10 @@ public class Dashboard_Fragment extends Fragment  {
 
     //Utils method
 
-    private Drawable getTypeImage(String type){
-        Drawable drawable;
-        if(type.matches("Income")){
-            drawable = ContextCompat.getDrawable(requireContext(),R.drawable.ic_arrow_drop_up);
-        }
-        else {
-            drawable = ContextCompat.getDrawable(requireContext(),R.drawable.ic_arrow_drop_down);
-        }
-        return drawable;
-    }
-
     private void setResult(String type,Double result){
-        incomeValue = stringToDouble(binding.incomeView);
-        expValue = stringToDouble(binding.expendView);
-        balanceValue = stringToDouble(binding.balanceView);
+        incomeValue = Dashboard_FragmentUtils.stringToDouble(binding.incomeView);
+        expValue = Dashboard_FragmentUtils.stringToDouble(binding.expendView);
+        balanceValue = Dashboard_FragmentUtils.stringToDouble(binding.balanceView);
 
         if (type.matches("Income")) {
             binding.incomeView.setText(String.valueOf(result + incomeValue));
@@ -241,15 +224,6 @@ public class Dashboard_Fragment extends Fragment  {
 
     }
 
-    private static String getDate(){
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault());
-        return df.format(c);
-    }
-
-    private Double stringToDouble(TextView view){
-        return Double.parseDouble(view.getText().toString());
-    }
 
     private final Runnable updateLog = new Runnable() {
         public void run() {
