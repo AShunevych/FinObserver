@@ -21,9 +21,8 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:text="Month balance: "
+        android:text="Month balance"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="@+id/accountView"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -32,12 +31,11 @@
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Accounts :"
+        android:layout_marginTop="16dp"
+        android:text="Accounts"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/newAccount"
         app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/newAccount"
-        tools:text="Accounts :" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView3"
@@ -168,14 +166,14 @@
         android:id="@+id/accountView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/rectangle_transp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newAccount"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
         tools:itemCount="12"
         tools:listitem="@layout/dashboard_account_item" />
 
@@ -183,15 +181,16 @@
         android:id="@+id/newAccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:clickable="true"
-        app:fabCustomSize="55dp"
-        app:fabSize="mini"
+        app:backgroundTint="@color/teal_200"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toTopOf="@+id/accountView"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_round_note_add_24" />
+        app:layout_constraintTop_toTopOf="@+id/textView12"
+        app:maxImageSize="50dp"
+        app:srcCompat="@drawable/ic_new_account" />
 
     <TextView
         android:id="@+id/textView5"
@@ -212,5 +211,13 @@
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toTopOf="@+id/textView5"
         tools:text="250.00" />
+
+    <Button
+        android:id="@+id/buttonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="delete"
+        app:layout_constraintEnd_toEndOf="@+id/accountView"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

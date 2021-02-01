@@ -1,6 +1,6 @@
-package com.ashunevich.finobserver.AccountPackage;
+package com.ashunevich.finobserver.DashboardAccountPackage;
 
-import android.annotation.SuppressLint;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,24 +10,28 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.UtilsPackage.CustomSpinnerAdapter;
 import com.ashunevich.finobserver.databinding.DashboardNewAccountDialogBinding;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
+
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-public class Account_NewItemDialog extends DialogFragment {
+public class Dashboard_NewAccountDialog extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
     ArrayList<Drawable> images;
-    EventBus bus;
+
+
 
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
@@ -39,51 +43,55 @@ public class Account_NewItemDialog extends DialogFragment {
         binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));
         binding.okButton.setOnClickListener(view -> onDismiss(Objects.requireNonNull(getDialog())));
         fillSpinner();
-        bus = EventBus.getDefault();
         Objects.requireNonNull(getDialog()).setCanceledOnTouchOutside(true);
         return binding.getRoot();
-
     }
 
 
-    public void postValue(Drawable drawable, String accountName,Double accountValue,String accountCurrency) {
-        bus.post(new Account_NewtItem(drawable, accountName,accountValue,accountCurrency));
+    public void postValue() {
+        if(!TextUtils.isEmpty(binding.newAccountName.getText().toString())  && !TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
+            Bundle result = new Bundle();
+            result.putString("nameResult",binding.newAccountName.getText().toString());
+            result.putDouble("doubleResult",Double.parseDouble(binding.newAccountValue.getText().toString()));
+            result.putString("currencyResult","UAH");
+            result.putInt("idResult",DrawablePostion());
+            getParentFragmentManager().setFragmentResult("fragmentKey",result);
+        }
+        else{
+            if(TextUtils.isEmpty(binding.newAccountName.getText().toString())){
+                buildToast("Mame is ");
+            }
+            else if(TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
+                buildToast("Value is ");
+            }
+            else if(TextUtils.isEmpty(binding.newAccountName.getText().toString()) && TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
+                buildToast("Name and value are ");
+            }
+        }
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private Drawable getDrawable(int position){
-        return images.get(position);
+
+    private void buildToast(String value){
+        Toast.makeText(getContext(), value + " empty",Toast.LENGTH_SHORT).show();
     }
 
 
+    private int DrawablePostion(){
+        return binding.drawableSpinner.getSelectedItemPosition();
+    }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
+
     private void fillSpinner(){
         images = new ArrayList<>();
-        images.add(getResources().getDrawable(R.drawable.ic_wallet_balance,null));
-        images.add(getResources().getDrawable(R.drawable.ic_bank_balance,null));
-        images.add(getResources().getDrawable(R.drawable.ic_other_balance,null));
+        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wallet_balance,null));
+        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_bank_balance,null));
+        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_other_balance,null));
         CustomSpinnerAdapter mCustomAdapter = new CustomSpinnerAdapter(requireContext(), images);
         binding.drawableSpinner.setAdapter(mCustomAdapter);
     }
 
     public void onDismiss(@NonNull DialogInterface dialog) {
-       if(!TextUtils.isEmpty(binding.newAccountName.getText().toString())  && !TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
-           postValue(getDrawable(binding.drawableSpinner.getSelectedItemPosition()),binding.newAccountName.getText().toString(),
-                   Double.valueOf(binding.newAccountValue.getText().toString()),"UAH");
-        }
-       else{
-          if(TextUtils.isEmpty(binding.newAccountName.getText().toString())){
-             binding.newAccountName.setError("Account Name cannot be empty");
-          }
-          else if(TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
-              binding.newAccountValue.setError("Account Value cannot be empty");
-          }
-          else if(TextUtils.isEmpty(binding.newAccountName.getText().toString()) && TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
-              binding.newAccountName.setError("Account Name cannot be empty");
-              binding.newAccountValue.setError("Account Value cannot be empty");
-          }
-       }
+       postValue();
         super.onDismiss(dialog);
     }
 

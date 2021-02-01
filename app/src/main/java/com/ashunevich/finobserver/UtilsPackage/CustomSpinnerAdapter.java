@@ -18,12 +18,12 @@ import androidx.annotation.Nullable;
 public class CustomSpinnerAdapter extends BaseAdapter {
 
     private final ArrayList<Drawable> spinnerImages;
-    Context mContext;
     LayoutInflater mInflater;
 
-    public CustomSpinnerAdapter(@NonNull Context context, ArrayList<Drawable> images) {
+    public CustomSpinnerAdapter(@NonNull Context context, ArrayList<Drawable> images ) {
         this.spinnerImages = images;
         mInflater = (LayoutInflater.from(context));
+
     }
 
     @Override
@@ -69,10 +69,6 @@ public class CustomSpinnerAdapter extends BaseAdapter {
 
 
     private static class ImageItem {
-
-        public void setImage(ImageView image) {
-            this.image = image;
-        }
 
         ImageView image;
     }

@@ -1,6 +1,7 @@
 package com.ashunevich.finobserver.DashboardAccountPackage;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -11,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
-import com.ashunevich.finobserver.AccountPackage.Account_Item;
-import com.ashunevich.finobserver.AccountPackage.Account_NewItemDialog;
-import com.ashunevich.finobserver.AccountPackage.Account_NewtItem;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_AddTransaction;
@@ -23,18 +22,16 @@ import com.ashunevich.finobserver.TransactionsPackage.Transaction_ViewModel;
 
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.List;
+import java.util.Locale;;
 
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -45,21 +42,22 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static android.app.Activity.RESULT_CANCELED;
 
+public class Dashboard_Fragment extends Fragment  {
 
-public class Dashboard_Fragment extends Fragment {
-    EventBus bus;
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
-    private final ArrayList<Account_Item> AccountItemList = new ArrayList<>();
+  private final List<Dashboard_Account> AccountItemList = new ArrayList<>();
     ArrayList<Transaction_Item> listTransactions = new ArrayList<>();
+    private Dashboard_ViewModel dashboardViewModel;
+
     Dashboard_RecyclevrViewAdapter adapter;
      Double incomeValue;
      Double expValue;
      Double balanceValue;
     Handler handler = new Handler();
     Transaction_ViewModel model;
+    ActivityResultLauncher<Intent> ResultLauncher;
 
 
 
@@ -70,8 +68,25 @@ public class Dashboard_Fragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (!EventBus.getDefault().isRegistered(this))
-            EventBus.getDefault().register(this);
+         ResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        assert data != null;
+                        String transactionType = data.getStringExtra("Type");
+                        String transactionAccount = data.getStringExtra("Account");
+                        String transactionCategory = data.getStringExtra("Category");
+                        Double transactionValue = data.getDoubleExtra("Value", 0);
+
+                        setResult (transactionType,transactionValue);
+
+                        Transaction_Item item = new Transaction_Item(getDate(),transactionAccount,"UAH",
+                                String.valueOf(transactionValue),transactionCategory,getTypeImage(transactionType),listTransactions.size()+1);
+                        listTransactions.add(0,item);
+                        model.setSelected(listTransactions);
+                    }
+                });
     }
 
 
@@ -94,8 +109,12 @@ public class Dashboard_Fragment extends Fragment {
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new Account_NewItemDialog();
-            newAccountDialogFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), "newAccountDialogFragment");
+            newAccountDialogFragment = new Dashboard_NewAccountDialog();
+            newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "newAccountDialogFragment");
+        });
+
+        binding.buttonDelete.setOnClickListener(view -> {
+            dashboardViewModel.deleteAll();
         });
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
@@ -103,7 +122,7 @@ public class Dashboard_Fragment extends Fragment {
             binding.expendView.setText(String.valueOf(0.0));
             binding.balanceView.setText(String.valueOf(0.0));
 
-        bus = EventBus.getDefault();
+
         handler.post(updateLog);
 
         return binding.getRoot();
@@ -112,38 +131,48 @@ public class Dashboard_Fragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         model = new ViewModelProvider(requireActivity()).get(Transaction_ViewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(Dashboard_ViewModel.class);
         setRecyclerView();
-     //   testItem();
+        getParentFragmentManager().setFragmentResultListener("fragmentKey", getViewLifecycleOwner(), (requestKey, result) -> {
+               String name = result.getString("nameResult");
+               double value = result.getDouble("doubleResult");
+               String currency = result.getString("currencyResult");
+               int imageID = result.getInt("idResult");
+
+               dashboardViewModel.insert(new Dashboard_Account(name,value,currency,imageID));
+        });
+
         super.onViewCreated(view, savedInstanceState);
     }
+
 
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new Dashboard_RecyclevrViewAdapter(AccountItemList);
-        adapter.setListContent(AccountItemList);
+        dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> {
+            adapter.setListContent(accounts);
+        });
         binding.accountView.setAdapter(adapter);
 
-        ItemTouchHelper itemTouchHelper = new
-                ItemTouchHelper(new Dashboard_RecyclerViewSwipeAdapter(adapter));
-        itemTouchHelper.attachToRecyclerView(binding.accountView);
+        setupItemTouchHelper();
     }
-
 
 
     private void newTransaction(){
         Intent intent = new Intent(getContext(), Transaction_AddTransaction.class);
         ArrayList<String> arrayList = new ArrayList<>();
+
            for (int i=0;i <binding.accountView.getChildCount();i++) {
                RecyclerView.ViewHolder holder = binding.accountView.getChildViewHolder(binding.accountView.getChildAt(i));
                TextView view = holder.itemView.findViewById(R.id.accountType);
                arrayList.add(view.getText().toString());
-               if (arrayList.size() != 0) {
-                   intent.putStringArrayListExtra("AccountTypes", arrayList);
-               } else {
-                   Log.d("List is ", String.valueOf(arrayList.size()));
-               }
            }
-                startActivityForResult(intent,1000);
+        if (arrayList.size() != 0) {
+            intent.putStringArrayListExtra("AccountTypes", arrayList);
+            ResultLauncher.launch(intent);
+        } else {
+            Toast.makeText(requireContext(),"There is no active account.Unable to make transaction",Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -154,74 +183,45 @@ public class Dashboard_Fragment extends Fragment {
 
     @Override
     public void onDetach() {
-     EventBus.getDefault().unregister(this);
         handler.removeCallbacksAndMessages(null);
         super.onDetach();
     }
 
     @Override
     public void onDestroyView() {
-        handler.removeCallbacksAndMessages(null);
         binding = null;
         super.onDestroyView();
     }
 
+    private void setupItemTouchHelper() {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
 
-    //TEST
-    //DELETE LATER
-    private void testItem(){
-        Account_Item newAccountItem = new Account_Item() ;
-        newAccountItem.setImage(ContextCompat.getDrawable(requireContext(),R.drawable.ic_bank_balance));
-        newAccountItem.setAccountType("PrivatBank");
-        newAccountItem.setAccountValue(250.00);
-        newAccountItem.setAccountCurrency("UAH");
-        AccountItemList.add(newAccountItem);
-        adapter.notifyItemChanged(adapter.getItemCount());
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Dashboard_Account account = adapter.getAccountAtPosition(position);
+                dashboardViewModel.deleteAccount(account);
+            }
+        });
+        helper.attachToRecyclerView(binding.accountView);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void setRecyclerViewItem(Account_NewtItem receivedItem)  {
-        Account_Item newAccountItem = new Account_Item() ;
-        newAccountItem.setImage(receivedItem.getImage());
-        newAccountItem.setAccountType(receivedItem.getAccountType());
-        newAccountItem.setAccountValue(receivedItem.getAccountValue());
-        newAccountItem.setAccountCurrency(receivedItem.getAccountCurrency());
-        AccountItemList.add(newAccountItem);
-        adapter.notifyItemChanged(adapter.getItemCount());
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if(resultCode != RESULT_CANCELED) {
-            assert data != null;
-            String transactionType = data.getStringExtra("Type");
-            String transactionAccount = data.getStringExtra("Account");
-            String transactionCategory = data.getStringExtra("Category");
-            Double transactionValue = data.getDoubleExtra("Value", 0);
-
-            setResult (transactionType,transactionValue);
-
-
-            Transaction_Item item = new Transaction_Item(getDate(),transactionAccount,"UAH",
-                    String.valueOf(transactionValue),transactionCategory,getTypeImage(transactionType),listTransactions.size()+1);
-            listTransactions.add(0,item);
-            model.setSelected(listTransactions);
-
-
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
-    }
 
     //Utils method
 
     private Drawable getTypeImage(String type){
         Drawable drawable;
         if(type.matches("Income")){
-            drawable = ContextCompat.getDrawable(Objects.requireNonNull(getContext()),R.drawable.ic_arrow_drop_up);
+            drawable = ContextCompat.getDrawable(requireContext(),R.drawable.ic_arrow_drop_up);
         }
         else {
-            drawable = ContextCompat.getDrawable(Objects.requireNonNull(getContext()),R.drawable.ic_arrow_drop_down);
+            drawable = ContextCompat.getDrawable(requireContext(),R.drawable.ic_arrow_drop_down);
         }
         return drawable;
     }
@@ -265,13 +265,17 @@ public class Dashboard_Fragment extends Fragment {
 
 
 
-    // TODO (1) Implement account mechanism :
-    // DONE  (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
-    // DONE (1.2) Count all accounts balance
-    // DONE (1.2.1) Count accounts balance when account removed
-    // TODO  (1.3) Permanent account holder
-    // DONE  (1.4) LiveData to TransactionFragment
-    //DONE  (1.5) Make LiveData observe pernament
+
+    //  TODO (1) Implement account mechanism :
+    //  DONE (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
+    //  DONE (1.2) Count all accounts balance
+    //      DONE (1.2.1) Count accounts balance when account removed
+    //  TODO  (1.3) Permanent account holder with ROOM
+    //      DONE  (1.3.1) Create Room persistance and insert data in it
+    //      DONE  (1.3.2) remove all data and specific item from room and Recyclerview
+    //      TODO  (1.3.3) update  data in the room
+    //  DONE (1.4) LiveData to TransactionFragment
+    //  DONE (1.5) Make LiveData observe pernament
 
 
 

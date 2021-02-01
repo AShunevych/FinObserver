@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 public class Transaction_AddTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
@@ -34,25 +33,28 @@ public class Transaction_AddTransaction extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = TransactionDialogBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        ArrayList<String> arrayList = getIntent().getStringArrayListExtra("AccountTypes");
-
-        createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
-        createChips(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
-        binding.IncomeChipGroup.setVisibility(View.GONE);
-        binding.SpendingChipGroup.setVisibility(View.GONE);
-        View view = binding.getRoot();
-        setContentView(view);
+        setChipVisibilityAtStart();
+        createChips();
         setChipsGroupListener();
+
         binding.resumeDialog.setOnClickListener(v -> onOkResult());
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
-        if(arrayList != null){
-            setSpinner(arrayList);
-        }
-        else{
-            Toast.makeText(this,"Accounts not found",Toast.LENGTH_SHORT).show();
-        }
+        setSpinner(getIntent().getStringArrayListExtra("AccountTypes"));
+
     }
+
+    private void setChipVisibilityAtStart(){
+        binding.IncomeChipGroup.setVisibility(View.GONE);
+        binding.SpendingChipGroup.setVisibility(View.GONE);
+    }
+
+    private void createChips(){
+        createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
+        createChips(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
+    }
+
 
 
      // (TODO) adapter should fill from DashBoarddFragmentValues.
@@ -72,11 +74,11 @@ public class Transaction_AddTransaction extends AppCompatActivity {
             previousScreen.putExtra("Value",valueChip);
             previousScreen.putExtra("Category",categoryChip);
             previousScreen.putExtra("Account",transactionAccount);
-            setResult(1000,previousScreen);
+            setResult(RESULT_OK,previousScreen);
             finish();
         }
         else{
-            Toast.makeText(this,"Some fields are empty please.Please check!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Some fields are empty.Please check!",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -109,13 +111,11 @@ public class Transaction_AddTransaction extends AppCompatActivity {
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
                            if(returnActiveChipId(group) == R.id.incomeChip){
-                               binding.incomeChip.setCheckedIcon(ContextCompat.getDrawable(this,R.drawable.ic_arrow_drop_up));
                                binding.SpendingChipGroup.setVisibility(View.GONE);
                                binding.IncomeChipGroup.setVisibility(View.VISIBLE);
                                setChipGroupUncheck(binding.SpendingChipGroup);
                            }
                            else{
-                               binding.spendingChip.setCheckedIcon(ContextCompat.getDrawable(this,R.drawable.ic_arrow_drop_up));
                                binding.SpendingChipGroup.setVisibility(View.VISIBLE);
                                binding.IncomeChipGroup.setVisibility(View.GONE);
                                setChipGroupUncheck(binding.IncomeChipGroup);

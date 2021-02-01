@@ -34,6 +34,7 @@
         android:layout_marginBottom="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/transactionCategory"
         app:layout_constraintTop_toBottomOf="@+id/transactionValue"
