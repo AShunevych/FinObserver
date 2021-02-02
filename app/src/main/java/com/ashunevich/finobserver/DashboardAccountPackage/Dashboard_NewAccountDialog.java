@@ -6,10 +6,13 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -40,6 +43,8 @@ public class Dashboard_NewAccountDialog extends DialogFragment {
         assert inflater != null;
         binding = DashboardNewAccountDialogBinding.inflate(inflater, container, false);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        setTextWatcher();
+        binding.okButton.setEnabled(false);
         binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));
         binding.okButton.setOnClickListener(view -> onDismiss(Objects.requireNonNull(getDialog())));
         fillSpinner();
@@ -47,8 +52,39 @@ public class Dashboard_NewAccountDialog extends DialogFragment {
         return binding.getRoot();
     }
 
+    private void setTextWatcher(){
+        binding.newAccountName.addTextChangedListener(watcher);
+        binding.newAccountValue.addTextChangedListener(watcher);
+    }
 
-    public void postValue() {
+       TextWatcher watcher = new TextWatcher() {
+           @Override
+           public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+           }
+
+           @Override
+           public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+           }
+
+           @Override
+           public void afterTextChanged(Editable editable) {
+               enableSubmitIfReady(binding.newAccountName,binding.newAccountValue);
+           }
+       };
+
+
+    private void enableSubmitIfReady(EditText text1, EditText text2) {
+        binding.okButton.setEnabled(getText(text1).length() > 0 && getText(text2).length() > 0);
+    }
+
+    private String getText(EditText text) {
+        return text.getText().toString().trim();
+    }
+
+
+    private void postValue() {
         if(!TextUtils.isEmpty(binding.newAccountName.getText().toString())  && !TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
             Bundle result = new Bundle();
             result.putString("nameResult",binding.newAccountName.getText().toString());
@@ -57,22 +93,7 @@ public class Dashboard_NewAccountDialog extends DialogFragment {
             result.putInt("idResult",DrawablePostion());
             getParentFragmentManager().setFragmentResult("fragmentKey",result);
         }
-        else{
-            if(TextUtils.isEmpty(binding.newAccountName.getText().toString())){
-                buildToast("Mame is ");
-            }
-            else if(TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
-                buildToast("Value is ");
-            }
-            else if(TextUtils.isEmpty(binding.newAccountName.getText().toString()) && TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
-                buildToast("Name and value are ");
-            }
-        }
-    }
 
-
-    private void buildToast(String value){
-        Toast.makeText(getContext(), value + " empty",Toast.LENGTH_SHORT).show();
     }
 
 
@@ -91,8 +112,8 @@ public class Dashboard_NewAccountDialog extends DialogFragment {
     }
 
     public void onDismiss(@NonNull DialogInterface dialog) {
-       postValue();
-        super.onDismiss(dialog);
+            postValue();
+            super.onDismiss(dialog);
     }
 
     public void onCancel(@NonNull DialogInterface dialog) {
