@@ -1,6 +1,5 @@
 package com.ashunevich.finobserver.DashboardAccountPackage;
 
-import java.security.Policy;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -11,7 +10,6 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import static android.icu.text.MessagePattern.ArgType.SELECT;
 
 @Dao
 public interface Dashboard_DAO {

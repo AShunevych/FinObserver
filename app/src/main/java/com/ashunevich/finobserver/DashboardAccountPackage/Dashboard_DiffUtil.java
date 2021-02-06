@@ -5,7 +5,7 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-public class Dashboard_DiffUtil extends DiffUtil.Callback {
+class Dashboard_DiffUtil extends DiffUtil.Callback {
 
     List<Dashboard_Account> oldList;
 

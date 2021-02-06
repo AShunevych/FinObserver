@@ -7,7 +7,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-public class Dashboard_Repository {
+class Dashboard_Repository {
     private Dashboard_DAO mDashboardDao;
     private LiveData<List<Dashboard_Account>> mAllAccounts;
 

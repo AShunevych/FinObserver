@@ -24,13 +24,13 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboard_RecyclevrViewAdapter.MyViewHolder>  {
+public class Dashboard_RecyclerViewAdapter extends RecyclerView.Adapter<Dashboard_RecyclerViewAdapter.MyViewHolder>  {
     private List<Dashboard_Account> pad_list;
     Context context;
     FragmentManager manager;
 
 
-    public Dashboard_RecyclevrViewAdapter(List<Dashboard_Account> data, FragmentManager manager){
+    public Dashboard_RecyclerViewAdapter(List<Dashboard_Account> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;
     }
@@ -55,7 +55,7 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
 
                 //TEST
             holder.binding.redactButon.setOnClickListener(view -> {
-                DialogFragment UpdateAccountDialogFragment = new Dashboard_UpdateAccountDialog();
+                DialogFragment UpdateAccountDialogFragment = new Dashboard_DialogUpdateAccount();
                 setBundleArgs(UpdateAccountDialogFragment,position);
                 UpdateAccountDialogFragment.show(manager,"UpdateDialog");
             });
@@ -118,7 +118,7 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
             this.binding = binding;
         }
     }
-//TODO  (1.6) Update item when accountValue change
+//
     
     protected String summAllItemsValue(RecyclerView viewRec){
         double totalPrice = 0;

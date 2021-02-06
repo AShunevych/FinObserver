@@ -7,7 +7,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 @Database(entities = {Dashboard_Account.class},version = 2,exportSchema = false)
-public abstract class Dashboard_Database extends RoomDatabase {
+abstract class Dashboard_Database extends RoomDatabase {
         public abstract Dashboard_DAO dashboard_dao();
 
         private static Dashboard_Database INSTANCE;

@@ -29,6 +29,8 @@ public class Transaction_AddTransaction extends AppCompatActivity {
     Double valueChip = 0.0;
     String transactionAccount;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

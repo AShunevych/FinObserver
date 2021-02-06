@@ -48,7 +48,7 @@ public class Dashboard_Fragment extends Fragment  {
     ArrayList<Transaction_Item> listTransactions = new ArrayList<>();
     private Dashboard_ViewModel dashboardViewModel;
 
-    Dashboard_RecyclevrViewAdapter adapter;
+    Dashboard_RecyclerViewAdapter adapter;
      Double incomeValue;
      Double expValue;
      Double balanceValue;
@@ -107,7 +107,7 @@ public class Dashboard_Fragment extends Fragment  {
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new Dashboard_NewAccountDialog();
+            newAccountDialogFragment = new Dashboard_DialogCreateAccount();
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "newAccountDialogFragment");
         });
 
@@ -154,7 +154,7 @@ public class Dashboard_Fragment extends Fragment  {
 
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new Dashboard_RecyclevrViewAdapter(AccountItemList,getParentFragmentManager());
+        adapter = new Dashboard_RecyclerViewAdapter(AccountItemList,getParentFragmentManager());
         dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
 
@@ -254,12 +254,13 @@ public class Dashboard_Fragment extends Fragment  {
     //  DONE (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
     //  DONE (1.2) Count all accounts balance
     //      DONE (1.2.1) Count accounts balance when account removed
-    //  TODO  (1.3) Permanent account holder with ROOM
+    //  DONE  (1.3) Permanent account holder with ROOM
     //      DONE  (1.3.1) Create Room persistance and insert data in it
     //      DONE  (1.3.2) remove all data and specific item from room and Recyclerview
-    //      TODO  (1.3.3) update  data in the room
+    //      DONE  (1.3.3) update  data in the room
     //  DONE (1.4) LiveData to TransactionFragment
     //  DONE (1.5) Make LiveData observe pernament
+    //  TODO  (1.6) Update item when accountValue change
 
 
 

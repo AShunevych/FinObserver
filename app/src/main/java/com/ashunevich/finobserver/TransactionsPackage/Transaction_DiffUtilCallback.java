@@ -1,6 +1,5 @@
 package com.ashunevich.finobserver.TransactionsPackage;
 
-import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
 
 import java.util.ArrayList;
 

@@ -14,11 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.UtilsPackage.CustomSpinnerAdapter;
 import com.ashunevich.finobserver.databinding.DashboardNewAccountDialogBinding;
 
 import java.util.ArrayList;
+
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -26,13 +28,11 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-public class Dashboard_UpdateAccountDialog extends DialogFragment {
+public class Dashboard_DialogCreateAccount extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
     ArrayList<Drawable> images;
-    int id;
-    String currency;
 
-    //receive bundle
+
 
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
@@ -46,7 +46,6 @@ public class Dashboard_UpdateAccountDialog extends DialogFragment {
         binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));
         binding.okButton.setOnClickListener(view -> onDismiss(Objects.requireNonNull(getDialog())));
         fillSpinner();
-        setTextFromBundle();
         Objects.requireNonNull(getDialog()).setCanceledOnTouchOutside(true);
         return binding.getRoot();
     }
@@ -54,15 +53,6 @@ public class Dashboard_UpdateAccountDialog extends DialogFragment {
     private void setTextWatcher(){
         binding.newAccountName.addTextChangedListener(watcher);
         binding.newAccountValue.addTextChangedListener(watcher);
-    }
-
-    private void setTextFromBundle(){
-        assert getArguments() != null;
-        binding.newAccountName.setText(getArguments().getString("accountName"));
-        binding.newAccountValue.setText(String.valueOf(getArguments().getDouble("accountValue")));
-       binding.drawableSpinner.setSelection(getArguments().getInt("imageID"));
-       id = getArguments().getInt("accountID");
-       currency = getArguments().getString("accountCurrency");
     }
 
        TextWatcher watcher = new TextWatcher() {
@@ -95,12 +85,11 @@ public class Dashboard_UpdateAccountDialog extends DialogFragment {
     private void postValue() {
         if(!TextUtils.isEmpty(binding.newAccountName.getText().toString())  && !TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
             Bundle result = new Bundle();
-            result.putInt("id",id);
-            result.putString("updatedName",binding.newAccountName.getText().toString());
-            result.putDouble("updatedValue",Double.parseDouble(binding.newAccountValue.getText().toString()));
-            result.putString("updatedCurrency",currency);
-            result.putInt("updatedDrawable",DrawablePostion());
-            getParentFragmentManager().setFragmentResult("updateKey",result);
+            result.putString("nameResult",binding.newAccountName.getText().toString());
+            result.putDouble("doubleResult",Double.parseDouble(binding.newAccountValue.getText().toString()));
+            result.putString("currencyResult","UAH");
+            result.putInt("idResult",DrawablePostion());
+            getParentFragmentManager().setFragmentResult("fragmentKey",result);
         }
 
     }
