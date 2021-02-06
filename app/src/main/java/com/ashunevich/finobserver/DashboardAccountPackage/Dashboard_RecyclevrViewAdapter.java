@@ -1,10 +1,15 @@
 package com.ashunevich.finobserver.DashboardAccountPackage;
 
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+
 import android.view.ViewGroup;
+
 import android.widget.TextView;
+
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
@@ -13,6 +18,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,8 +27,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboard_RecyclevrViewAdapter.MyViewHolder>  {
     private List<Dashboard_Account> pad_list;
     Context context;
+    FragmentManager manager;
 
-    public Dashboard_RecyclevrViewAdapter(List<Dashboard_Account> data ){
+
+    public Dashboard_RecyclevrViewAdapter(List<Dashboard_Account> data, FragmentManager manager){
+            this.manager = manager;
         this.pad_list = data;
     }
     //This method inflates view present in the RecyclerView
@@ -35,19 +45,34 @@ public class Dashboard_RecyclevrViewAdapter extends RecyclerView.Adapter<Dashboa
 
     //Binding the data using get() method of POJO object
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         if(pad_list!=null){
             final Dashboard_Account account  = pad_list.get(position);
             holder.binding.accountIco.setImageDrawable(returnDrawableByID(account.getImageID()));
             holder.binding.accountType.setText(account.getAccountName());
             holder.binding.accountValue.setText(String.valueOf(account.getAccountValue()));
             holder.binding.accountCurrency.setText(account.getAccountCurrency());
-        }
 
+                //TEST
+            holder.binding.redactButon.setOnClickListener(view -> {
+                DialogFragment UpdateAccountDialogFragment = new Dashboard_UpdateAccountDialog();
+                setBundleArgs(UpdateAccountDialogFragment,position);
+                UpdateAccountDialogFragment.show(manager,"UpdateDialog");
+            });
+        }
 
     }
 
-
+   private void setBundleArgs (DialogFragment fragment, int position){
+        Bundle bundle = new Bundle();
+        Dashboard_Account account = getAccountAtPosition(position);
+       bundle.putInt("accountID",account.getAccountID());
+       bundle.putString("accountName",account.getAccountName());
+       bundle.putDouble("accountValue",account.getAccountValue());
+       bundle.putString("accountCurrency",account.getAccountCurrency());
+       bundle.putInt("imageID",account.getImageID());
+       fragment.setArguments(bundle);
+   }
 
 
 

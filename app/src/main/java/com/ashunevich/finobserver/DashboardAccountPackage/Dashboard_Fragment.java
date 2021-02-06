@@ -138,14 +138,24 @@ public class Dashboard_Fragment extends Fragment  {
                dashboardViewModel.insert(new Dashboard_Account(name,value,currency,imageID));
         });
 
+        getParentFragmentManager().setFragmentResultListener("updateKey", getViewLifecycleOwner(), (requestKey, result) -> {
+            int id = result.getInt("id");
+            String name = result.getString("updatedName");
+            double value = result.getDouble("updatedValue");
+            String currency = result.getString("updatedCurrency");
+            int imageID = result.getInt("updatedDrawable");
+
+            dashboardViewModel.updateAccount(new Dashboard_Account(id,name,value,currency,imageID));
+        });
+
         super.onViewCreated(view, savedInstanceState);
     }
 
 
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new Dashboard_RecyclevrViewAdapter(AccountItemList);
-        dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.setListContent(accounts));
+        adapter = new Dashboard_RecyclevrViewAdapter(AccountItemList,getParentFragmentManager());
+        dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
 
         setupItemTouchHelper();
