@@ -7,19 +7,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 
-import com.ashunevich.finobserver.R;
+
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_AddTransaction;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_ViewModel;
 
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
+
 
 
 import java.util.ArrayList;
@@ -38,7 +40,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 public class Dashboard_Fragment extends Fragment  {
 
@@ -71,12 +72,17 @@ public class Dashboard_Fragment extends Fragment  {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         assert data != null;
-                        String transactionType = data.getStringExtra("Type");
+                        int idAccount = data.getIntExtra("ID",0);
                         String transactionAccount = data.getStringExtra("Account");
-                        String transactionCategory = data.getStringExtra("Category");
-                        Double transactionValue = data.getDoubleExtra("Value", 0);
+                        double accountBasicValue = data.getDoubleExtra("BasicValue",0);
+                        int imagePos = data.getIntExtra("ImagePos",0);
 
-                        setResult (transactionType,transactionValue);
+                        String transactionType = data.getStringExtra("Type");
+                        String transactionCategory = data.getStringExtra("Category");
+                        double transactionValue = data.getDoubleExtra("Value", 0);
+
+                        setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
+
 
                         Transaction_Item item = new Transaction_Item(Dashboard_FragmentUtils.getDate(),transactionAccount,"UAH",
                                 String.valueOf(transactionValue),transactionCategory,
@@ -88,10 +94,6 @@ public class Dashboard_Fragment extends Fragment  {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +131,8 @@ public class Dashboard_Fragment extends Fragment  {
         model = new ViewModelProvider(requireActivity()).get(Transaction_ViewModel.class);
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(Dashboard_ViewModel.class);
         setRecyclerView();
+
+
         getParentFragmentManager().setFragmentResultListener("fragmentKey", getViewLifecycleOwner(), (requestKey, result) -> {
                String name = result.getString("nameResult");
                double value = result.getDouble("doubleResult");
@@ -144,8 +148,7 @@ public class Dashboard_Fragment extends Fragment  {
             double value = result.getDouble("updatedValue");
             String currency = result.getString("updatedCurrency");
             int imageID = result.getInt("updatedDrawable");
-
-            dashboardViewModel.updateAccount(new Dashboard_Account(id,name,value,currency,imageID));
+            updateResult(id,name,value,currency,imageID);
         });
 
         super.onViewCreated(view, savedInstanceState);
@@ -164,18 +167,27 @@ public class Dashboard_Fragment extends Fragment  {
 
     private void newTransaction(){
         Intent intent = new Intent(getContext(), Transaction_AddTransaction.class);
-        ArrayList<String> arrayList = new ArrayList<>();
 
+        //int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos
+        ArrayList<String> idLists = new ArrayList<>();
+        ArrayList<String> namesLists = new ArrayList<>();
+        ArrayList<String> valuesLists = new ArrayList<>();
+        ArrayList<String> imagePos = new ArrayList<>();
            for (int i=0;i <binding.accountView.getChildCount();i++) {
-               RecyclerView.ViewHolder holder = binding.accountView.getChildViewHolder(binding.accountView.getChildAt(i));
-               TextView view = holder.itemView.findViewById(R.id.accountType);
-               arrayList.add(view.getText().toString());
+               Dashboard_Account account = adapter.getAccountAtPosition(i);
+               namesLists.add(account.getAccountName());
+               idLists.add(String.valueOf(account.getAccountID()));
+               valuesLists.add(String.valueOf(account.getAccountValue()));
+               imagePos.add(String.valueOf(account.getImageID()));
            }
-        if (arrayList.size() != 0) {
-            intent.putStringArrayListExtra("AccountTypes", arrayList);
+        if (namesLists.size() !=0 && idLists.size() !=0 && valuesLists.size() != 0) {
+            intent.putStringArrayListExtra("AccountNames", namesLists);
+            intent.putStringArrayListExtra("AccountIDs", idLists);
+            intent.putStringArrayListExtra("AccountValues", valuesLists);
+            intent.putStringArrayListExtra("AccountImages", imagePos);
             ResultLauncher.launch(intent);
         } else {
-            Toast.makeText(requireContext(),"There is no active account.Unable to make transaction",Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(),"There is no active accounts.Please create",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,15 +231,24 @@ public class Dashboard_Fragment extends Fragment  {
 
     //Utils method
 
-    private void setResult(String type,Double result){
+    private void updateResult(int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos){
+        dashboardViewModel.updateAccount(new Dashboard_Account(updatedID,updatedName,updatedValue,updatedCurrency,updatedImagePos));
+    }
+
+
+    private void setResult(String type,double result, int id, String name, double basicValue, int imagePos){
         incomeValue = Dashboard_FragmentUtils.stringToDouble(binding.incomeView);
         expValue = Dashboard_FragmentUtils.stringToDouble(binding.expendView);
         balanceValue = Dashboard_FragmentUtils.stringToDouble(binding.balanceView);
+        double positiveValue = basicValue+result;
+        double negativeValue = basicValue-result;
 
         if (type.matches("Income")) {
+            updateResult(id,name,positiveValue,"UAH",imagePos);
             binding.incomeView.setText(String.valueOf(result + incomeValue));
             binding.balanceView.setText(String.valueOf(balanceValue + result));
         } else {
+            updateResult(id,name,negativeValue,"UAH",imagePos);
             binding.expendView.setText(String.valueOf(result + expValue));
             binding.balanceView.setText(String.valueOf(balanceValue - result));
         }
@@ -260,7 +281,8 @@ public class Dashboard_Fragment extends Fragment  {
     //      DONE  (1.3.3) update  data in the room
     //  DONE (1.4) LiveData to TransactionFragment
     //  DONE (1.5) Make LiveData observe pernament
-    //  TODO  (1.6) Update item when accountValue change
+    //  DONE  (1.6) Update item when accountValue change
+    //  TODO (1.7) Save in SharedPreferences all TextView;
 
 
 

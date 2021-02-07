@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Transaction_AddTransaction extends AppCompatActivity {
@@ -28,6 +30,10 @@ public class Transaction_AddTransaction extends AppCompatActivity {
     String categoryChip = null;
     Double valueChip = 0.0;
     String transactionAccount;
+    int id;
+    int imagePos;
+    double basicValue;
+
 
 
 
@@ -43,7 +49,10 @@ public class Transaction_AddTransaction extends AppCompatActivity {
 
         binding.resumeDialog.setOnClickListener(v -> onOkResult());
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
-        setSpinner(getIntent().getStringArrayListExtra("AccountTypes"));
+        setSpinner(getIntent().getStringArrayListExtra("AccountNames"));
+        setAdditionalInfo(getIntent().getStringArrayListExtra("AccountIDs"),
+                getIntent().getStringArrayListExtra("AccountValues"),
+                getIntent().getStringArrayListExtra("AccountImages"));
 
     }
 
@@ -52,11 +61,34 @@ public class Transaction_AddTransaction extends AppCompatActivity {
         binding.SpendingChipGroup.setVisibility(View.GONE);
     }
 
+    private void setAdditionalInfo(ArrayList<String> idArray,
+                                   ArrayList<String> valueArray,
+                                   ArrayList<String> imagesArray){
+        binding.ActiveAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                id = Integer.parseInt(idArray.get(SpinnerPosition()));
+                basicValue = Double.parseDouble(valueArray.get(SpinnerPosition()));
+                imagePos = Integer.parseInt(imagesArray.get(SpinnerPosition()));
+                Log.d("id",idArray.get(SpinnerPosition()));
+                Log.d("basicValue",valueArray.get(SpinnerPosition()));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private int SpinnerPosition(){
+        return binding.ActiveAccounts.getSelectedItemPosition();
+    }
+
     private void createChips(){
         createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
         createChips(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
     }
-
 
 
      // (TODO) adapter should fill from DashBoarddFragmentValues.
@@ -72,10 +104,17 @@ public class Transaction_AddTransaction extends AppCompatActivity {
        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
         Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
         if(typeChip != null && valueChip !=null && transactionAccount != null && categoryChip != null){
+            ////int updatedID, String updatedName, double updatedValue, int updatedImagePos
+            //for update
+            previousScreen.putExtra("ID",id); //updatedID
+            previousScreen.putExtra("Account",transactionAccount);//updatedName
+            previousScreen.putExtra("BasicValue",basicValue);//updatedValue
+            previousScreen.putExtra("ImagePos",imagePos);//updatedImagePos
+
+
+            previousScreen.putExtra("Category",categoryChip);
             previousScreen.putExtra("Type",typeChip);
             previousScreen.putExtra("Value",valueChip);
-            previousScreen.putExtra("Category",categoryChip);
-            previousScreen.putExtra("Account",transactionAccount);
             setResult(RESULT_OK,previousScreen);
             finish();
         }

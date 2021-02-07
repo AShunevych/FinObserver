@@ -84,11 +84,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="56dp"
-        android:text="Value"
+        android:layout_marginTop="32dp"
+        android:text="Transaction value"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ActiveAccounts" />
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/SpendingChipGroup"
