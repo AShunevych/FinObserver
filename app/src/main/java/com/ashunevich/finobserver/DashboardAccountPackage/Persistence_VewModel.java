@@ -11,12 +11,12 @@ import androidx.lifecycle.LiveData;
 
 
 
-public class Dashboard_ViewModel extends AndroidViewModel {
+public class Persistence_VewModel extends AndroidViewModel {
     private Dashboard_Repository mRepo;
     private LiveData<List<Dashboard_Account>> mAllAccounts;
 
 
-    public Dashboard_ViewModel(@NonNull Application application) {
+    public Persistence_VewModel(@NonNull Application application) {
         super(application);
         mRepo = new Dashboard_Repository(application);
         mAllAccounts = mRepo.getAllAcounts();

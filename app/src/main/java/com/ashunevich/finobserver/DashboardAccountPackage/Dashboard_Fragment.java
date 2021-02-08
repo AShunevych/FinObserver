@@ -1,6 +1,7 @@
 package com.ashunevich.finobserver.DashboardAccountPackage;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -21,7 +23,6 @@ import com.ashunevich.finobserver.TransactionsPackage.Transaction_AddTransaction
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_ViewModel;
 
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
-
 
 
 import java.util.ArrayList;
@@ -41,23 +42,22 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
+
 public class Dashboard_Fragment extends Fragment  {
 
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
   private final List<Dashboard_Account> AccountItemList = new ArrayList<>();
     ArrayList<Transaction_Item> listTransactions = new ArrayList<>();
-    private Dashboard_ViewModel dashboardViewModel;
+    private Persistence_VewModel dashboardViewModel;
 
-    Dashboard_RecyclerViewAdapter adapter;
-     Double incomeValue;
-     Double expValue;
-     Double balanceValue;
+    RecyclerView_Adapter adapter;
+     Double incomeValue,expValue,balanceValue;
     Handler handler = new Handler();
     Transaction_ViewModel model;
     ActivityResultLauncher<Intent> ResultLauncher;
-
-
+    private Dashboard_SharedPrefManager prefManager;
 
     public Dashboard_Fragment() {
         // Required empty public constructor
@@ -106,30 +106,36 @@ public class Dashboard_Fragment extends Fragment  {
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new Dashboard_DialogCreateAccount();
+            newAccountDialogFragment = new Dialog_CreateAccount();
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "newAccountDialogFragment");
         });
 
+        prefManager = new Dashboard_SharedPrefManager(requireActivity(), Dashboard_FragmentUtils.PREFERENCE_NAME);
         binding.buttonDelete.setOnClickListener(view -> dashboardViewModel.deleteAll());
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
-            binding.incomeView.setText(String.valueOf(0.0));
-            binding.expendView.setText(String.valueOf(0.0));
-            binding.balanceView.setText(String.valueOf(0.0));
 
+        binding.balanceView.setText(prefManager.getValue(Dashboard_FragmentUtils.BALANCE,"0.0"));
+        binding.incomeView.setText(prefManager.getValue(Dashboard_FragmentUtils.INCOME,"0.0"));
+        binding.expendView.setText(prefManager.getValue(Dashboard_FragmentUtils.EXPENDITURES,"0.0"));
 
         handler.post(updateLog);
 
         return binding.getRoot();
     }
 
+
+
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         model = new ViewModelProvider(requireActivity()).get(Transaction_ViewModel.class);
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(Dashboard_ViewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(Persistence_VewModel.class);
         setRecyclerView();
 
 
@@ -157,7 +163,7 @@ public class Dashboard_Fragment extends Fragment  {
 
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new Dashboard_RecyclerViewAdapter(AccountItemList,getParentFragmentManager());
+        adapter = new RecyclerView_Adapter(AccountItemList,getParentFragmentManager());
         dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
 
@@ -191,15 +197,26 @@ public class Dashboard_Fragment extends Fragment  {
         }
     }
 
-
+    @SuppressLint("ApplySharedPref")
     @Override
     public void onStop() {
+
+        prefManager.setValue(Dashboard_FragmentUtils.BALANCE,returnString(binding.balanceView));
+        prefManager.setValue(Dashboard_FragmentUtils.INCOME,returnString(binding.incomeView));
+        prefManager.setValue(Dashboard_FragmentUtils.EXPENDITURES,returnString(binding.expendView));
         super.onStop();
+
     }
+
+    private String returnString(TextView textView){
+        return textView.getText().toString();
+    }
+
 
     @Override
     public void onDetach() {
         handler.removeCallbacksAndMessages(null);
+
         super.onDetach();
     }
 
@@ -260,7 +277,7 @@ public class Dashboard_Fragment extends Fragment  {
         public void run() {
             try {
                 binding.balanceValue.setText(adapter.summAllItemsValue(binding.accountView));
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 2000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -271,7 +288,7 @@ public class Dashboard_Fragment extends Fragment  {
 
 
 
-    //  TODO (1) Implement account mechanism :
+    //  DONE (1) Implement account mechanism :
     //  DONE (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
     //  DONE (1.2) Count all accounts balance
     //      DONE (1.2.1) Count accounts balance when account removed
@@ -282,7 +299,7 @@ public class Dashboard_Fragment extends Fragment  {
     //  DONE (1.4) LiveData to TransactionFragment
     //  DONE (1.5) Make LiveData observe pernament
     //  DONE  (1.6) Update item when accountValue change
-    //  TODO (1.7) Save in SharedPreferences all TextView;
+    //  DONE (1.7) Save in SharedPreferences all TextView;
 
 
 

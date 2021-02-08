@@ -28,7 +28,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-public class Dashboard_DialogCreateAccount extends DialogFragment {
+public class Dialog_CreateAccount extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
     ArrayList<Drawable> images;
 

@@ -12,7 +12,7 @@ import androidx.room.Update;
 
 
 @Dao
-public interface Dashboard_DAO {
+public interface Persistence_DAO {
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(Dashboard_Account... dashboard_accounts);

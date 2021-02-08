@@ -15,6 +15,10 @@ import androidx.core.content.ContextCompat;
 
 abstract class Dashboard_FragmentUtils extends Dashboard_Fragment{
 
+    public static String PREFERENCE_NAME ="APP_PREF";
+    public static String BALANCE="BALANCE";
+    public static String INCOME="INCOME";
+    public static String EXPENDITURES="EXPENDITURES";
 
     protected static Drawable getTypeImage(String type, Context context){
         Drawable drawable;

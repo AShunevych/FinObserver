@@ -7,17 +7,17 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 @Database(entities = {Dashboard_Account.class},version = 2,exportSchema = false)
-abstract class Dashboard_Database extends RoomDatabase {
-        public abstract Dashboard_DAO dashboard_dao();
+abstract class Persistence_Database extends RoomDatabase {
+        public abstract Persistence_DAO dashboard_dao();
 
-        private static Dashboard_Database INSTANCE;
+        private static Persistence_Database INSTANCE;
 
-        public static Dashboard_Database getDatabase(final Context context) {
+        public static Persistence_Database getDatabase(final Context context) {
                 if (INSTANCE == null) {
-                        synchronized (Dashboard_Database.class) {
+                        synchronized (Persistence_Database.class) {
                                 if (INSTANCE == null) {
                                         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                                Dashboard_Database.class, "account_database")
+                                                Persistence_Database.class, "account_database")
                                                 .fallbackToDestructiveMigration()
                                                 .build();
                                 }

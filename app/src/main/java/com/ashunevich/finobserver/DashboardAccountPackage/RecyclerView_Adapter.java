@@ -24,13 +24,13 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class Dashboard_RecyclerViewAdapter extends RecyclerView.Adapter<Dashboard_RecyclerViewAdapter.MyViewHolder>  {
+public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyViewHolder>  {
     private List<Dashboard_Account> pad_list;
     Context context;
     FragmentManager manager;
 
 
-    public Dashboard_RecyclerViewAdapter(List<Dashboard_Account> data, FragmentManager manager){
+    public RecyclerView_Adapter(List<Dashboard_Account> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;
     }
@@ -55,7 +55,7 @@ public class Dashboard_RecyclerViewAdapter extends RecyclerView.Adapter<Dashboar
 
                 //TEST
             holder.binding.redactButon.setOnClickListener(view -> {
-                DialogFragment UpdateAccountDialogFragment = new Dashboard_DialogUpdateAccount();
+                DialogFragment UpdateAccountDialogFragment = new Dialog_UpdateAccount();
                 setBundleArgs(UpdateAccountDialogFragment,position);
                 UpdateAccountDialogFragment.show(manager,"UpdateDialog");
             });
@@ -85,7 +85,7 @@ public class Dashboard_RecyclerViewAdapter extends RecyclerView.Adapter<Dashboar
     }
 
     protected void updateList(List<Dashboard_Account> accounts){
-        final Dashboard_DiffUtil diffCallback = new Dashboard_DiffUtil(this.pad_list, accounts);
+        final RecyclerView_DiffUtil diffCallback = new RecyclerView_DiffUtil(this.pad_list, accounts);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();

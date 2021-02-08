@@ -5,11 +5,11 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-class Dashboard_DiffUtil extends DiffUtil.Callback {
+class RecyclerView_DiffUtil extends DiffUtil.Callback {
 
     List<Dashboard_Account> oldList;
 
-    public Dashboard_DiffUtil(List<Dashboard_Account> oldList, List<Dashboard_Account>newList) {
+    public RecyclerView_DiffUtil(List<Dashboard_Account> oldList, List<Dashboard_Account>newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
