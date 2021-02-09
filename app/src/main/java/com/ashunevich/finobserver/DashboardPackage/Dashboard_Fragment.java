@@ -113,13 +113,13 @@ public class Dashboard_Fragment extends Fragment  {
         });
 
         prefManager = new Dashboard_SharedPrefManager(requireActivity(), Dashboard_FragmentUtils.PREFERENCE_NAME);
-        binding.buttonDelete.setOnClickListener(view -> dashboardViewModel.deleteAll());
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
 
         binding.balanceView.setText(prefManager.getValue(Dashboard_FragmentUtils.BALANCE,"0.0"));
         binding.incomeView.setText(prefManager.getValue(Dashboard_FragmentUtils.INCOME,"0.0"));
         binding.expendView.setText(prefManager.getValue(Dashboard_FragmentUtils.EXPENDITURES,"0.0"));
+
 
         handler.post(updateLog);
 
@@ -198,7 +198,6 @@ public class Dashboard_Fragment extends Fragment  {
     @SuppressLint("ApplySharedPref")
     @Override
     public void onStop() {
-
         prefManager.setValue(Dashboard_FragmentUtils.BALANCE,returnString(binding.balanceView));
         prefManager.setValue(Dashboard_FragmentUtils.INCOME,returnString(binding.incomeView));
         prefManager.setValue(Dashboard_FragmentUtils.EXPENDITURES,returnString(binding.expendView));
@@ -274,7 +273,7 @@ public class Dashboard_Fragment extends Fragment  {
     private final Runnable updateLog = new Runnable() {
         public void run() {
             try {
-                binding.balanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+                binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
                 handler.postDelayed(this, 2000);
             } catch (Exception e) {
                 e.printStackTrace();

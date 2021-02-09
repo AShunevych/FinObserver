@@ -11,11 +11,11 @@ import java.util.Locale;
 
 abstract class Dashboard_FragmentUtils extends Dashboard_Fragment{
 
-    public static String PREFERENCE_NAME ="APP_PREF";
-    public static String BALANCE="BALANCE";
-    public static String INCOME="INCOME";
-    public static String EXPENDITURES="EXPENDITURES";
-
+    protected static String PREFERENCE_NAME ="APP_PREF";
+    protected static String BALANCE="BALANCE";
+    protected static String INCOME="INCOME";
+    protected static String EXPENDITURES="EXPENDITURES";
+    protected static String TOTAL_BALANCE = "BALANCE";
 
 
    protected static int getImageInt(String type){

@@ -21,11 +21,12 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Month balance"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="@+id/accountView"
-        app:layout_constraintTop_toBottomOf="@+id/buttonDelete" />
+        android:layout_marginBottom="8dp"
+        android:text="Balance"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        app:layout_constraintBottom_toTopOf="@+id/textView18"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toEndOf="@+id/divider" />
 
     <TextView
         android:id="@+id/textView12"
@@ -41,41 +42,40 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:text="Income"
+        app:layout_constraintBottom_toTopOf="@+id/divider4"
         app:layout_constraintEnd_toEndOf="@+id/incomeView"
-        app:layout_constraintStart_toStartOf="@+id/incomeView"
-        app:layout_constraintTop_toBottomOf="@+id/incomeView"
-        tools:text="Income" />
+        app:layout_constraintStart_toStartOf="@+id/incomeView" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Expenditures"
         app:layout_constraintEnd_toEndOf="@+id/expendView"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="@+id/expendView"
-        app:layout_constraintTop_toBottomOf="@+id/incomeView" />
+        app:layout_constraintTop_toBottomOf="@+id/expendView" />
 
     <TextView
         android:id="@+id/incomeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
         app:layout_constraintEnd_toStartOf="@+id/divider"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintStart_toStartOf="@+id/view" />
 
     <TextView
         android:id="@+id/balanceView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toStartOf="@+id/textView18"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView8"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/incomeView" />
 
     <TextView
         android:id="@+id/expendView"
@@ -83,9 +83,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintStart_toEndOf="@+id/divider"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/divider4" />
 
     <TextView
         android:id="@+id/textView10"
@@ -107,16 +108,17 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/expendView"
-        app:layout_constraintTop_toTopOf="@+id/textView10" />
+        app:layout_constraintTop_toTopOf="@+id/expendView" />
 
     <TextView
         android:id="@+id/textView18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="UAH"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toEndOf="@+id/balanceView"
         app:layout_constraintTop_toTopOf="@+id/balanceView" />
 
     <TextView
@@ -127,18 +129,20 @@
         android:text="UAH"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/balanceValue"
-        app:layout_constraintTop_toTopOf="@+id/balanceValue" />
+        app:layout_constraintStart_toEndOf="@+id/totalBalanceValue"
+        app:layout_constraintTop_toTopOf="@+id/totalBalanceValue" />
 
     <View
         android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_width="389dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rectangle_transp"
+        app:layout_constraintBottom_toTopOf="@+id/newTransactionDialog"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
         app:layout_constraintStart_toStartOf="@+id/accountView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
     <View
         android:id="@+id/divider"
@@ -149,6 +153,17 @@
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@+id/divider"
         app:layout_constraintStart_toStartOf="@+id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
@@ -192,24 +207,15 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Balance"
+        android:text="Estimated"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-    <Button
-        android:id="@+id/buttonDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="delete"
-        app:layout_constraintEnd_toEndOf="@+id/accountView"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
-
     <TextView
-        android:id="@+id/balanceValue"
+        android:id="@+id/totalBalanceValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
