@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 import java.util.List;
 

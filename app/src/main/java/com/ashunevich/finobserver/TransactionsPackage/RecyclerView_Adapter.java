@@ -1,48 +1,51 @@
 package com.ashunevich.finobserver.TransactionsPackage;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class Transaction_RecyclerViewAdapter extends RecyclerView.Adapter<Transaction_RecyclerViewAdapter.MyViewHolder>  {
-    private ArrayList<Transaction_Item> pad_list;
+class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyViewHolder>  {
+    private List<Transaction_Item> pad_list;
+    Context context;
     //   private PassBalanceValue mListerner;
-    public Transaction_RecyclerViewAdapter(ArrayList<Transaction_Item> data){
+    public RecyclerView_Adapter(List<Transaction_Item> data){
         this.pad_list = data;
     }
     //This method inflates view present in the RecyclerView
     @NonNull
     @Override
-    public Transaction_RecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new Transaction_RecyclerViewAdapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+    public RecyclerView_Adapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
+        return new RecyclerView_Adapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
     //Binding the data using get() method of POJO object
     @Override
-    public void onBindViewHolder(final Transaction_RecyclerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView_Adapter.MyViewHolder holder, int position) {
         final Transaction_Item item  = pad_list.get(position);
-        holder.binding.transactionID.setText(String.valueOf(item.getItemIID()));
-        holder.binding.transactionTypeImage.setImageDrawable(item.getImage());
-        holder.binding.transactionValue.setText(item.getTransactionValue());
-        holder.binding.transactionCurrency.setText(String.valueOf(item.getTransactionCurrency()));
+      holder.binding.transactionTypeImage.setImageDrawable(getTypeImage(item.getImageInt()));
+         holder.binding.transactionValue.setText(String.valueOf(item.getTransactionValue()));
+        holder.binding.transactionCurrency.setText(item.getTransactionCurrency());
         holder.binding.tranactionAccountFrom.setText(item.getTransactionAccount());
         holder.binding.transactionCategory.setText(item.getTransactionCategory());
         holder.binding.transactionDate.setText(item.getTransactionDate());
     }
 
 
-    //Setting the arraylist
-    public void setListContent(ArrayList <Transaction_Item> pad_list) {
-        this.pad_list = pad_list;
-    }
+
 
     @Override
     public int getItemCount() {
@@ -58,8 +61,19 @@ public class Transaction_RecyclerViewAdapter extends RecyclerView.Adapter<Transa
         }
     }
 
-    public void updateItemList(ArrayList<Transaction_Item> items){
-        final Transaction_DiffUtilCallback diffCallback = new Transaction_DiffUtilCallback(this.pad_list, items);
+    private Drawable getTypeImage(int i) {
+
+        if(i == 0){
+            return ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_up);
+        }
+        else {
+            return ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down);
+        }
+    }
+
+    //Setting the arraylist
+    public void updateItemList(List<Transaction_Item> items){
+        final RecyclerView_DiffUtil diffCallback = new RecyclerView_DiffUtil(this.pad_list, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();
@@ -67,10 +81,6 @@ public class Transaction_RecyclerViewAdapter extends RecyclerView.Adapter<Transa
         diffResult.dispatchUpdatesTo(this);
     }
 
-/*
-    public interface PassBalanceValue {
-        void passData(Double value);
-    }
-*/
+
 }
 

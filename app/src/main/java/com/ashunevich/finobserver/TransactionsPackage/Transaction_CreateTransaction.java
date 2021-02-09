@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
-import com.ashunevich.finobserver.DashboardAccountPackage.Dashboard_Fragment;
+import com.ashunevich.finobserver.DashboardPackage.Dashboard_Fragment;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionDialogBinding;
 import com.google.android.material.chip.Chip;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Transaction_AddTransaction extends AppCompatActivity {
+public class Transaction_CreateTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip = null;
     String categoryChip = null;
@@ -90,8 +90,6 @@ public class Transaction_AddTransaction extends AppCompatActivity {
         createChips(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
     }
 
-
-     // (TODO) adapter should fill from DashBoarddFragmentValues.
     private void setSpinner(ArrayList<String> array){
            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, array);
            binding.ActiveAccounts.setAdapter(adapter);
@@ -163,16 +161,10 @@ public class Transaction_AddTransaction extends AppCompatActivity {
                            }
         });
 
-        binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-         //   (DONE) return value of IncomeChipGroup
-            categoryChip = returnChipText(group);
-        });
+        binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = returnChipText(group));
 
 
-        binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            //   (DONE) return value of SpendingChipGroup
-            categoryChip = returnChipText(group);
-        });
+        binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = returnChipText(group));
     }
 
     private void setChipGroupUncheck(ChipGroup chipGroup){

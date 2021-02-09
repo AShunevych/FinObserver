@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -53,6 +53,7 @@ class Dashboard_Account {
         this.accountID = accountID;
     }
 
+
     protected int getImageID() {
         return imageID;
     }
@@ -60,6 +61,7 @@ class Dashboard_Account {
     protected void setImageID(int imageID) {
         this.imageID = imageID;
     }
+
 
     protected String getAccountName() {
         return accountName;
@@ -69,6 +71,7 @@ class Dashboard_Account {
         this.accountName = accountName;
     }
 
+
     protected Double getAccountValue() {
         return accountValue;
     }
@@ -76,6 +79,7 @@ class Dashboard_Account {
     protected void setAccountValue(Double accountValue) {
         this.accountValue = accountValue;
     }
+
 
     protected String getAccountCurrency() {
         return accountCurrency;

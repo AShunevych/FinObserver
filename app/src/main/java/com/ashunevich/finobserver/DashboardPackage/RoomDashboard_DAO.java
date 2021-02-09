@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import androidx.room.Update;
 
 
 @Dao
-public interface Persistence_DAO {
+public interface RoomDashboard_DAO {
 
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(Dashboard_Account... dashboard_accounts);

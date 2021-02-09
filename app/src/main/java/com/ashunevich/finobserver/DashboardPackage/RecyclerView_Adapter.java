@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 
 import android.content.Context;
@@ -93,12 +93,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
         diffResult.dispatchUpdatesTo(this);
     }
 
-    //Setting the arraylist
-    public void setListContent(List <Dashboard_Account> pad_list) {
-        this.pad_list = pad_list;
-        notifyDataSetChanged();
-    }
-
+    //Setting the List
     public Dashboard_Account getAccountAtPosition (int position) {
         return pad_list.get(position);
     }

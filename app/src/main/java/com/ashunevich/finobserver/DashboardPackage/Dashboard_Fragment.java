@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 
 import android.annotation.SuppressLint;
@@ -17,10 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
+import com.ashunevich.finobserver.TransactionsPackage.RoomTransactions_ViewModel;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
-import com.ashunevich.finobserver.TransactionsPackage.Transaction_AddTransaction;
-import com.ashunevich.finobserver.TransactionsPackage.Transaction_ViewModel;
+import com.ashunevich.finobserver.TransactionsPackage.Transaction_CreateTransaction;
 
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 
@@ -49,13 +48,13 @@ public class Dashboard_Fragment extends Fragment  {
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
   private final List<Dashboard_Account> AccountItemList = new ArrayList<>();
-    ArrayList<Transaction_Item> listTransactions = new ArrayList<>();
-    private Persistence_VewModel dashboardViewModel;
+
+    private RoomDashboard_VewModel dashboardViewModel;
 
     RecyclerView_Adapter adapter;
      Double incomeValue,expValue,balanceValue;
     Handler handler = new Handler();
-    Transaction_ViewModel model;
+    RoomTransactions_ViewModel model;
     ActivityResultLauncher<Intent> ResultLauncher;
     private Dashboard_SharedPrefManager prefManager;
 
@@ -80,15 +79,14 @@ public class Dashboard_Fragment extends Fragment  {
                         String transactionType = data.getStringExtra("Type");
                         String transactionCategory = data.getStringExtra("Category");
                         double transactionValue = data.getDoubleExtra("Value", 0);
+                        String date = Dashboard_FragmentUtils.getDate();
+                        int imageType = Dashboard_FragmentUtils.getImageInt(transactionType);
 
                         setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
 
-
-                        Transaction_Item item = new Transaction_Item(Dashboard_FragmentUtils.getDate(),transactionAccount,"UAH",
-                                String.valueOf(transactionValue),transactionCategory,
-                                Dashboard_FragmentUtils.getTypeImage(transactionType,requireContext()),listTransactions.size()+1);
-                        listTransactions.add(0,item);
-                        model.setSelected(listTransactions);
+                        Transaction_Item item = new Transaction_Item(transactionAccount,transactionCategory,
+                                transactionValue,"UAH",date,imageType);
+                        model.insertTransAction(item);
                     }
                 });
     }
@@ -134,8 +132,8 @@ public class Dashboard_Fragment extends Fragment  {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        model = new ViewModelProvider(requireActivity()).get(Transaction_ViewModel.class);
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(Persistence_VewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboard_VewModel.class);
         setRecyclerView();
 
 
@@ -172,7 +170,7 @@ public class Dashboard_Fragment extends Fragment  {
 
 
     private void newTransaction(){
-        Intent intent = new Intent(getContext(), Transaction_AddTransaction.class);
+        Intent intent = new Intent(getContext(), Transaction_CreateTransaction.class);
 
         //int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos
         ArrayList<String> idLists = new ArrayList<>();
@@ -287,19 +285,21 @@ public class Dashboard_Fragment extends Fragment  {
 
 
 
+/*
+    //   (1) Implement account mechanism :
+    //   (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
+    //   (1.2) Count all accounts balance
+    //       (1.2.1) Count accounts balance when account removed
+    //    (1.3) Permanent account holder with ROOM
+    //        (1.3.1) Create Room persistance and insert data in it
+    //        (1.3.2) remove all data and specific item from room and Recyclerview
+    //        (1.3.3) update  data in the room
+    //   (1.4) LiveData to TransactionFragment
+    //   (1.5) Make LiveData observe pernament
+    //    (1.6) Update item when accountValue change
+    //   (1.7) Save in SharedPreferences all TextView;
 
-    //  DONE (1) Implement account mechanism :
-    //  DONE (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
-    //  DONE (1.2) Count all accounts balance
-    //      DONE (1.2.1) Count accounts balance when account removed
-    //  DONE  (1.3) Permanent account holder with ROOM
-    //      DONE  (1.3.1) Create Room persistance and insert data in it
-    //      DONE  (1.3.2) remove all data and specific item from room and Recyclerview
-    //      DONE  (1.3.3) update  data in the room
-    //  DONE (1.4) LiveData to TransactionFragment
-    //  DONE (1.5) Make LiveData observe pernament
-    //  DONE  (1.6) Update item when accountValue change
-    //  DONE (1.7) Save in SharedPreferences all TextView;
+ */
 
 
 

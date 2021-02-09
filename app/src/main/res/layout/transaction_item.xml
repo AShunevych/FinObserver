@@ -9,10 +9,10 @@
         android:id="@+id/transactionTypeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/transactionValue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/transactionValue"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/tranactionAccountFrom"
+        app:layout_constraintStart_toStartOf="@+id/tranactionAccountFrom"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_arrow_drop_up" />
 
     <TextView
@@ -22,67 +22,64 @@
         android:layout_marginBottom="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/transactionCategory"
+        app:layout_constraintBottom_toTopOf="@+id/divider3"
+        app:layout_constraintStart_toStartOf="@+id/transactionValue"
         app:layout_constraintTop_toBottomOf="@+id/transactionValue"
         tools:text="25-01-200" />
-
-    <TextView
-        android:id="@+id/transactionID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/transactionCategory"
-        app:layout_constraintTop_toBottomOf="@+id/transactionValue"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="#1" />
 
     <TextView
         android:id="@+id/tranactionAccountFrom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/transactionTypeImage"
-        app:layout_constraintTop_toBottomOf="@+id/transactionValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/transactionTypeImage"
         tools:text="Cash" />
 
     <TextView
         android:id="@+id/transactionCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/transactionValue"
-        app:layout_constraintTop_toTopOf="@+id/transactionValue"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/tranactionAccountFrom"
+        app:layout_constraintStart_toStartOf="@+id/tranactionAccountFrom"
+        app:layout_constraintTop_toBottomOf="@+id/tranactionAccountFrom"
         tools:text="UAH" />
 
     <TextView
         android:id="@+id/transactionValue"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toEndOf="@+id/transactionTypeImage"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tranactionAccountFrom"
+        app:layout_constraintStart_toEndOf="@+id/tranactionAccountFrom"
+        app:layout_constraintTop_toTopOf="@+id/transactionTypeImage"
         tools:text="250.00" />
 
     <TextView
         android:id="@+id/transactionCategory"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/transactionTypeImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/transactionCurrency"
-        app:layout_constraintTop_toTopOf="@+id/transactionTypeImage"
+        app:layout_constraintBottom_toBottomOf="@+id/transactionValue"
+        app:layout_constraintStart_toEndOf="@+id/transactionValue"
+        app:layout_constraintTop_toTopOf="@+id/transactionValue"
+        app:layout_constraintVertical_bias="1.0"
         tools:text="Internet" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

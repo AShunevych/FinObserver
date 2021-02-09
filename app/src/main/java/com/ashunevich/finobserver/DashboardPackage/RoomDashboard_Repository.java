@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -7,12 +7,12 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-class Dashboard_Repository {
-    private Persistence_DAO mDashboardDao;
+class RoomDashboard_Repository {
+    private RoomDashboard_DAO mDashboardDao;
     private LiveData<List<Dashboard_Account>> mAllAccounts;
 
-    Dashboard_Repository(Application application) {
-        Persistence_Database db = Persistence_Database.getDatabase(application);
+    RoomDashboard_Repository(Application application) {
+        RoomDashboard_Database db = RoomDashboard_Database.getDatabase(application);
         mDashboardDao = db.dashboard_dao();
         mAllAccounts = mDashboardDao.getAllAccounts();
     }
@@ -40,9 +40,9 @@ class Dashboard_Repository {
 
     private static class insertAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
 
-        private Persistence_DAO mAsyncTaskDao;
+        private RoomDashboard_DAO mAsyncTaskDao;
 
-        insertAsyncTask(Persistence_DAO mDashboardDao) {
+        insertAsyncTask(RoomDashboard_DAO mDashboardDao) {
             mAsyncTaskDao = mDashboardDao;
         }
 
@@ -55,9 +55,9 @@ class Dashboard_Repository {
 
 
     private static class deleteAllWordsAsyncTask extends AsyncTask<Void, Void, Void> {
-        private Persistence_DAO mAsyncTaskDao;
+        private RoomDashboard_DAO mAsyncTaskDao;
 
-        deleteAllWordsAsyncTask(Persistence_DAO mDashboardDao) {
+        deleteAllWordsAsyncTask(RoomDashboard_DAO mDashboardDao) {
             mAsyncTaskDao = mDashboardDao;
         }
 
@@ -70,9 +70,9 @@ class Dashboard_Repository {
 
 
     private static class deleteWordAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
-        private Persistence_DAO mAsyncTaskDao;
+        private RoomDashboard_DAO mAsyncTaskDao;
 
-        deleteWordAsyncTask(Persistence_DAO mDashboardDao) {
+        deleteWordAsyncTask(RoomDashboard_DAO mDashboardDao) {
             mAsyncTaskDao = mDashboardDao;
         }
 
@@ -86,9 +86,9 @@ class Dashboard_Repository {
 
 
     private static class updateWordAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
-        private Persistence_DAO mAsyncTaskDao;
+        private RoomDashboard_DAO mAsyncTaskDao;
 
-        updateWordAsyncTask(Persistence_DAO mDashboardDao) {
+        updateWordAsyncTask(RoomDashboard_DAO mDashboardDao) {
             mAsyncTaskDao = mDashboardDao;
         }
 

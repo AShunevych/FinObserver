@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardAccountPackage;
+package com.ashunevich.finobserver.DashboardPackage;
 
 import android.app.Application;
 
@@ -11,14 +11,14 @@ import androidx.lifecycle.LiveData;
 
 
 
-public class Persistence_VewModel extends AndroidViewModel {
-    private Dashboard_Repository mRepo;
+public class RoomDashboard_VewModel extends AndroidViewModel {
+    private RoomDashboard_Repository mRepo;
     private LiveData<List<Dashboard_Account>> mAllAccounts;
 
 
-    public Persistence_VewModel(@NonNull Application application) {
+    public RoomDashboard_VewModel(@NonNull Application application) {
         super(application);
-        mRepo = new Dashboard_Repository(application);
+        mRepo = new RoomDashboard_Repository(application);
         mAllAccounts = mRepo.getAllAcounts();
     }
 

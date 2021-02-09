@@ -1,6 +1,6 @@
 package com.ashunevich.finobserver;
 
-import com.ashunevich.finobserver.DashboardAccountPackage.Dashboard_Fragment;
+import com.ashunevich.finobserver.DashboardPackage.Dashboard_Fragment;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_Fragment;
 
 import java.util.ArrayList;
