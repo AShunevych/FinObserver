@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -53,10 +55,12 @@ public class Transaction_Fragment extends Fragment {
     }
     //init RecyclerView
     private void initRecView(){
-        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,true));
         adapter = new RecyclerView_Adapter(listContentArr);
-        modelDatabase.getAllTransactions().observe(requireActivity(),transaction_items -> adapter.updateItemList(transaction_items));
-
+        modelDatabase.getAllTransactions().observe(requireActivity(),transaction_items -> {
+            adapter.updateItemList(transaction_items);
+            binding.transactionView.smoothScrollToPosition(transaction_items.size());
+        });
         binding.transactionView.setAdapter(adapter);
     }
 

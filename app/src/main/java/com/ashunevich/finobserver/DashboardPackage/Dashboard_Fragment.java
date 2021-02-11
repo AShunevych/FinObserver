@@ -164,7 +164,6 @@ public class Dashboard_Fragment extends Fragment  {
         adapter = new RecyclerView_Adapter(AccountItemList,getParentFragmentManager());
         dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
-
         setupItemTouchHelper();
     }
 
@@ -184,7 +183,7 @@ public class Dashboard_Fragment extends Fragment  {
                valuesLists.add(String.valueOf(account.getAccountValue()));
                imagePos.add(String.valueOf(account.getImageID()));
            }
-        if (namesLists.size() !=0 && idLists.size() !=0 && valuesLists.size() != 0) {
+        if (binding.accountView.getChildCount() !=0) {
             intent.putStringArrayListExtra("AccountNames", namesLists);
             intent.putStringArrayListExtra("AccountIDs", idLists);
             intent.putStringArrayListExtra("AccountValues", valuesLists);
@@ -195,14 +194,12 @@ public class Dashboard_Fragment extends Fragment  {
         }
     }
 
-    @SuppressLint("ApplySharedPref")
+
+
+
     @Override
     public void onStop() {
-        prefManager.setValue(Dashboard_FragmentUtils.BALANCE,returnString(binding.balanceView));
-        prefManager.setValue(Dashboard_FragmentUtils.INCOME,returnString(binding.incomeView));
-        prefManager.setValue(Dashboard_FragmentUtils.EXPENDITURES,returnString(binding.expendView));
         super.onStop();
-
     }
 
     private String returnString(TextView textView){
@@ -213,7 +210,6 @@ public class Dashboard_Fragment extends Fragment  {
     @Override
     public void onDetach() {
         handler.removeCallbacksAndMessages(null);
-
         super.onDetach();
     }
 
@@ -267,6 +263,9 @@ public class Dashboard_Fragment extends Fragment  {
             binding.balanceView.setText(String.valueOf(balanceValue - result));
         }
 
+        prefManager.setValue(Dashboard_FragmentUtils.BALANCE,returnString(binding.balanceView));
+        prefManager.setValue(Dashboard_FragmentUtils.INCOME,returnString(binding.incomeView));
+        prefManager.setValue(Dashboard_FragmentUtils.EXPENDITURES,returnString(binding.expendView));
     }
 
 
