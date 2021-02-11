@@ -179,13 +179,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rectangle_transp"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toBottomOf="@+id/textView12"
         tools:itemCount="12"
         tools:listitem="@layout/dashboard_account_item" />
 
@@ -196,23 +196,12 @@
         android:layout_marginEnd="8dp"
         android:clickable="true"
         app:backgroundTint="@color/teal_200"
-        app:fabSize="auto"
+        app:fabSize="mini"
         app:layout_constraintBottom_toTopOf="@+id/accountView"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
         app:layout_constraintTop_toTopOf="@+id/accountView"
-        app:maxImageSize="50dp"
+        app:maxImageSize="40dp"
         app:srcCompat="@drawable/ic_new_account" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Total"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toStartOf="@+id/textView12"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <TextView
         android:id="@+id/totalBalanceValue"
@@ -220,7 +209,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintStart_toEndOf="@+id/textView5"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/textView12" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/editMenu"
-        android:title="Edit" />
+        android:id="@+id/deleteData"
+        android:title="Erase data" />
 </menu>

@@ -1,7 +1,7 @@
 package com.ashunevich.finobserver.DashboardPackage;
 
 
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -21,8 +20,12 @@ import com.ashunevich.finobserver.TransactionsPackage.RoomTransactions_ViewModel
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
 import com.ashunevich.finobserver.TransactionsPackage.Transaction_CreateTransaction;
 
+import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +44,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.BALANCE;
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.EXPENDITURES;
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.INCOME;
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.getDate;
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.getImageInt;
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.returnString;
+import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.returnStringFromObj;
 
 
-public class Dashboard_Fragment extends Fragment  {
+public class Dashboard_Fragment extends Fragment {
 
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
@@ -79,8 +89,8 @@ public class Dashboard_Fragment extends Fragment  {
                         String transactionType = data.getStringExtra("Type");
                         String transactionCategory = data.getStringExtra("Category");
                         double transactionValue = data.getDoubleExtra("Value", 0);
-                        String date = Dashboard_FragmentUtils.getDate();
-                        int imageType = Dashboard_FragmentUtils.getImageInt(transactionType);
+                        String date = getDate();
+                        int imageType = getImageInt(transactionType);
 
                         setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
 
@@ -89,6 +99,7 @@ public class Dashboard_Fragment extends Fragment  {
                         model.insertTransAction(item);
                     }
                 });
+        if (!EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().register(this); }
     }
 
 
@@ -116,18 +127,15 @@ public class Dashboard_Fragment extends Fragment  {
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
 
-        binding.balanceView.setText(prefManager.getValue(Dashboard_FragmentUtils.BALANCE,"0.0"));
-        binding.incomeView.setText(prefManager.getValue(Dashboard_FragmentUtils.INCOME,"0.0"));
-        binding.expendView.setText(prefManager.getValue(Dashboard_FragmentUtils.EXPENDITURES,"0.0"));
+        binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
+        binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
+        binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
 
 
         handler.post(updateLog);
 
         return binding.getRoot();
     }
-
-
-
 
 
     @Override
@@ -195,21 +203,10 @@ public class Dashboard_Fragment extends Fragment  {
     }
 
 
-
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    private String returnString(TextView textView){
-        return textView.getText().toString();
-    }
-
-
     @Override
     public void onDetach() {
         handler.removeCallbacksAndMessages(null);
+        if (EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().unregister(this); }
         super.onDetach();
     }
 
@@ -263,9 +260,7 @@ public class Dashboard_Fragment extends Fragment  {
             binding.balanceView.setText(String.valueOf(balanceValue - result));
         }
 
-        prefManager.setValue(Dashboard_FragmentUtils.BALANCE,returnString(binding.balanceView));
-        prefManager.setValue(Dashboard_FragmentUtils.INCOME,returnString(binding.incomeView));
-        prefManager.setValue(Dashboard_FragmentUtils.EXPENDITURES,returnString(binding.expendView));
+        setSharedPrefValues();
     }
 
 
@@ -279,6 +274,26 @@ public class Dashboard_Fragment extends Fragment  {
             }
         }
     };
+
+    @Subscribe
+    public void receiveEvent(PostPOJO postPOJO){
+        binding.balanceView.setText(returnStringFromObj(postPOJO));
+        binding.incomeView.setText(returnStringFromObj(postPOJO));
+        binding.expendView.setText(returnStringFromObj(postPOJO));
+        setSharedPrefValues();
+    }
+
+    private void setSharedPrefValues(){
+        prefManager.setValue(BALANCE, returnString(binding.balanceView));
+        prefManager.setValue(INCOME,returnString(binding.incomeView));
+        prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
+    }
+
+
+    }
+
+
+
 
 
 
@@ -301,4 +316,5 @@ public class Dashboard_Fragment extends Fragment  {
 
 
 
-}
+
+
