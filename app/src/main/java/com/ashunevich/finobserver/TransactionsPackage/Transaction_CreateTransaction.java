@@ -46,14 +46,19 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         setChipVisibilityAtStart();
         createChips();
         setChipsGroupListener();
-
+        getIntents();
+        
         binding.resumeDialog.setOnClickListener(v -> onOkResult());
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
+
+
+    }
+
+    private void getIntents(){
         setSpinner(getIntent().getStringArrayListExtra("AccountNames"));
         setAdditionalInfo(getIntent().getStringArrayListExtra("AccountIDs"),
                 getIntent().getStringArrayListExtra("AccountValues"),
                 getIntent().getStringArrayListExtra("AccountImages"));
-
     }
 
     private void setChipVisibilityAtStart(){
@@ -67,11 +72,12 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         binding.ActiveAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                id = Integer.parseInt(idArray.get(SpinnerPosition()));
-                basicValue = Double.parseDouble(valueArray.get(SpinnerPosition()));
-                imagePos = Integer.parseInt(imagesArray.get(SpinnerPosition()));
-                Log.d("id",idArray.get(SpinnerPosition()));
-                Log.d("basicValue",valueArray.get(SpinnerPosition()));
+                int spinnerPos = Transaction_Utils.SpinnerPosition(binding.ActiveAccounts);
+                id = Integer.parseInt(idArray.get(spinnerPos));
+                basicValue = Double.parseDouble(valueArray.get(spinnerPos));
+                imagePos = Integer.parseInt(imagesArray.get(spinnerPos));
+                Log.d("id",idArray.get(spinnerPos));
+                Log.d("basicValue",valueArray.get(spinnerPos));
             }
 
             @Override
@@ -81,9 +87,6 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         });
     }
 
-    private int SpinnerPosition(){
-        return binding.ActiveAccounts.getSelectedItemPosition();
-    }
 
     private void createChips(){
         createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
@@ -97,7 +100,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
 
     // TEST DELETE LATER
     private void onOkResult(){
-        typeChip = returnChipText(binding.transactionType);
+        typeChip = Transaction_Utils.returnChipText(binding.transactionType);
         valueChip = Double.valueOf(binding.transactionEstimate.getText().toString());
        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
         Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
@@ -127,49 +130,26 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         finish();
     }
 
-    private String returnChipText(ChipGroup chipGroup){
-        String text = null;
-        List<Integer> ids = chipGroup.getCheckedChipIds();
-        for (Integer id:ids){
-            Chip chip = chipGroup.findViewById(id);
-            text = chip.getText().toString();
-        }
-        return text;
-    }
-
-    private int returnActiveChipId(ChipGroup chipGroup){
-        int idChip = 0;
-        List<Integer> ids = chipGroup.getCheckedChipIds();
-        for (Integer id:ids){
-            Chip chip = chipGroup.findViewById(id);
-            idChip = chip.getId();
-        }
-        return idChip;
-    }
-
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
-                           if(returnActiveChipId(group) == R.id.incomeChip){
+                           if(Transaction_Utils.returnActiveChipId(group) == R.id.incomeChip){
                                binding.SpendingChipGroup.setVisibility(View.GONE);
                                binding.IncomeChipGroup.setVisibility(View.VISIBLE);
-                               setChipGroupUncheck(binding.SpendingChipGroup);
+                               Transaction_Utils.setChipGroupUncheck(binding.SpendingChipGroup);
                            }
                            else{
                                binding.SpendingChipGroup.setVisibility(View.VISIBLE);
                                binding.IncomeChipGroup.setVisibility(View.GONE);
-                               setChipGroupUncheck(binding.IncomeChipGroup);
+                               Transaction_Utils.setChipGroupUncheck(binding.IncomeChipGroup);
                            }
         });
 
-        binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = returnChipText(group));
+        binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
 
 
-        binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = returnChipText(group));
+        binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
     }
 
-    private void setChipGroupUncheck(ChipGroup chipGroup){
-       chipGroup.clearCheck();
-    }
 
     private void createChips( String [] list,ChipGroup chipGroup){
         for (String category :

@@ -2,4 +2,5 @@
 <resources>
 
     <color name="drawableColor">#FFFFFFFF</color>
+    <color name="backGround">#121212</color>
 </resources>

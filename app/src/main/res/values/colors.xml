@@ -10,4 +10,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="drawableColor">#FF000000</color>
+
+    <color name="backGround">@android:color/transparent</color>
 </resources>
