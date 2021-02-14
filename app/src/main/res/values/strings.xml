@@ -1,4 +1,16 @@
 <resources>
     <string name="app_name">FinObserver</string>
     <string name="UAH">UAH</string>
+    <string name="balance">Balance</string>
+    <string name="income">Income</string>
+    <string name="exp">Expenditures</string>
+    <string name="newAccount">+ Create account</string>
+    <string name="total">Total</string>
+    <string name="cat">Category</string>
+    <string name="tType">Transaction Type</string>
+    <string name="Acc">Category</string>
+    <string name="tValue">Transaction value</string>
+    <string name="ok">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="loadData">Loading data…</string>
 </resources>
