@@ -11,5 +11,5 @@
 
     <color name="drawableColor">#FF000000</color>
 
-    <color name="backGround">@android:color/transparent</color>
+    <color name="backGround">#50eeeeee</color>
 </resources>

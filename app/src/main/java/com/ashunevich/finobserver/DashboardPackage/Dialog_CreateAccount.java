@@ -40,7 +40,6 @@ public class Dialog_CreateAccount extends DialogFragment {
         // Inflate the layout for this fragment
         assert inflater != null;
         binding = DashboardNewAccountDialogBinding.inflate(inflater, container, false);
-        Objects.requireNonNull(getDialog()).getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         setTextWatcher();
         binding.okButton.setEnabled(false);
         binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));

@@ -3,7 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/backGround"
+    android:elevation="1sp">
+
+    <Button
+        android:id="@+id/redactButon"
+        android:layout_width="25dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
+        app:icon="@drawable/ic_create_24"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/accountIco"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/accountIco"
+        app:layout_constraintVertical_bias="0.666" />
 
     <ImageView
         android:id="@+id/accountIco"
@@ -11,21 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/accountValue"
-        app:layout_constraintStart_toEndOf="@+id/redactButon"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/accountType"
         tools:srcCompat="@drawable/ic_wallet_balance" />
-
-    <TextView
-        android:id="@+id/accountType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/accountIco"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="PRIVATBANK" />
 
     <TextView
         android:id="@+id/accountCurrency"
@@ -51,17 +54,17 @@
         app:layout_constraintTop_toBottomOf="@+id/accountType"
         tools:text="2500000.00" />
 
-    <Button
-        android:id="@+id/redactButon"
-        android:layout_width="25dp"
-        android:layout_height="35dp"
+    <TextView
+        android:id="@+id/accountType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:icon="@drawable/ic_create_24"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/accountIco"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/accountIco" />
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/accountIco"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="PRIVATBANK" />
 
     <View
         android:id="@+id/divider2"
