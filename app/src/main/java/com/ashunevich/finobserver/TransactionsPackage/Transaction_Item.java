@@ -1,7 +1,5 @@
 package com.ashunevich.finobserver.TransactionsPackage;
 
-import android.graphics.drawable.Drawable;
-
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

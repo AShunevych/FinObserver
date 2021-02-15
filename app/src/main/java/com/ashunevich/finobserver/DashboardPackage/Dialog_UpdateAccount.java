@@ -2,8 +2,6 @@ package com.ashunevich.finobserver.DashboardPackage;
 
 
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;

@@ -47,7 +47,7 @@ public class CustomSpinnerAdapter extends BaseAdapter {
         ImageItem item = new ImageItem();
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.custom_account_spinneritem, parent, false);
-            item.image = (ImageView) convertView.findViewById(R.id.imIcon);
+            item.image = convertView.findViewById(R.id.imIcon);
             convertView.setTag(item);
         }
         else{
