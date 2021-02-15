@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="incomeCategory">
-        <item>Salary</item>
+        <item>Salary/Wage</item>
         <item>Investment</item>
         <item>Credit</item>
+        <item>Interest payment</item>
+        <item>Rent</item>
+        <item>Dividends</item>
         <item>Other</item>
     </string-array>
 
@@ -17,6 +20,8 @@
         <item>Housing</item>
         <item>Investment</item>
         <item>Banking</item>
+        <item>Transfer</item>
+        <item>Insurance</item>
         <item>Other</item>
     </string-array>
 
