@@ -24,6 +24,9 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.returnActiveChipId;
+import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.setChipGroupUncheck;
+
 public class Transaction_CreateTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip = null;
@@ -31,6 +34,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     Double valueChip = 0.0;
     String transactionAccount;
     int id;
+    int pos = 0;
     int imagePos;
     double basicValue;
 
@@ -42,15 +46,13 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = TransactionDialogBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setChipVisibilityAtStart();
         createChips();
         setChipsGroupListener();
         getIntents();
-        
+
         binding.resumeDialog.setOnClickListener(v -> onOkResult());
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
-
 
     }
 
@@ -89,8 +91,8 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
 
 
     private void createChips(){
-        createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
         createChips(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
+        createChips(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
     }
 
     private void setSpinner(ArrayList<String> array){
@@ -112,7 +114,6 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
             previousScreen.putExtra("BasicValue",basicValue);//updatedValue
             previousScreen.putExtra("ImagePos",imagePos);//updatedImagePos
 
-
             previousScreen.putExtra("Category",categoryChip);
             previousScreen.putExtra("Type",typeChip);
             previousScreen.putExtra("Value",valueChip);
@@ -124,31 +125,44 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         }
     }
 
+
+
     private void onCancelResult(){
         Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
         setResult(RESULT_CANCELED,previousScreen);
         finish();
     }
 
+    @SuppressLint("NonConstantResourceId")
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
-                           if(Transaction_Utils.returnActiveChipId(group) == R.id.incomeChip){
-                               binding.SpendingChipGroup.setVisibility(View.GONE);
-                               binding.IncomeChipGroup.setVisibility(View.VISIBLE);
-                               Transaction_Utils.setChipGroupUncheck(binding.SpendingChipGroup);
-                           }
-                           else{
-                               binding.SpendingChipGroup.setVisibility(View.VISIBLE);
-                               binding.IncomeChipGroup.setVisibility(View.GONE);
-                               Transaction_Utils.setChipGroupUncheck(binding.IncomeChipGroup);
-                           }
+                        switch (returnActiveChipId(group)){
+                            case R.id.incomeChip :  chipViewHandlerPos(pos=1);break;
+                            case R.id.spendingChip : chipViewHandlerPos(pos=2);break;
+                        }
         });
 
         binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
 
-
         binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
     }
+
+
+
+        private void chipViewHandlerPos(int i){
+        switch (i){
+            case 1 :
+                binding.IncomeChipGroup.setVisibility(View.VISIBLE);
+                binding.SpendingChipGroup.setVisibility(View.GONE);
+                setChipGroupUncheck(binding.SpendingChipGroup);
+                break;
+            case 2:
+                binding.SpendingChipGroup.setVisibility(View.VISIBLE);
+                binding.IncomeChipGroup.setVisibility(View.GONE);
+                setChipGroupUncheck(binding.IncomeChipGroup);
+                break;
+        }
+        }
 
 
     private void createChips( String [] list,ChipGroup chipGroup){
