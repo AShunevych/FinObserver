@@ -31,14 +31,12 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip = null;
     String categoryChip = null;
-    Double valueChip = 0.0;
-    String transactionAccount;
-    int id;
+    Double transactionValue = 0.0;
+    String transactionAccount, targetAccount;
+    int basicAccountID,targetAccountID;
     int pos = 0;
-    int imagePos;
-    double basicValue;
-
-
+    int basicAccountImagePos, targetAccountImagePos;
+    double basicValue, targetValue, newBasicAccountValue,newTargetAccountValue;
 
 
     @Override
@@ -51,7 +49,14 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         setChipsGroupListener();
         getIntents();
 
-        binding.resumeDialog.setOnClickListener(v -> onOkResult());
+        binding.resumeDialog.setOnClickListener(v -> {
+            if(getBasicTransactionBool()||getTransferBool()){
+                    onOkResult();
+            }
+            else {
+                Toast.makeText(this, "Some fields may be empty", Toast.LENGTH_SHORT).show();
+            }
+        });
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
 
     }
@@ -66,6 +71,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     private void setChipVisibilityAtStart(){
         binding.IncomeChipGroup.setVisibility(View.GONE);
         binding.SpendingChipGroup.setVisibility(View.GONE);
+        binding.targetAccount.setVisibility(View.GONE);
     }
 
     private void setAdditionalInfo(ArrayList<String> idArray,
@@ -75,11 +81,9 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 int spinnerPos = Transaction_Utils.SpinnerPosition(binding.ActiveAccounts);
-                id = Integer.parseInt(idArray.get(spinnerPos));
+                basicAccountID = Integer.parseInt(idArray.get(spinnerPos));
                 basicValue = Double.parseDouble(valueArray.get(spinnerPos));
-                imagePos = Integer.parseInt(imagesArray.get(spinnerPos));
-                Log.d("id",idArray.get(spinnerPos));
-                Log.d("basicValue",valueArray.get(spinnerPos));
+                basicAccountImagePos = Integer.parseInt(imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -87,6 +91,22 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
 
             }
         });
+
+        binding.targetAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                int spinnerPos = Transaction_Utils.SpinnerPosition(binding.targetAccount);
+                targetAccountID = Integer.parseInt(idArray.get(spinnerPos));
+                targetValue = Double.parseDouble(valueArray.get(spinnerPos));
+                targetAccountImagePos = Integer.parseInt(imagesArray.get(spinnerPos));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
     }
 
 
@@ -98,33 +118,85 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     private void setSpinner(ArrayList<String> array){
            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, array);
            binding.ActiveAccounts.setAdapter(adapter);
+         binding.targetAccount.setAdapter(adapter);
     }
 
     // TEST DELETE LATER
-    private void onOkResult(){
+    private void onOkResult() {
+        transactionValue = Double.valueOf(binding.transactionEstimate.getText().toString());
+        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
+        targetAccount = binding.targetAccount.getSelectedItem().toString();
         typeChip = Transaction_Utils.returnChipText(binding.transactionType);
-        valueChip = Double.valueOf(binding.transactionEstimate.getText().toString());
-       transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
-        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
-        if(typeChip != null && valueChip !=null && transactionAccount != null && categoryChip != null){
-            ////int updatedID, String updatedName, double updatedValue, int updatedImagePos
-            //for update
-            previousScreen.putExtra("ID",id); //updatedID
-            previousScreen.putExtra("Account",transactionAccount);//updatedName
-            previousScreen.putExtra("BasicValue",basicValue);//updatedValue
-            previousScreen.putExtra("ImagePos",imagePos);//updatedImagePos
 
-            previousScreen.putExtra("Category",categoryChip);
-            previousScreen.putExtra("Type",typeChip);
-            previousScreen.putExtra("Value",valueChip);
-            setResult(RESULT_OK,previousScreen);
-            finish();
-        }
-        else{
-            Toast.makeText(this,"Some fields are empty.Please check!",Toast.LENGTH_SHORT).show();
+
+        if (typeChip.matches(getResources().getString(R.string.transfer))) {
+                    transferResult();
+            } else {
+                    incomeExpResult();
         }
     }
 
+
+    private boolean getTransferBool(){
+        return typeChip != null && transactionValue !=null && transactionAccount != null && targetAccount != null;
+    }
+
+    private boolean getBasicTransactionBool(){
+        return typeChip != null && transactionValue !=null && transactionAccount != null && categoryChip != null;
+    }
+
+
+
+    private void transferResult(){
+        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
+
+            newBasicAccountValue = basicValue - transactionValue;
+            newTargetAccountValue = targetValue + transactionValue;
+
+            previousScreen.putExtra("Type",typeChip);
+
+            previousScreen.putExtra("basicAccountID", basicAccountID);
+            previousScreen.putExtra("targetAccountID", targetAccountID);
+
+            previousScreen.putExtra("basicAccountImagePos", basicAccountImagePos);
+            previousScreen.putExtra("targetAccountImagePos", targetAccountImagePos);
+
+            previousScreen.putExtra("basicAccountName",transactionAccount);
+            previousScreen.putExtra("targetAccountName",targetAccount);
+
+            previousScreen.putExtra("Category",categoryChip);
+
+            previousScreen.putExtra("transferValue",transactionValue);//updatedValue
+            previousScreen.putExtra("newBasicAccountValue",newBasicAccountValue);//updatedValue
+            previousScreen.putExtra("newTargetAccountValue",newTargetAccountValue);//updatedValue
+            if(basicAccountID == targetAccountID){
+                Toast.makeText(this, "Same account", Toast.LENGTH_SHORT).show();
+            }
+            else {
+            setResult(RESULT_OK,previousScreen);
+            finish();
+            }
+
+    }
+
+    private void incomeExpResult(){
+        ////int updatedID, String updatedName, double updatedValue, int updatedImagePos
+        //for update
+        transactionValue = Double.valueOf(binding.transactionEstimate.getText().toString());
+        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
+        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
+
+            previousScreen.putExtra("ID", basicAccountID); //updatedID
+            previousScreen.putExtra("Account",transactionAccount);//updatedName
+            previousScreen.putExtra("BasicValue",basicValue);//updatedValue
+            previousScreen.putExtra("ImagePos", basicAccountImagePos);//updatedImagePos
+            previousScreen.putExtra("Category",categoryChip);
+            previousScreen.putExtra("Type",typeChip);
+            previousScreen.putExtra("Value", transactionValue);
+            setResult(RESULT_OK,previousScreen);
+            finish();
+
+    }
 
 
     private void onCancelResult(){
@@ -137,16 +209,17 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
                         switch (returnActiveChipId(group)){
-                            case R.id.incomeChip :  chipViewHandlerPos(pos=1);break;
-                            case R.id.spendingChip : chipViewHandlerPos(pos=2);break;
+                            case R.id.incomeChip :  chipViewHandlerPos(1);break;
+                            case R.id.spendingChip : chipViewHandlerPos(2);break;
+                            case R.id.transferChip : chipViewHandlerPos(3);break;
                         }
         });
 
         binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
 
         binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
-    }
 
+    }
 
 
         private void chipViewHandlerPos(int i){
@@ -154,13 +227,24 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
             case 1 :
                 binding.IncomeChipGroup.setVisibility(View.VISIBLE);
                 binding.SpendingChipGroup.setVisibility(View.GONE);
+                binding.targetAccount.setVisibility(View.GONE);
                 setChipGroupUncheck(binding.SpendingChipGroup);
+                binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 break;
             case 2:
                 binding.SpendingChipGroup.setVisibility(View.VISIBLE);
                 binding.IncomeChipGroup.setVisibility(View.GONE);
+                binding.targetAccount.setVisibility(View.GONE);
                 setChipGroupUncheck(binding.IncomeChipGroup);
+                binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 break;
+            case 3 :
+                binding.SpendingChipGroup.setVisibility(View.GONE);
+                binding.IncomeChipGroup.setVisibility(View.GONE);
+                binding.targetAccount.setVisibility(View.VISIBLE);
+                binding.categoryTextView.setText(getResources().getString(R.string.target));
+                setChipGroupUncheck(binding.IncomeChipGroup);
+                setChipGroupUncheck(binding.SpendingChipGroup);
         }
         }
 

@@ -24,8 +24,11 @@ abstract class Dashboard_FragmentUtils extends Dashboard_Fragment{
        if(type.matches("Income")){
            return 0;
        }
-       else{
+       else if (type.matches("Expenditures")){
            return 1;
+       }
+       else{
+           return 2;
        }
    }
 

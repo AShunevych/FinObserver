@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,12 @@ public class Dashboard_Fragment extends Fragment {
     RoomTransactions_ViewModel model;
     ActivityResultLauncher<Intent> ResultLauncher;
     private Dashboard_SharedPrefManager prefManager;
+    String date = getDate();
+
+    int idAccount,imagePos,imageType;
+    String transactionAccount,transactionType,transactionCategory;
+    double  accountBasicValue, transactionValue;
+    String currencyAccount = "UAH";
 
     public Dashboard_Fragment() {
         // Required empty public constructor
@@ -81,33 +88,23 @@ public class Dashboard_Fragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         assert data != null;
-                        int idAccount = data.getIntExtra("ID",0);
-                        String transactionAccount = data.getStringExtra("Account");
-                        double accountBasicValue = data.getDoubleExtra("BasicValue",0);
-                        int imagePos = data.getIntExtra("ImagePos",0);
+                        transactionType = data.getStringExtra("Type");
+                        if(transactionType.matches("Income") || transactionType.matches("Expenditures") ){
+                            onTransactionIncomeExp(data,transactionType);
+                        }
+                        else {
+                            onTransferTransaction(data,transactionType);
+                        }
+                        countSumAfterDelay(1000);
 
-                        String transactionType = data.getStringExtra("Type");
-                        String transactionCategory = data.getStringExtra("Category");
-                        double transactionValue = data.getDoubleExtra("Value", 0);
-                        String date = getDate();
-                        int imageType = getImageInt(transactionType);
-
-                        setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
-
-                        Transaction_Item item = new Transaction_Item(transactionAccount,transactionCategory,
-                                transactionValue,"UAH",date,imageType);
-                        model.insertTransAction(item);
                     }
                 });
         if (!EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().register(this); }
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-
         super.onCreate(savedInstanceState);
     }
 
@@ -132,7 +129,7 @@ public class Dashboard_Fragment extends Fragment {
         binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
 
 
-        handler.post(updateLog);
+
 
         return binding.getRoot();
     }
@@ -144,14 +141,22 @@ public class Dashboard_Fragment extends Fragment {
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboard_VewModel.class);
         setRecyclerView();
 
+        setFragmentListeners();
 
+        countSumAfterDelay(500);
+
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void setFragmentListeners(){
         getParentFragmentManager().setFragmentResultListener("fragmentKey", getViewLifecycleOwner(), (requestKey, result) -> {
-               String name = result.getString("nameResult");
-               double value = result.getDouble("doubleResult");
-               String currency = result.getString("currencyResult");
-               int imageID = result.getInt("idResult");
-
-               dashboardViewModel.insert(new Dashboard_Account(name,value,currency,imageID));
+            String name = result.getString("nameResult");
+            double value = result.getDouble("doubleResult");
+            String currency = result.getString("currencyResult");
+            int imageID = result.getInt("idResult");
+            dashboardViewModel.insert(new Dashboard_Account(name,value,currency,imageID));
+            countSumAfterDelay(1000);
         });
 
         getParentFragmentManager().setFragmentResultListener("updateKey", getViewLifecycleOwner(), (requestKey, result) -> {
@@ -161,10 +166,10 @@ public class Dashboard_Fragment extends Fragment {
             String currency = result.getString("updatedCurrency");
             int imageID = result.getInt("updatedDrawable");
             updateResult(id,name,value,currency,imageID);
+            countSumAfterDelay(1000);
         });
-
-        super.onViewCreated(view, savedInstanceState);
     }
+
 
 
     private void setRecyclerView(){
@@ -235,7 +240,6 @@ public class Dashboard_Fragment extends Fragment {
     }
 
 
-
     //Utils method
 
     private void updateResult(int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos){
@@ -250,12 +254,13 @@ public class Dashboard_Fragment extends Fragment {
         double positiveValue = basicValue+result;
         double negativeValue = basicValue-result;
 
+
         if (type.matches("Income")) {
-            updateResult(id,name,positiveValue,"UAH",imagePos);
+            updateResult(id,name,positiveValue,currencyAccount,imagePos);
             binding.incomeView.setText(String.valueOf(result + incomeValue));
             binding.balanceView.setText(String.valueOf(balanceValue + result));
         } else {
-            updateResult(id,name,negativeValue,"UAH",imagePos);
+            updateResult(id,name,negativeValue,currencyAccount,imagePos);
             binding.expendView.setText(String.valueOf(result + expValue));
             binding.balanceView.setText(String.valueOf(balanceValue - result));
         }
@@ -263,17 +268,16 @@ public class Dashboard_Fragment extends Fragment {
         setSharedPrefValues();
     }
 
+    private void countSum(){
+        binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+    }
 
-    private final Runnable updateLog = new Runnable() {
-        public void run() {
-            try {
-                binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
-                handler.postDelayed(this, 2000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
+    private void countSumAfterDelay(long delay){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::countSum, delay);
+    }
+
+    //DO SOMETHING WITH THIS
 
     @Subscribe
     public void receiveEvent(PostPOJO postPOJO){
@@ -289,6 +293,53 @@ public class Dashboard_Fragment extends Fragment {
         prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
     }
 
+    private void onTransactionIncomeExp(Intent intent,String transactionType){
+        idAccount = intent.getIntExtra("ID",0);
+        transactionAccount = intent.getStringExtra("Account");
+        accountBasicValue = intent.getDoubleExtra("BasicValue",0);
+        imagePos = intent.getIntExtra("ImagePos",0);
+        transactionCategory = intent.getStringExtra("Category");
+        transactionValue = intent.getDoubleExtra("Value", 0);
+        date = getDate();
+        imageType = getImageInt(transactionType);
+
+        setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
+
+        Transaction_Item item = new Transaction_Item(transactionAccount,transactionCategory,
+                transactionValue,currencyAccount,date,imageType);
+        model.insertTransAction(item);
+    }
+
+    private void onTransferTransaction(Intent intent,String transactionType){
+        //String type,double result, int id, String name, double basicValue, int imagePos
+      //updateResult(id,name,positiveValue,"UAH",imagePos);
+
+        int basicAccountID = intent.getIntExtra("basicAccountID",0);
+        int targetAccountID = intent.getIntExtra("targetAccountID",0);
+
+        int basicAccountImagePos = intent.getIntExtra("basicAccountImagePos",0);
+        int targetAccountImagePos = intent.getIntExtra("targetAccountImagePos",0);
+
+        String basicAccountName  = intent.getStringExtra("basicAccountName");
+        String targetAccountName  = intent.getStringExtra("targetAccountName");
+
+        String transactionCategory = "Transfer from " + basicAccountName;
+
+        double transferValue = intent.getDoubleExtra("transferValue",0);
+        double newBasicAccountValue = intent.getDoubleExtra("newBasicAccountValue", 0);
+        double newTargetAccountValue = intent.getDoubleExtra("newTargetAccountValue", 0);
+
+
+        int imageType = getImageInt(transactionType);
+
+        updateResult(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
+        updateResult(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
+
+        Transaction_Item item = new Transaction_Item(targetAccountName,transactionCategory,
+                transferValue,currencyAccount,date,imageType);
+        model.insertTransAction(item);
+
+    }
 
     }
 

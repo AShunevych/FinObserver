@@ -13,4 +13,6 @@
     <string name="ok">Submit</string>
     <string name="cancel">Cancel</string>
     <string name="loadData">Loading data…</string>
+    <string name="target">Target account</string>
+    <string name="transfer">Transfer</string>
 </resources>

@@ -49,6 +49,15 @@
         app:layout_constraintStart_toEndOf="@+id/textView16"
         app:layout_constraintTop_toTopOf="@+id/textView16" />
 
+    <Spinner
+        android:id="@+id/targetAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/categoryTextView"
+        app:layout_constraintStart_toEndOf="@+id/categoryTextView"
+        app:layout_constraintTop_toTopOf="@+id/categoryTextView" />
+
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
@@ -133,6 +142,13 @@
             android:layout_height="wrap_content"
             android:checkable="true"
             android:text="@string/exp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/transferChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="@string/transfer" />
 
     </com.google.android.material.chip.ChipGroup>
 

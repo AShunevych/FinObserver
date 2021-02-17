@@ -65,8 +65,11 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
         if(i == 0){
             return ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_up);
         }
-        else {
+        else if (i==1){
             return ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down);
+        }
+        else{
+            return ContextCompat.getDrawable(context, R.drawable.ic_transfer);
         }
     }
 
