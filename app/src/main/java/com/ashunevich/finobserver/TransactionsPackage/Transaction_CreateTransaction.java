@@ -34,7 +34,6 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     Double transactionValue = 0.0;
     String transactionAccount, targetAccount;
     int basicAccountID,targetAccountID;
-    int pos = 0;
     int basicAccountImagePos, targetAccountImagePos;
     double basicValue, targetValue, newBasicAccountValue,newTargetAccountValue;
 

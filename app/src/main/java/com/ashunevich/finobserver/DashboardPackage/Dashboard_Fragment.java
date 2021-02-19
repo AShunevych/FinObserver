@@ -277,7 +277,6 @@ public class Dashboard_Fragment extends Fragment {
         handler.postDelayed(this::countSum, delay);
     }
 
-    //DO SOMETHING WITH THIS
 
     @Subscribe
     public void receiveEvent(PostPOJO postPOJO){
