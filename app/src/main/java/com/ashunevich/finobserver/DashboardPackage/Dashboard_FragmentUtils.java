@@ -38,7 +38,7 @@ abstract class Dashboard_FragmentUtils extends Dashboard_Fragment{
 
     protected static String getDate(){
         Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.UK);
+        SimpleDateFormat df = new SimpleDateFormat("d MMM, yyyy ", Locale.UK);
         return df.format(c);
     }
 

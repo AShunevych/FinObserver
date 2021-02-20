@@ -24,7 +24,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/transactionCurrency"
-        tools:text="25-01-200" />
+        tools:text="4,Jul, 2021" />
 
     <TextView
         android:id="@+id/tranactionAccountFrom"

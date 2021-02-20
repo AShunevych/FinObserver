@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -74,13 +75,18 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
     }
 
     //Setting the arraylist
-    public void updateItemList(List<Transaction_Item> items){
+     void updateItemList(List<Transaction_Item> items){
         final RecyclerView_DiffUtil diffCallback = new RecyclerView_DiffUtil(this.pad_list, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();
         this.pad_list.addAll(items);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    void filter(ArrayList<Transaction_Item> filter) {
+        this.pad_list = filter;
+        notifyDataSetChanged();
     }
 
 

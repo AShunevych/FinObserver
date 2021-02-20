@@ -68,7 +68,8 @@ public class Dashboard_Fragment extends Fragment {
     RoomTransactions_ViewModel model;
     ActivityResultLauncher<Intent> ResultLauncher;
     private Dashboard_SharedPrefManager prefManager;
-    String date = getDate();
+        String date = getDate();
+
 
     int idAccount,imagePos,imageType;
     String transactionAccount,transactionType,transactionCategory;
@@ -127,9 +128,6 @@ public class Dashboard_Fragment extends Fragment {
         binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
         binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
         binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
-
-
-
 
         return binding.getRoot();
     }
@@ -299,7 +297,6 @@ public class Dashboard_Fragment extends Fragment {
         imagePos = intent.getIntExtra("ImagePos",0);
         transactionCategory = intent.getStringExtra("Category");
         transactionValue = intent.getDoubleExtra("Value", 0);
-        date = getDate();
         imageType = getImageInt(transactionType);
 
         setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);

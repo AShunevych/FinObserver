@@ -3,11 +3,16 @@ package com.ashunevich.finobserver.TransactionsPackage;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 
+import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ public class Transaction_Fragment extends Fragment {
     private final List<Transaction_Item> listContentArr = new ArrayList<>();
     RecyclerView_Adapter adapter;
     RoomTransactions_ViewModel modelDatabase;
+    Boolean FILTER_TYPE = true;
 
     public Transaction_Fragment() {
         // Required empty public constructor
@@ -53,6 +59,12 @@ public class Transaction_Fragment extends Fragment {
         final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(this::initRecView, 1000);
         super.onViewCreated(view, savedInstanceState);
+
+        setSpinnerListeners();
+        setTextWatcher();
+        setSpinner();
+        UICondition(false);
+        setCheckBoxListener();
     }
     //init RecyclerView
     private void initRecView() {
@@ -65,17 +77,89 @@ public class Transaction_Fragment extends Fragment {
             binding.transactionView.smoothScrollToPosition(transaction_items.size());
         });
         Transaction_Utils.hideProgressBar(binding.progressBar,binding.loadingText);
+
+
+    }
+
+    private void setTextWatcher(){
+        binding.filterPlainText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                setFilter(editable.toString(),FILTER_TYPE);
+            }
+        });
+    }
+
+    private void setSpinner(){
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.filterTypes));
+        binding.filterType.setAdapter(adapter);
     }
 
 
 
+    private void setSpinnerListeners(){
+        binding.filterType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i){
+                    case 1: FILTER_TYPE = true;
+                    case 2: FILTER_TYPE = false;
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+    }
 
+    private void UICondition(boolean bool){
+        if(bool){
+            binding.filterType.setVisibility(View.VISIBLE);
+            binding.filterPlainText.setVisibility(View.VISIBLE);
+            binding.transactionView.smoothScrollToPosition(adapter.getItemCount());
+        }
+        else {
+            binding.filterType.setVisibility(View.GONE);
+            binding.filterPlainText.setVisibility(View.GONE);
+            binding.filterPlainText.getText().clear();
+            binding.transactionView.smoothScrollToPosition(adapter.getItemCount());
+        }
+    }
 
+    private void setCheckBoxListener(){
+        binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> UICondition(b));
+    }
 
+    private void setFilter(String text, Boolean bool){
+        ArrayList<Transaction_Item> filteredList = new ArrayList<>();
 
-    //observe data from Fragment A and create object based on it
+        for(Transaction_Item item:listContentArr){
+            if(bool){
+                if (item.getTransactionDate().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(item);
+                }
+            }
+            else {
+                if (item.getTransactionAccount().toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(item);
+                }
+            }
+        }
+        adapter.filter(filteredList);
 
+    }
 
 
     @Override

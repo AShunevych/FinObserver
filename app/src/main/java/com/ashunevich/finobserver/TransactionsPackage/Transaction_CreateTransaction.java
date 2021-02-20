@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -29,8 +32,8 @@ import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.s
 
 public class Transaction_CreateTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
-    String typeChip = null;
-    String categoryChip = null;
+    String typeChip ;
+    String categoryChip ;
     Double transactionValue = 0.0;
     String transactionAccount, targetAccount;
     int basicAccountID,targetAccountID;
@@ -43,19 +46,13 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = TransactionDialogBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setChipVisibilityAtStart();
+        setTextWatcher();
         createChips();
         setChipsGroupListener();
         getIntents();
+        setUIStatusOnStart();
 
-        binding.resumeDialog.setOnClickListener(v -> {
-            if(getBasicTransactionBool()||getTransferBool()){
-                    onOkResult();
-            }
-            else {
-                Toast.makeText(this, "Some fields may be empty", Toast.LENGTH_SHORT).show();
-            }
-        });
+        binding.resumeDialog.setOnClickListener(v -> onSubmitAction());
         binding.cancelDialog.setOnClickListener(v -> onCancelResult());
 
     }
@@ -67,10 +64,12 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                 getIntent().getStringArrayListExtra("AccountImages"));
     }
 
-    private void setChipVisibilityAtStart(){
+    private void setUIStatusOnStart(){
         binding.IncomeChipGroup.setVisibility(View.GONE);
         binding.SpendingChipGroup.setVisibility(View.GONE);
         binding.targetAccount.setVisibility(View.GONE);
+        binding.resumeDialog.setEnabled(false);
+        binding.transactionType.setVisibility(View.INVISIBLE);
     }
 
     private void setAdditionalInfo(ArrayList<String> idArray,
@@ -121,28 +120,38 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     }
 
     // TEST DELETE LATER
-    private void onOkResult() {
+    private void onSubmitAction() {
         transactionValue = Double.valueOf(binding.transactionEstimate.getText().toString());
         transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
         targetAccount = binding.targetAccount.getSelectedItem().toString();
         typeChip = Transaction_Utils.returnChipText(binding.transactionType);
 
-
         if (typeChip.matches(getResources().getString(R.string.transfer))) {
-                    transferResult();
-            } else {
-                    incomeExpResult();
+            transferResult();
+        } else {
+            incomeExpResult();
         }
     }
 
+    private void setTextWatcher(){
+        binding.transactionEstimate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-    private boolean getTransferBool(){
-        return typeChip != null && transactionValue !=null && transactionAccount != null && targetAccount != null;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                enableChipWhenValueEntered(binding.transactionEstimate);
+            }
+        });
     }
 
-    private boolean getBasicTransactionBool(){
-        return typeChip != null && transactionValue !=null && transactionAccount != null && categoryChip != null;
-    }
 
 
 
@@ -210,14 +219,39 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                         switch (returnActiveChipId(group)){
                             case R.id.incomeChip :  chipViewHandlerPos(1);break;
                             case R.id.spendingChip : chipViewHandlerPos(2);break;
-                            case R.id.transferChip : chipViewHandlerPos(3);break;
+                            case R.id.transferChip : chipViewHandlerPos(3);
+                                enableSubmitButton();break;
                         }
         });
 
-        binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
+        binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            categoryChip = Transaction_Utils.returnChipText(group);
+            enableSubmitButton();
+        });
 
-        binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> categoryChip = Transaction_Utils.returnChipText(group));
+        binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            categoryChip = Transaction_Utils.returnChipText(group);
+            enableSubmitButton();
+        });
 
+    }
+
+    private void enableSubmitButton() {
+        binding.resumeDialog.setEnabled(true);
+    }
+
+    private void enableChipWhenValueEntered(EditText editText){
+        if(getText(editText).length() > 0){
+            binding.transactionType.setVisibility(View.VISIBLE);
+        }
+        if(getText(editText).length() == 0){
+           chipViewHandlerPos(4);
+        }
+
+    }
+
+    private String getText(EditText text) {
+        return text.getText().toString().trim();
     }
 
 
@@ -228,14 +262,12 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                 binding.SpendingChipGroup.setVisibility(View.GONE);
                 binding.targetAccount.setVisibility(View.GONE);
                 setChipGroupUncheck(binding.SpendingChipGroup);
-                binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 break;
             case 2:
                 binding.SpendingChipGroup.setVisibility(View.VISIBLE);
                 binding.IncomeChipGroup.setVisibility(View.GONE);
                 binding.targetAccount.setVisibility(View.GONE);
                 setChipGroupUncheck(binding.IncomeChipGroup);
-                binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 break;
             case 3 :
                 binding.SpendingChipGroup.setVisibility(View.GONE);
@@ -244,6 +276,16 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                 binding.categoryTextView.setText(getResources().getString(R.string.target));
                 setChipGroupUncheck(binding.IncomeChipGroup);
                 setChipGroupUncheck(binding.SpendingChipGroup);
+                break;
+            case 4:
+                binding.SpendingChipGroup.setVisibility(View.GONE);
+                binding.IncomeChipGroup.setVisibility(View.GONE);
+                setChipGroupUncheck(binding.IncomeChipGroup);
+                setChipGroupUncheck(binding.SpendingChipGroup);
+                setChipGroupUncheck(binding.transactionType);
+                binding.categoryTextView.setText(getResources().getString(R.string.cat));
+                binding.transactionType.setVisibility(View.INVISIBLE);
+                binding.targetAccount.setVisibility(View.GONE);
         }
         }
 
