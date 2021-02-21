@@ -74,7 +74,10 @@ public class Transaction_Fragment extends Fragment {
         adapter = new RecyclerView_Adapter(listContentArr);
         binding.transactionView.setAdapter(adapter);
         modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
-        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> adapter.updateItemList(transaction_items));
+        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> {
+            adapter.updateItemList(transaction_items);
+            binding.transactionView.smoothScrollToPosition(0);
+        });
         hideProgressBar(binding.progressBar,binding.loadingText);
         Log.d("ITEMS COUNT",String.valueOf(adapter.getItemCount()));
     }

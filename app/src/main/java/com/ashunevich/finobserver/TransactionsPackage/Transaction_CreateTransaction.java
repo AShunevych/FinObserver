@@ -286,6 +286,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                 binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 binding.transactionType.setVisibility(View.INVISIBLE);
                 binding.targetAccount.setVisibility(View.GONE);
+                binding.resumeDialog.setEnabled(false);
         }
         }
 
