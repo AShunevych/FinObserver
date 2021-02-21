@@ -261,12 +261,14 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                 binding.IncomeChipGroup.setVisibility(View.VISIBLE);
                 binding.SpendingChipGroup.setVisibility(View.GONE);
                 binding.targetAccount.setVisibility(View.GONE);
+                binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 setChipGroupUncheck(binding.SpendingChipGroup);
                 break;
             case 2:
                 binding.SpendingChipGroup.setVisibility(View.VISIBLE);
                 binding.IncomeChipGroup.setVisibility(View.GONE);
                 binding.targetAccount.setVisibility(View.GONE);
+                binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 setChipGroupUncheck(binding.IncomeChipGroup);
                 break;
             case 3 :
