@@ -1,3 +1,3 @@
-# FinObserver
-Demo budget control app
-Features: Model-View-ViewModel pattern, RecyclerView + Room + LiveData 
+# FinObserver 
+Demo budget control app    
+Features: RecyclerView + Android Room persistance library + ViewModel
