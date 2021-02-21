@@ -5,12 +5,12 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
@@ -24,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.hideProgressBar;
 
 public class Transaction_Fragment extends Fragment {
     private TransactionsFragmentBinding binding;
@@ -68,18 +70,16 @@ public class Transaction_Fragment extends Fragment {
     }
     //init RecyclerView
     private void initRecView() {
-        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, true));
+        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new RecyclerView_Adapter(listContentArr);
         binding.transactionView.setAdapter(adapter);
         modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
-        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> {
-            adapter.updateItemList(transaction_items);
-            binding.transactionView.smoothScrollToPosition(transaction_items.size());
-        });
-        Transaction_Utils.hideProgressBar(binding.progressBar,binding.loadingText);
-
-
+        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> adapter.updateItemList(transaction_items));
+        hideProgressBar(binding.progressBar,binding.loadingText);
+        Log.d("ITEMS COUNT",String.valueOf(adapter.getItemCount()));
     }
+
+
 
     private void setTextWatcher(){
         binding.filterPlainText.addTextChangedListener(new TextWatcher() {
@@ -128,13 +128,11 @@ public class Transaction_Fragment extends Fragment {
         if(bool){
             binding.filterType.setVisibility(View.VISIBLE);
             binding.filterPlainText.setVisibility(View.VISIBLE);
-            binding.transactionView.smoothScrollToPosition(adapter.getItemCount());
         }
         else {
             binding.filterType.setVisibility(View.GONE);
             binding.filterPlainText.setVisibility(View.GONE);
             binding.filterPlainText.getText().clear();
-            binding.transactionView.smoothScrollToPosition(adapter.getItemCount());
         }
     }
 
@@ -158,7 +156,6 @@ public class Transaction_Fragment extends Fragment {
             }
         }
         adapter.filter(filteredList);
-
     }
 
 
@@ -167,5 +164,6 @@ public class Transaction_Fragment extends Fragment {
         binding = null;
         super.onDestroyView();
     }
-    
+
+
 }

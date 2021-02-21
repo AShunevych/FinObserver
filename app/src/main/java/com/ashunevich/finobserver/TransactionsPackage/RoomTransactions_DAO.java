@@ -15,7 +15,7 @@ public interface RoomTransactions_DAO {
     @Insert (onConflict = OnConflictStrategy.REPLACE)
     void insert(Transaction_Item...items);
 
-    @Query ("SELECT * FROM transactions")
+    @Query ("SELECT * FROM transactions ORDER BY itemID DESC")
     LiveData<List<Transaction_Item>> getAllTransactions();
 
     @Query("DELETE FROM transactions")
