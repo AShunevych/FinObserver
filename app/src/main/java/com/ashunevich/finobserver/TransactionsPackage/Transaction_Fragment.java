@@ -25,7 +25,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.hideProgressBar;
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.hideProgressBar;
 
 public class Transaction_Fragment extends Fragment {
     private TransactionsFragmentBinding binding;

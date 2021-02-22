@@ -10,7 +10,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-class Transaction_Utils {
+class Utils_Transactions {
      protected static void hideProgressBar(ProgressBar bar, TextView textView){
          bar.setVisibility(View.GONE);
          textView.setVisibility(View.GONE);
@@ -36,12 +36,21 @@ class Transaction_Utils {
         return idChip;
     }
 
+    protected static double stringToDouble(String string){
+         return Double.parseDouble(string);
+    }
+
+    protected static int stringToInteger(String string){
+        return Integer.parseInt(string);
+    }
+
+    protected static String getSelectedItemFromSpinner(Spinner spinner){
+         return  spinner.getSelectedItem().toString();
+    }
+
     protected static void setChipGroupUncheck(ChipGroup chipGroup){
         chipGroup.clearCheck();
     }
 
-    protected static int SpinnerPosition(Spinner spinner){
-        return spinner.getSelectedItemPosition();
-    }
 
 }

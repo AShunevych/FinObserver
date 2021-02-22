@@ -45,30 +45,30 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.BALANCE;
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.EXPENDITURES;
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.INCOME;
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.getDate;
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.getImageInt;
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.returnString;
-import static com.ashunevich.finobserver.DashboardPackage.Dashboard_FragmentUtils.returnStringFromObj;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.BALANCE;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.EXPENDITURES;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.INCOME;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.getDate;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.getImageInt;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnString;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnStringFromObj;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.textToDouble;
 
 
 public class Dashboard_Fragment extends Fragment {
 
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
-  private final List<Dashboard_Account> AccountItemList = new ArrayList<>();
+    private final List<Dashboard_Account> AccountItemList = new ArrayList<>();
 
     private RoomDashboard_VewModel dashboardViewModel;
 
     RecyclerView_Adapter adapter;
-     Double incomeValue,expValue,balanceValue;
-    Handler handler = new Handler();
+    double incomeValue,expValue,balanceValue;
     RoomTransactions_ViewModel model;
     ActivityResultLauncher<Intent> ResultLauncher;
     private Dashboard_SharedPrefManager prefManager;
-        String date = getDate();
+    String date = getDate();
 
 
     int idAccount,imagePos,imageType;
@@ -121,7 +121,7 @@ public class Dashboard_Fragment extends Fragment {
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "newAccountDialogFragment");
         });
 
-        prefManager = new Dashboard_SharedPrefManager(requireActivity(), Dashboard_FragmentUtils.PREFERENCE_NAME);
+        prefManager = new Dashboard_SharedPrefManager(requireActivity(), Utils_Dashboard.PREFERENCE_NAME);
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
 
@@ -201,14 +201,13 @@ public class Dashboard_Fragment extends Fragment {
             intent.putStringArrayListExtra("AccountImages", imagePos);
             ResultLauncher.launch(intent);
         } else {
-            Toast.makeText(requireContext(),"There is no active accounts.Please create",Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(),"There is no active accounts.",Toast.LENGTH_SHORT).show();
         }
     }
 
 
     @Override
     public void onDetach() {
-        handler.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().unregister(this); }
         super.onDetach();
     }
@@ -246,9 +245,9 @@ public class Dashboard_Fragment extends Fragment {
 
 
     private void setResult(String type,double result, int id, String name, double basicValue, int imagePos){
-        incomeValue = Dashboard_FragmentUtils.stringToDouble(binding.incomeView);
-        expValue = Dashboard_FragmentUtils.stringToDouble(binding.expendView);
-        balanceValue = Dashboard_FragmentUtils.stringToDouble(binding.balanceView);
+        incomeValue = textToDouble(binding.incomeView);
+        expValue = textToDouble(binding.expendView);
+        balanceValue = textToDouble(binding.balanceView);
         double positiveValue = basicValue+result;
         double negativeValue = basicValue-result;
 

@@ -22,7 +22,6 @@ public class PageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-
         return fragments.get(position);
     }
 

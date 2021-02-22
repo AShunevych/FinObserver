@@ -1,6 +1,8 @@
 package com.ashunevich.finobserver.DashboardPackage;
 
 
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
@@ -10,8 +12,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static com.ashunevich.finobserver.UtilsPackage.Utils.getTextFrom;
 
-abstract class Dashboard_FragmentUtils extends Dashboard_Fragment{
+
+abstract class Utils_Dashboard {
 
     public static String PREFERENCE_NAME ="APP_PREF";
     protected static String BALANCE="BALANCE";
@@ -42,12 +46,17 @@ abstract class Dashboard_FragmentUtils extends Dashboard_Fragment{
         return df.format(c);
     }
 
-    protected static Double stringToDouble(TextView view){
+    protected static Double textToDouble(TextView view){
         return Double.parseDouble(view.getText().toString());
     }
 
-    protected static String returnStringFromObj(PostPOJO postPOJO){
+    protected static String returnStringFromObj(PostPOJO postPOJO) {
         return postPOJO.getZero();
+    }
+
+
+    protected static void enableSubmitIfReady(Button button,EditText text1, EditText text2) {
+        button.setEnabled(getTextFrom(text1).length() > 0 && getTextFrom(text2).length() > 0);
     }
 
 }

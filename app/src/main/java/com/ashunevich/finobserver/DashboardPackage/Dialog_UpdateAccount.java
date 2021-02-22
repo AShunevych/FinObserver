@@ -10,7 +10,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.UtilsPackage.CustomSpinnerAdapter;
@@ -23,6 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
+
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.enableSubmitIfReady;
+import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
 
 public class Dialog_UpdateAccount extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
@@ -75,18 +77,9 @@ public class Dialog_UpdateAccount extends DialogFragment {
 
            @Override
            public void afterTextChanged(Editable editable) {
-               enableSubmitIfReady(binding.newAccountName,binding.newAccountValue);
+               enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue);
            }
        };
-
-
-    private void enableSubmitIfReady(EditText text1, EditText text2) {
-        binding.okButton.setEnabled(getText(text1).length() > 0 && getText(text2).length() > 0);
-    }
-
-    private String getText(EditText text) {
-        return text.getText().toString().trim();
-    }
 
 
     private void postValue() {
@@ -96,17 +89,11 @@ public class Dialog_UpdateAccount extends DialogFragment {
             result.putString("updatedName",binding.newAccountName.getText().toString());
             result.putDouble("updatedValue",Double.parseDouble(binding.newAccountValue.getText().toString()));
             result.putString("updatedCurrency",currency);
-            result.putInt("updatedDrawable",DrawablePostion());
+            result.putInt("updatedDrawable", getSelectedItemOnSpinnerPosition(binding.drawableSpinner));
             getParentFragmentManager().setFragmentResult("updateKey",result);
         }
 
     }
-
-
-    private int DrawablePostion(){
-        return binding.drawableSpinner.getSelectedItemPosition();
-    }
-
 
     private void fillSpinner(){
         images = new ArrayList<>();

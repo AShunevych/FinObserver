@@ -27,8 +27,14 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.returnActiveChipId;
-import static com.ashunevich.finobserver.TransactionsPackage.Transaction_Utils.setChipGroupUncheck;
+
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.getSelectedItemFromSpinner;
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.returnActiveChipId;
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.returnChipText;
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.setChipGroupUncheck;
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.stringToDouble;
+import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.stringToInteger;
+import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
 
 public class Transaction_CreateTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
@@ -78,10 +84,10 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         binding.ActiveAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int spinnerPos = Transaction_Utils.SpinnerPosition(binding.ActiveAccounts);
-                basicAccountID = Integer.parseInt(idArray.get(spinnerPos));
-                basicValue = Double.parseDouble(valueArray.get(spinnerPos));
-                basicAccountImagePos = Integer.parseInt(imagesArray.get(spinnerPos));
+                int spinnerPos = getSelectedItemOnSpinnerPosition(binding.ActiveAccounts);
+                basicAccountID = stringToInteger(idArray.get(spinnerPos));
+                basicValue = stringToDouble(valueArray.get(spinnerPos));
+                basicAccountImagePos = stringToInteger(imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -93,10 +99,10 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         binding.targetAccount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                int spinnerPos = Transaction_Utils.SpinnerPosition(binding.targetAccount);
-                targetAccountID = Integer.parseInt(idArray.get(spinnerPos));
-                targetValue = Double.parseDouble(valueArray.get(spinnerPos));
-                targetAccountImagePos = Integer.parseInt(imagesArray.get(spinnerPos));
+                int spinnerPos = getSelectedItemOnSpinnerPosition(binding.targetAccount);
+                targetAccountID = stringToInteger(idArray.get(spinnerPos));
+                targetValue = stringToDouble(valueArray.get(spinnerPos));
+                targetAccountImagePos = stringToInteger(imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -121,10 +127,10 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
 
     // TEST DELETE LATER
     private void onSubmitAction() {
-        transactionValue = Double.valueOf(binding.transactionEstimate.getText().toString());
-        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
-        targetAccount = binding.targetAccount.getSelectedItem().toString();
-        typeChip = Transaction_Utils.returnChipText(binding.transactionType);
+        transactionValue = stringToDouble(binding.transactionEstimate.getText().toString());
+        transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
+        targetAccount = getSelectedItemFromSpinner(binding.targetAccount);
+        typeChip = returnChipText(binding.transactionType);
 
         if (typeChip.matches(getResources().getString(R.string.transfer))) {
             transferResult();
@@ -190,8 +196,8 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     private void incomeExpResult(){
         ////int updatedID, String updatedName, double updatedValue, int updatedImagePos
         //for update
-        transactionValue = Double.valueOf(binding.transactionEstimate.getText().toString());
-        transactionAccount = binding.ActiveAccounts.getSelectedItem().toString();
+        transactionValue = stringToDouble(binding.transactionEstimate.getText().toString());
+        transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
         Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
 
             previousScreen.putExtra("ID", basicAccountID); //updatedID
@@ -219,18 +225,17 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
                         switch (returnActiveChipId(group)){
                             case R.id.incomeChip :  chipViewHandlerPos(1);break;
                             case R.id.spendingChip : chipViewHandlerPos(2);break;
-                            case R.id.transferChip : chipViewHandlerPos(3);
-                                enableSubmitButton();break;
+                            case R.id.transferChip : chipViewHandlerPos(3); enableSubmitButton();break;
                         }
         });
 
         binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            categoryChip = Transaction_Utils.returnChipText(group);
+            categoryChip = returnChipText(group);
             enableSubmitButton();
         });
 
         binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            categoryChip = Transaction_Utils.returnChipText(group);
+            categoryChip = returnChipText(group);
             enableSubmitButton();
         });
 
@@ -244,7 +249,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         if(getText(editText).length() > 0){
             binding.transactionType.setVisibility(View.VISIBLE);
         }
-        if(getText(editText).length() == 0){
+        else{
            chipViewHandlerPos(4);
         }
 
@@ -255,8 +260,8 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
     }
 
 
-        private void chipViewHandlerPos(int i){
-        switch (i){
+        private void chipViewHandlerPos(int UIHandlingPos){
+        switch (UIHandlingPos){
             case 1 :
                 binding.IncomeChipGroup.setVisibility(View.VISIBLE);
                 binding.SpendingChipGroup.setVisibility(View.GONE);
