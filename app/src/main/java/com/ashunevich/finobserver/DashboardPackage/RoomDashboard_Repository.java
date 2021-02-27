@@ -1,15 +1,14 @@
 package com.ashunevich.finobserver.DashboardPackage;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
 class RoomDashboard_Repository {
-    private RoomDashboard_DAO mDashboardDao;
-    private LiveData<List<Dashboard_Account>> mAllAccounts;
+    private final RoomDashboard_DAO mDashboardDao;
+    private final LiveData<List<Dashboard_Account>> mAllAccounts;
 
     RoomDashboard_Repository(Application application) {
         RoomDashboard_Database db = RoomDashboard_Database.getDatabase(application);
@@ -17,27 +16,36 @@ class RoomDashboard_Repository {
         mAllAccounts = mDashboardDao.getAllAccounts();
     }
 
-    LiveData<List<Dashboard_Account>> getAllAcounts(){
+    LiveData<List<Dashboard_Account>> getAllAccounts(){
         return mAllAccounts;
     }
 
     public void insert (Dashboard_Account account) {
-        new insertAsyncTask(mDashboardDao).execute(account);
+        RoomDashboard_Database.dashboardDatabaseWriteExecutor.execute(() -> mDashboardDao.insert(account));
     }
 
     public void deleteAccount(Dashboard_Account account)  {
-        new deleteWordAsyncTask(mDashboardDao).execute(account);
+        RoomDashboard_Database.dashboardDatabaseWriteExecutor.execute(() -> mDashboardDao.delete(account));
     }
 
     public void deleteAll()  {
-        new deleteAllWordsAsyncTask(mDashboardDao).execute();
+        RoomDashboard_Database.dashboardDatabaseWriteExecutor.execute(mDashboardDao::deleteAll);
     }
+
+    public void updateEntity(Dashboard_Account account)  {
+        RoomDashboard_Database.dashboardDatabaseWriteExecutor.execute(() -> mDashboardDao.update(account));
+    }
+     /*
+    // !-----DEPRECATED ASYNC TASK CODE----!
 
     public void updateEntity(Dashboard_Account account)  {
         new updateWordAsyncTask(mDashboardDao).execute(account);
     }
 
-
+     //!--- INSERT OPERATION --!
+   public void insert (Dashboard_Account account) {
+        new insertAsyncTask(mDashboardDao).execute(account);
+    }
     private static class insertAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
 
         private RoomDashboard_DAO mAsyncTaskDao;
@@ -53,8 +61,11 @@ class RoomDashboard_Repository {
         }
     }
 
-
-    private static class deleteAllWordsAsyncTask extends AsyncTask<Void, Void, Void> {
+        //!--- DELETE ALL OPERATION ---!
+     public void deleteAll()  {
+        new deleteAllAccountsAsyncTask(mDashboardDao).execute();
+    }
+    private static class deleteAllAccountsAsyncTask extends AsyncTask<Void, Void, Void> {
         private RoomDashboard_DAO mAsyncTaskDao;
 
         deleteAllWordsAsyncTask(RoomDashboard_DAO mDashboardDao) {
@@ -68,8 +79,11 @@ class RoomDashboard_Repository {
         }
     }
 
-
-    private static class deleteWordAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
+     //!--- DELETE SINGLE ITEM OPERATION ---!
+    public void deleteAccount(Dashboard_Account account)  {
+        new deleteAccountAsyncTask(mDashboardDao).execute(account);
+    }
+    private static class deleteAccountAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
         private RoomDashboard_DAO mAsyncTaskDao;
 
         deleteWordAsyncTask(RoomDashboard_DAO mDashboardDao) {
@@ -84,7 +98,7 @@ class RoomDashboard_Repository {
 
     }
 
-
+        //!--- UPDATE ITEM OPERATION ---!
     private static class updateWordAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {
         private RoomDashboard_DAO mAsyncTaskDao;
 
@@ -98,6 +112,7 @@ class RoomDashboard_Repository {
             return null;
         }
     }
+     */
 
 
 

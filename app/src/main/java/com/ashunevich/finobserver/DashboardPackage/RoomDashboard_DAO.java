@@ -19,6 +19,6 @@ public interface RoomDashboard_DAO extends FactoryDAO<Dashboard_Account> {
     @Query("DELETE FROM active_accounts")
      void deleteAll();
 
-    @Query("SELECT * FROM active_accounts" )
+    @Query("SELECT * FROM active_accounts ORDER BY accountID DESC" )
     LiveData<List<Dashboard_Account>> getAllAccounts();
 }

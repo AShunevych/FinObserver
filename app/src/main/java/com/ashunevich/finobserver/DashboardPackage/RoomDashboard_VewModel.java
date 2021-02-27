@@ -12,17 +12,17 @@ import androidx.lifecycle.LiveData;
 
 
 public class RoomDashboard_VewModel extends AndroidViewModel {
-    private RoomDashboard_Repository mRepo;
-    private LiveData<List<Dashboard_Account>> mAllAccounts;
+    private final RoomDashboard_Repository mRepo;
+    private final LiveData<List<Dashboard_Account>> mAllAccounts;
 
 
     public RoomDashboard_VewModel(@NonNull Application application) {
         super(application);
         mRepo = new RoomDashboard_Repository(application);
-        mAllAccounts = mRepo.getAllAcounts();
+        mAllAccounts = mRepo.getAllAccounts();
     }
 
-    LiveData<List<Dashboard_Account>> getmAllAccounts() {
+    LiveData<List<Dashboard_Account>> getAllAccounts() {
         return mAllAccounts;
     }
 
@@ -34,7 +34,6 @@ public class RoomDashboard_VewModel extends AndroidViewModel {
 
     public void deleteAccount(Dashboard_Account account) {mRepo.deleteAccount(account);}
 
-    public void updateAccount(Dashboard_Account account) {
-        mRepo.updateEntity(account);}
+    public void updateAccount(Dashboard_Account account) { mRepo.updateEntity(account);}
 
 }

@@ -97,13 +97,11 @@ public class Dashboard_Fragment extends Fragment {
                             onTransferTransaction(data,transactionType);
                         }
                         countSumAfterDelay(1000);
-
                     }
                 });
         if (!EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().register(this); }
     }
-
-
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,7 +111,6 @@ public class Dashboard_Fragment extends Fragment {
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.newAccount.setOnClickListener(view -> {
@@ -125,9 +122,7 @@ public class Dashboard_Fragment extends Fragment {
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
 
-        binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
-        binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
-        binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
+        getSharedPrefValues();
 
         return binding.getRoot();
     }
@@ -163,7 +158,7 @@ public class Dashboard_Fragment extends Fragment {
             double value = result.getDouble("updatedValue");
             String currency = result.getString("updatedCurrency");
             int imageID = result.getInt("updatedDrawable");
-            updateResult(id,name,value,currency,imageID);
+            updateAccount(id,name,value,currency,imageID);
             countSumAfterDelay(1000);
         });
     }
@@ -173,7 +168,7 @@ public class Dashboard_Fragment extends Fragment {
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new RecyclerView_Adapter(AccountItemList,getParentFragmentManager());
-        dashboardViewModel.getmAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
+        dashboardViewModel.getAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
         setupItemTouchHelper();
     }
@@ -231,6 +226,7 @@ public class Dashboard_Fragment extends Fragment {
                 int position = viewHolder.getAdapterPosition();
                 Dashboard_Account account = adapter.getAccountAtPosition(position);
                 dashboardViewModel.deleteAccount(account);
+                countSumAfterDelay(500);
             }
         });
         helper.attachToRecyclerView(binding.accountView);
@@ -239,25 +235,24 @@ public class Dashboard_Fragment extends Fragment {
 
     //Utils method
 
-    private void updateResult(int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos){
+    private void updateAccount(int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos){
         dashboardViewModel.updateAccount(new Dashboard_Account(updatedID,updatedName,updatedValue,updatedCurrency,updatedImagePos));
     }
 
 
-    private void setResult(String type,double result, int id, String name, double basicValue, int imagePos){
+    private void onIncExpTransactionResult(String type, double result, int id, String name, double basicValue, int imagePos){
         incomeValue = textToDouble(binding.incomeView);
         expValue = textToDouble(binding.expendView);
         balanceValue = textToDouble(binding.balanceView);
         double positiveValue = basicValue+result;
         double negativeValue = basicValue-result;
 
-
         if (type.matches("Income")) {
-            updateResult(id,name,positiveValue,currencyAccount,imagePos);
+            updateAccount(id,name,positiveValue,currencyAccount,imagePos);
             binding.incomeView.setText(String.valueOf(result + incomeValue));
             binding.balanceView.setText(String.valueOf(balanceValue + result));
         } else {
-            updateResult(id,name,negativeValue,currencyAccount,imagePos);
+            updateAccount(id,name,negativeValue,currencyAccount,imagePos);
             binding.expendView.setText(String.valueOf(result + expValue));
             binding.balanceView.setText(String.valueOf(balanceValue - result));
         }
@@ -280,6 +275,7 @@ public class Dashboard_Fragment extends Fragment {
         binding.balanceView.setText(returnStringFromObj(postPOJO));
         binding.incomeView.setText(returnStringFromObj(postPOJO));
         binding.expendView.setText(returnStringFromObj(postPOJO));
+        binding.totalBalanceValue.setText(returnStringFromObj(postPOJO));
         setSharedPrefValues();
     }
 
@@ -287,6 +283,12 @@ public class Dashboard_Fragment extends Fragment {
         prefManager.setValue(BALANCE, returnString(binding.balanceView));
         prefManager.setValue(INCOME,returnString(binding.incomeView));
         prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
+    }
+
+    private void getSharedPrefValues(){
+        binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
+        binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
+        binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
     }
 
     private void onTransactionIncomeExp(Intent intent,String transactionType){
@@ -298,7 +300,7 @@ public class Dashboard_Fragment extends Fragment {
         transactionValue = intent.getDoubleExtra("Value", 0);
         imageType = getImageInt(transactionType);
 
-        setResult (transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
+        onIncExpTransactionResult(transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
 
         Transaction_Item item = new Transaction_Item(transactionAccount,transactionCategory,
                 transactionValue,currencyAccount,date,imageType);
@@ -327,8 +329,8 @@ public class Dashboard_Fragment extends Fragment {
 
         int imageType = getImageInt(transactionType);
 
-        updateResult(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
-        updateResult(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
+        updateAccount(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
+        updateAccount(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
 
         Transaction_Item item = new Transaction_Item(targetAccountName,transactionCategory,
                 transferValue,currencyAccount,date,imageType);

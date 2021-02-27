@@ -1,15 +1,14 @@
 package com.ashunevich.finobserver.TransactionsPackage;
 
 import android.app.Application;
-import android.os.AsyncTask;
 
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
 public class RoomTransactions_Repository {
-    private RoomTransactions_DAO mTransactionsDao;
-    private LiveData<List<Transaction_Item>> mAllTransactions;
+    private final RoomTransactions_DAO mTransactionsDao;
+    private final LiveData<List<Transaction_Item>> mAllTransactions;
 
     RoomTransactions_Repository(Application application){
             RoomTransactions_Database db = RoomTransactions_Database.getDatabase(application);
@@ -22,13 +21,19 @@ public class RoomTransactions_Repository {
     }
 
     public void insertTransaction (Transaction_Item item){
+        RoomTransactions_Database.transactionDatabaseWriteExecutor.execute(() -> mTransactionsDao.insert(item));
+    }
+
+    public void deleteAllTransactions (){
+        RoomTransactions_Database.transactionDatabaseWriteExecutor.execute(mTransactionsDao::deleteAll);
+    }
+/*
+  // !-----DEPRECATED ASYNC TASK CODE----!
+
+  //!--- INSERT OPERATION ---!
+    public void insertTransaction (Transaction_Item item){
             new insertAsyncTask(mTransactionsDao).execute(item);
     }
-
-    public void deleteAllTransactions ( ){
-        new deleteAllAsyncTask(mTransactionsDao).execute();
-    }
-
 
     private static class insertAsyncTask extends AsyncTask<Transaction_Item,Void, Void>{
         private RoomTransactions_DAO mAsyncTaskDao;
@@ -44,6 +49,10 @@ public class RoomTransactions_Repository {
         }
     }
 
+     //!--- DELETE ALL ITEMS OPERATION ---!
+    public void deleteAllTransactions ( ){
+        new deleteAllAsyncTask(mTransactionsDao).execute();
+    }
     private static class deleteAllAsyncTask extends AsyncTask<Transaction_Item,Void, Void>{
         private RoomTransactions_DAO mAsyncTaskDao;
 
@@ -57,5 +66,5 @@ public class RoomTransactions_Repository {
             return null;
         }
     }
-
+ */
 }

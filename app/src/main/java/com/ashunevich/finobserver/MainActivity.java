@@ -87,9 +87,7 @@ public class MainActivity extends AppCompatActivity {
             Snackbar.make(binding.mainLayout,"All data was deleted.", BaseTransientBottomBar.LENGTH_SHORT).show();
          });
 
-        builder.setNegativeButton("NO", (dialogInterface, i) -> {
-          dialogInterface.cancel();
-        });
+        builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
