@@ -4,7 +4,7 @@
     <solid android:color="@color/backGround"/>
     <stroke
         android:width="0.1dp"
-        android:color="@color/drawableColor"/>
+        android:color="@color/backGround_70"/>
     <padding
         android:bottom="5dp"
         android:left="5dp"

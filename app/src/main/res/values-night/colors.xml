@@ -3,4 +3,5 @@
 
     <color name="drawableColor">#FFFFFFFF</color>
     <color name="backGround">#1b1b1b</color>
+    <color name="backGround_70">#101b1b1b</color>
 </resources>
