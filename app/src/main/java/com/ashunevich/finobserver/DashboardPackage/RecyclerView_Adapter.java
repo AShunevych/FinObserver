@@ -23,9 +23,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_UPDATE;
 
-public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyViewHolder>  {
-    private List<Dashboard_Account> pad_list;
+
+class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyViewHolder>  {
+    private final List<Dashboard_Account> pad_list;
     Context context;
     FragmentManager manager;
 
@@ -55,7 +57,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
 
                 //TEST
             holder.binding.redactButon.setOnClickListener(view -> {
-                DialogFragment UpdateAccountDialogFragment = new Dialog_UpdateAccount();
+                DialogFragment UpdateAccountDialogFragment = new Dashboard_Account_Dialog();
                 setBundleArgs(UpdateAccountDialogFragment,position);
                 UpdateAccountDialogFragment.show(manager,"UpdateDialog");
             });
@@ -70,6 +72,7 @@ public class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adap
        bundle.putString("accountName",account.getAccountName());
        bundle.putDouble("accountValue",account.getAccountValue());
        bundle.putString("accountCurrency",account.getAccountCurrency());
+       bundle.putString("operationKey",KEY_UPDATE);
        bundle.putInt("imageID",account.getImageID());
        fragment.setArguments(bundle);
    }

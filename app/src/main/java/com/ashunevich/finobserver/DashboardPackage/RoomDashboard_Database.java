@@ -2,8 +2,6 @@ package com.ashunevich.finobserver.DashboardPackage;
 
 import android.content.Context;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -14,8 +12,6 @@ abstract class RoomDashboard_Database extends RoomDatabase {
         public abstract RoomDashboard_DAO dashboard_dao();
 
         private static RoomDashboard_Database INSTANCE;
-        static final ExecutorService dashboardDatabaseWriteExecutor =
-                Executors.newSingleThreadExecutor();
 
 
         public static RoomDashboard_Database getDatabase(final Context context) {

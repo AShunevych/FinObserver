@@ -10,6 +10,7 @@ import android.os.Handler;
 
 
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.BALANCE;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.EXPENDITURES;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.INCOME;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_CREATE;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_DIALOG;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_UPDATE;
+
+
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.getDate;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.getImageInt;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnString;
@@ -96,7 +102,7 @@ public class Dashboard_Fragment extends Fragment {
                         else {
                             onTransferTransaction(data,transactionType);
                         }
-                        countSumAfterDelay(1000);
+                        countSumAfterDelay();
                     }
                 });
         if (!EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().register(this); }
@@ -114,14 +120,16 @@ public class Dashboard_Fragment extends Fragment {
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new Dialog_CreateAccount();
-            newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "newAccountDialogFragment");
+            newAccountDialogFragment = new Dashboard_Account_Dialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("operationKey",KEY_CREATE);
+            newAccountDialogFragment.setArguments(bundle);
+            newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
         });
 
         prefManager = new Dashboard_SharedPrefManager(requireActivity(), Utils_Dashboard.PREFERENCE_NAME);
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
-
         getSharedPrefValues();
 
         return binding.getRoot();
@@ -134,32 +142,30 @@ public class Dashboard_Fragment extends Fragment {
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboard_VewModel.class);
         setRecyclerView();
 
-        setFragmentListeners();
-
-        countSumAfterDelay(500);
+        setupFragmentResultListener();
+         countSumAfterDelay();
 
 
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void setFragmentListeners(){
-        getParentFragmentManager().setFragmentResultListener("fragmentKey", getViewLifecycleOwner(), (requestKey, result) -> {
-            String name = result.getString("nameResult");
-            double value = result.getDouble("doubleResult");
-            String currency = result.getString("currencyResult");
-            int imageID = result.getInt("idResult");
-            dashboardViewModel.insert(new Dashboard_Account(name,value,currency,imageID));
-            countSumAfterDelay(1000);
-        });
+    private void setupFragmentResultListener(){
 
-        getParentFragmentManager().setFragmentResultListener("updateKey", getViewLifecycleOwner(), (requestKey, result) -> {
-            int id = result.getInt("id");
-            String name = result.getString("updatedName");
-            double value = result.getDouble("updatedValue");
-            String currency = result.getString("updatedCurrency");
-            int imageID = result.getInt("updatedDrawable");
-            updateAccount(id,name,value,currency,imageID);
-            countSumAfterDelay(1000);
+        getParentFragmentManager().setFragmentResultListener(KEY_DIALOG, getViewLifecycleOwner(), (requestKey, result) -> {
+            String operationType = result.getString("operationType");
+            Log.d("OPERATION KEY", operationType);
+            String name = result.getString("accountName");
+            double value = result.getDouble("accountValue");
+            String currency = result.getString("accountCurrency");
+            int drawablePos = result.getInt("accountDrawablePos");
+            if(operationType.matches(KEY_UPDATE)){
+                int id = result.getInt("accountID");
+                updateAccount(id,name,value,currency,drawablePos);
+            }
+            else{
+                insertAccount(name,value,currency,drawablePos);
+            }
+
         });
     }
 
@@ -223,20 +229,26 @@ public class Dashboard_Fragment extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                Dashboard_Account account = adapter.getAccountAtPosition(position);
-                dashboardViewModel.deleteAccount(account);
-                countSumAfterDelay(500);
+               deleteAccount(viewHolder.getAdapterPosition());
             }
         });
         helper.attachToRecyclerView(binding.accountView);
     }
 
 
-    //Utils method
+    private void updateAccount(int accountId, String accountName, double accountValue, String accountCurrency, int accountDrawablePos){
+        dashboardViewModel.update(new Dashboard_Account(accountId,accountName,accountValue,accountCurrency,accountDrawablePos));
+        countSumAfterDelay();
+    }
 
-    private void updateAccount(int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos){
-        dashboardViewModel.updateAccount(new Dashboard_Account(updatedID,updatedName,updatedValue,updatedCurrency,updatedImagePos));
+    private void insertAccount(String accountName,double accountValue, String accountCurrency,int accountDrawablePos ){
+        dashboardViewModel.insert(new Dashboard_Account(accountName,accountValue,accountCurrency,accountDrawablePos));
+        countSumAfterDelay();
+    }
+
+    private void deleteAccount(int pos){
+        dashboardViewModel.delete(adapter.getAccountAtPosition(pos));
+        countSumAfterDelay();
     }
 
 
@@ -264,24 +276,25 @@ public class Dashboard_Fragment extends Fragment {
         binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
     }
 
-    private void countSumAfterDelay(long delay){
+    private void countSumAfterDelay(){
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::countSum, delay);
+        handler.postDelayed(this::countSum, 500);
     }
 
 
     @Subscribe
     public void receiveEvent(PostPOJO postPOJO){
-        binding.balanceView.setText(returnStringFromObj(postPOJO));
-        binding.incomeView.setText(returnStringFromObj(postPOJO));
-        binding.expendView.setText(returnStringFromObj(postPOJO));
-        binding.totalBalanceValue.setText(returnStringFromObj(postPOJO));
+        String zeroString = returnStringFromObj(postPOJO);
+        binding.balanceView.setText(zeroString);
+        binding.incomeView.setText(zeroString);
+        binding.expendView.setText(zeroString);
+        binding.totalBalanceValue.setText(zeroString);
         setSharedPrefValues();
     }
 
     private void setSharedPrefValues(){
         prefManager.setValue(BALANCE, returnString(binding.balanceView));
-        prefManager.setValue(INCOME,returnString(binding.incomeView));
+        prefManager.setValue(BALANCE, returnString(binding.balanceView));
         prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
     }
 
@@ -332,10 +345,8 @@ public class Dashboard_Fragment extends Fragment {
         updateAccount(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
         updateAccount(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
 
-        Transaction_Item item = new Transaction_Item(targetAccountName,transactionCategory,
-                transferValue,currencyAccount,date,imageType);
-        model.insertTransAction(item);
-
+        model.insertTransAction(new Transaction_Item(targetAccountName,transactionCategory,
+                transferValue,currencyAccount,date,imageType));
     }
 
     }

@@ -3,6 +3,8 @@ package com.ashunevich.finobserver.TransactionsPackage;
 import android.content.Context;
 
 
+import com.ashunevich.finobserver.UtilsPackage.Utils;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,8 +17,6 @@ abstract class RoomTransactions_Database extends RoomDatabase {
 
     public abstract RoomTransactions_DAO transactions_dao();
     private static RoomTransactions_Database INSTANCE;
-    static final ExecutorService transactionDatabaseWriteExecutor =
-            Executors.newSingleThreadExecutor();
 
     public static RoomTransactions_Database getDatabase(final Context context) {
         if (INSTANCE == null) {

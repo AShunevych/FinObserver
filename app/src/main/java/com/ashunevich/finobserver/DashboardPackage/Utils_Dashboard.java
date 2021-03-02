@@ -17,11 +17,13 @@ import static com.ashunevich.finobserver.UtilsPackage.Utils.getTextFrom;
 
 abstract class Utils_Dashboard {
 
-    public static String PREFERENCE_NAME ="APP_PREF";
-    protected static String BALANCE="BALANCE";
-    protected static String INCOME="INCOME";
-    protected static String EXPENDITURES="EXPENDITURES";
-    //protected static String TOTAL_BALANCE = "BALANCE";
+    protected static String PREFERENCE_NAME ="APP_PREF";
+    protected static final String BALANCE="BALANCE";
+    protected static final String INCOME="INCOME";
+    protected static final String EXPENDITURES="EXPENDITURES";
+    protected static final String KEY_UPDATE = "UPDATE";
+    protected static final String KEY_CREATE = "CREATE";
+    protected static final String KEY_DIALOG = "DIALOG";
 
 
    protected static int getImageInt(String type){

@@ -2,9 +2,13 @@ package com.ashunevich.finobserver.TransactionsPackage;
 
 import android.app.Application;
 
+import com.ashunevich.finobserver.UtilsPackage.Utils;
+
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
+
+import static com.ashunevich.finobserver.UtilsPackage.Utils.singleThreadExecutor;
 
 public class RoomTransactions_Repository {
     private final RoomTransactions_DAO mTransactionsDao;
@@ -20,12 +24,12 @@ public class RoomTransactions_Repository {
         return mAllTransactions;
     }
 
-    public void insertTransaction (Transaction_Item item){
-        RoomTransactions_Database.transactionDatabaseWriteExecutor.execute(() -> mTransactionsDao.insert(item));
+     void insertTransaction (Transaction_Item item){
+         singleThreadExecutor.execute(() -> mTransactionsDao.insert(item));
     }
 
-    public void deleteAllTransactions (){
-        RoomTransactions_Database.transactionDatabaseWriteExecutor.execute(mTransactionsDao::deleteAll);
+     void deleteAllTransactions (){
+         singleThreadExecutor.execute(mTransactionsDao::deleteAll);
     }
 /*
   // !-----DEPRECATED ASYNC TASK CODE----!

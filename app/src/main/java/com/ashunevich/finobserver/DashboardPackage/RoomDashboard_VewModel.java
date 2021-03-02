@@ -26,14 +26,14 @@ public class RoomDashboard_VewModel extends AndroidViewModel {
         return mAllAccounts;
     }
 
-    public void insert(Dashboard_Account account) {
+     void insert(Dashboard_Account account) {
         mRepo.insert(account);
     }
 
     public void deleteAll() {mRepo.deleteAll();}
 
-    public void deleteAccount(Dashboard_Account account) {mRepo.deleteAccount(account);}
+     void delete(Dashboard_Account account) {mRepo.deleteAccount(account);}
 
-    public void updateAccount(Dashboard_Account account) { mRepo.updateEntity(account);}
+     void update(Dashboard_Account account) { mRepo.updateEntity(account);}
 
 }
