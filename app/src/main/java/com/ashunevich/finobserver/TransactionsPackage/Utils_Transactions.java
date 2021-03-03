@@ -10,7 +10,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-class Utils_Transactions {
+abstract class Utils_Transactions {
      protected static void hideProgressBar(ProgressBar bar, TextView textView){
          bar.setVisibility(View.GONE);
          textView.setVisibility(View.GONE);
