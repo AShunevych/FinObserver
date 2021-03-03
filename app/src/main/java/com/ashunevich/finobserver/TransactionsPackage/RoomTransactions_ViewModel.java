@@ -21,7 +21,7 @@ public class RoomTransactions_ViewModel extends AndroidViewModel {
         return mAllTransactions;
     }
 
-    public void insertTransAction(Transaction_Item item){mRepo.insertTransaction(item);}
-    public void deleteAllTransactions(){mRepo.deleteAllTransactions();}
+    public void insert(Transaction_Item item){mRepo.insertTransaction(item);}
+    public void deleteAll(){mRepo.deleteAllTransactions();}
 
 }

@@ -26,6 +26,8 @@ import androidx.fragment.app.DialogFragment;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_DIALOG;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_UPDATE;
 import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.enableSubmitIfReady;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnString;
+import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.textToDouble;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
 
 public class Dashboard_Account_Dialog extends DialogFragment {
@@ -91,16 +93,16 @@ public class Dashboard_Account_Dialog extends DialogFragment {
 
 
     private void submitToActivity() {
-        if(!TextUtils.isEmpty(binding.newAccountName.getText().toString())
-                && !TextUtils.isEmpty(binding.newAccountValue.getText().toString())){
+        if(!TextUtils.isEmpty(returnString(binding.newAccountName))
+                && !TextUtils.isEmpty(returnString(binding.newAccountValue))){
             bundlePackage(keyType);
         }
     }
 
     private void bundlePackage(String key){
         Bundle result = new Bundle();
-        result.putString("accountName",binding.newAccountName.getText().toString());
-        result.putDouble("accountValue",Double.parseDouble(binding.newAccountValue.getText().toString()));
+        result.putString("accountName",returnString(binding.newAccountName));
+        result.putDouble("accountValue",textToDouble(binding.newAccountValue));
         if(currency == null){
             currency = getResources().getString(R.string.UAH);
         }

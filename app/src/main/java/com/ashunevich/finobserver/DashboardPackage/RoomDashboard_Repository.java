@@ -2,8 +2,6 @@ package com.ashunevich.finobserver.DashboardPackage;
 
 import android.app.Application;
 
-import com.ashunevich.finobserver.UtilsPackage.Utils;
-
 import java.util.List;
 
 import androidx.lifecycle.LiveData;

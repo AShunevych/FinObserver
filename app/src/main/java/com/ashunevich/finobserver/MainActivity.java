@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
           builder.setTitle("WARNING");
           builder.setMessage("You are going to erase all data. Proceed?");
          builder.setPositiveButton("YES", (dialogInterface, i) -> {
-             transactionsRoomData.deleteAllTransactions();
+             transactionsRoomData.deleteAll();
              dashboardRoomData.deleteAll();
              EventBus.getDefault().post(new PostPOJO(zero));
             Snackbar.make(binding.mainLayout,"All data was deleted.", BaseTransientBottomBar.LENGTH_SHORT).show();

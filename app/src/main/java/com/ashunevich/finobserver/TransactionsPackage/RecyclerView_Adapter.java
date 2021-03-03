@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyViewHolder>  {
     private List<Transaction_Item> pad_list;
     Context context;
-    //   private PassBalanceValue mListerner;
+
     public RecyclerView_Adapter(List<Transaction_Item> data){
         this.pad_list = data;
     }

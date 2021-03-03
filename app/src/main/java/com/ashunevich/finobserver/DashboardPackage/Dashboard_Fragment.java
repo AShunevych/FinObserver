@@ -71,7 +71,7 @@ public class Dashboard_Fragment extends Fragment {
 
     RecyclerView_Adapter adapter;
     double incomeValue,expValue,balanceValue;
-    RoomTransactions_ViewModel model;
+    RoomTransactions_ViewModel transactionsViewModel;
     ActivityResultLauncher<Intent> ResultLauncher;
     private Dashboard_SharedPrefManager prefManager;
     String date = getDate();
@@ -138,12 +138,14 @@ public class Dashboard_Fragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        model = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboard_VewModel.class);
         setRecyclerView();
 
         setupFragmentResultListener();
-         countSumAfterDelay();
+        if(binding.accountView.getChildCount() != 0){
+            countSumAfterDelay();
+        }
 
 
         super.onViewCreated(view, savedInstanceState);
@@ -315,9 +317,8 @@ public class Dashboard_Fragment extends Fragment {
 
         onIncExpTransactionResult(transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
 
-        Transaction_Item item = new Transaction_Item(transactionAccount,transactionCategory,
-                transactionValue,currencyAccount,date,imageType);
-        model.insertTransAction(item);
+        transactionsViewModel.insert(new Transaction_Item(transactionAccount,transactionCategory,
+                transactionValue,currencyAccount,date,imageType));
     }
 
     private void onTransferTransaction(Intent intent,String transactionType){
@@ -345,7 +346,7 @@ public class Dashboard_Fragment extends Fragment {
         updateAccount(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
         updateAccount(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
 
-        model.insertTransAction(new Transaction_Item(targetAccountName,transactionCategory,
+        transactionsViewModel.insert(new Transaction_Item(targetAccountName,transactionCategory,
                 transferValue,currencyAccount,date,imageType));
     }
 
