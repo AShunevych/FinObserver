@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.TransactionsPackage;
+package com.ashunevich.finobserver.transactions;
 
 import android.view.View;
 import android.widget.ProgressBar;
@@ -10,7 +10,7 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
-abstract class Utils_Transactions {
+abstract class TransactionsUtils {
      protected static void hideProgressBar(ProgressBar bar, TextView textView){
          bar.setVisibility(View.GONE);
          textView.setVisibility(View.GONE);

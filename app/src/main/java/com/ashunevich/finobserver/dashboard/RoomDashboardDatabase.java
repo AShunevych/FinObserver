@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 import android.content.Context;
 
@@ -7,19 +7,19 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Dashboard_Account.class},version = 1,exportSchema = false)
-abstract class RoomDashboard_Database extends RoomDatabase {
-        public abstract RoomDashboard_DAO dashboard_dao();
+@Database(entities = {AccountItem.class},version = 1,exportSchema = false)
+abstract class RoomDashboardDatabase extends RoomDatabase {
+        public abstract RoomDashboardDAO dashboard_dao();
 
-        private static RoomDashboard_Database INSTANCE;
+        private static RoomDashboardDatabase INSTANCE;
 
 
-        public static RoomDashboard_Database getDatabase(final Context context) {
+        public static RoomDashboardDatabase getDatabase(final Context context) {
                 if (INSTANCE == null) {
-                        synchronized (RoomDashboard_Database.class) {
+                        synchronized (RoomDashboardDatabase.class) {
                                 if (INSTANCE == null) {
                                         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                                RoomDashboard_Database.class, "account_database")
+                                                RoomDashboardDatabase.class, "account_database")
                                                 .fallbackToDestructiveMigration()
                                                 .build();
                                 }

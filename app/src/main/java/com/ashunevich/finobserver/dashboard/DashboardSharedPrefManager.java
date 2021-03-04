@@ -1,16 +1,16 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-class Dashboard_SharedPrefManager {
+class DashboardSharedPrefManager {
     protected Context mContext;
     protected SharedPreferences mSettings;
     protected SharedPreferences.Editor mEditor;
 
     @SuppressLint("CommitPrefEdits")
-    public Dashboard_SharedPrefManager(Context ctx, String prefFileName) {
+    public DashboardSharedPrefManager(Context ctx, String prefFileName) {
         mContext = ctx;
         mSettings = mContext.getSharedPreferences(prefFileName,
                 Context.MODE_PRIVATE);

@@ -1,14 +1,14 @@
-package com.ashunevich.finobserver.TransactionsPackage;
+package com.ashunevich.finobserver.transactions;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "transactions")
-public class Transaction_Item {
+public class TransactionItem {
 
-    public Transaction_Item(){}
-    public Transaction_Item (String transactionAccount,String transactionCategory, double transactionValue,
-                             String transactionCurrency, String transactionDate ,int imageInt) {
+    public TransactionItem(){}
+    public TransactionItem(String transactionAccount, String transactionCategory, double transactionValue,
+                           String transactionCurrency, String transactionDate , int imageInt) {
         this.transactionAccount = transactionAccount;
         this.transactionCategory = transactionCategory;
         this.transactionValue = transactionValue;

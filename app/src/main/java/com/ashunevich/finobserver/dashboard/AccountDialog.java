@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 
 import android.content.DialogInterface;
@@ -23,14 +23,14 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_DIALOG;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_UPDATE;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.enableSubmitIfReady;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnString;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.textToDouble;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_DIALOG;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.enableSubmitIfReady;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.textToDouble;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
 
-public class Dashboard_Account_Dialog extends DialogFragment {
+public class AccountDialog extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
     ArrayList<Drawable> images;
     int id;

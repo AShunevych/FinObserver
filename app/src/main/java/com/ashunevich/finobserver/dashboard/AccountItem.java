@@ -1,11 +1,11 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity (tableName = "active_accounts")
-class Dashboard_Account {
+class AccountItem {
 
 
     @PrimaryKey (autoGenerate = true)
@@ -24,11 +24,11 @@ class Dashboard_Account {
      int imageID;
 
 
-    protected Dashboard_Account() {
+    protected AccountItem() {
 
     }
 
-    protected Dashboard_Account(int id, String accountName,double accountValue,String accountCurrency,int imageID) {
+    protected AccountItem(int id, String accountName, double accountValue, String accountCurrency, int imageID) {
         this.accountID = id;
         this.accountName = accountName;
         this.accountValue = accountValue;
@@ -38,7 +38,7 @@ class Dashboard_Account {
 
 
 
-    protected Dashboard_Account(String accountName,double accountValue,String accountCurrency,int imageID) {
+    protected AccountItem(String accountName, double accountValue, String accountCurrency, int imageID) {
         this.accountName = accountName;
         this.accountValue = accountValue;
         this.accountCurrency = accountCurrency;

@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.TransactionsPackage;
+package com.ashunevich.finobserver.transactions;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,16 +25,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.hideProgressBar;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.hideProgressBar;
 
-public class Transaction_Fragment extends Fragment {
+public class TransactionsFragment extends Fragment {
     private TransactionsFragmentBinding binding;
-    private final List<Transaction_Item> listContentArr = new ArrayList<>();
-    RecyclerView_Adapter adapter;
-    RoomTransactions_ViewModel modelDatabase;
+    private final List<TransactionItem> listContentArr = new ArrayList<>();
+    RecyclerAdapter adapter;
+    RoomTransactionsViewModel modelDatabase;
     Boolean FILTER_TYPE = true;
 
-    public Transaction_Fragment() {
+    public TransactionsFragment() {
         // Required empty public constructor
     }
 
@@ -71,9 +71,9 @@ public class Transaction_Fragment extends Fragment {
     //init RecyclerView
     private void initRecView() {
         binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerView_Adapter(listContentArr);
+        adapter = new RecyclerAdapter(listContentArr);
         binding.transactionView.setAdapter(adapter);
-        modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
+        modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
         modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> {
             adapter.updateItemList(transaction_items);
             binding.transactionView.smoothScrollToPosition(0);
@@ -144,9 +144,9 @@ public class Transaction_Fragment extends Fragment {
     }
 
     private void setFilter(String text, Boolean bool){
-        ArrayList<Transaction_Item> filteredList = new ArrayList<>();
+        ArrayList<TransactionItem> filteredList = new ArrayList<>();
 
-        for(Transaction_Item item:listContentArr){
+        for(TransactionItem item:listContentArr){
             if(bool){
                 if (item.getTransactionDate().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(item);

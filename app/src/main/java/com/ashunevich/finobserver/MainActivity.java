@@ -13,8 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 
-import com.ashunevich.finobserver.DashboardPackage.RoomDashboard_VewModel;
-import com.ashunevich.finobserver.TransactionsPackage.RoomTransactions_ViewModel;
+import com.ashunevich.finobserver.dashboard.RoomDashboardVewModel;
+import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
 import com.ashunevich.finobserver.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -31,15 +31,15 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private final ArrayList<String> tabNames = new ArrayList<>();
     private final ArrayList<Integer> drawables = new ArrayList<>();
-    private RoomTransactions_ViewModel transactionsRoomData;
-    private RoomDashboard_VewModel dashboardRoomData;
+    private RoomTransactionsViewModel transactionsRoomData;
+    private RoomDashboardVewModel dashboardRoomData;
     private final static String zero = "0.0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        transactionsRoomData = new ViewModelProvider(this).get(RoomTransactions_ViewModel.class);
-        dashboardRoomData = new ViewModelProvider(this).get(RoomDashboard_VewModel.class);
+        transactionsRoomData = new ViewModelProvider(this).get(RoomTransactionsViewModel.class);
+        dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardVewModel.class);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);

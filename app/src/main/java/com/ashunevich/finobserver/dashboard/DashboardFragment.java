@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 
 
@@ -18,9 +18,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
-import com.ashunevich.finobserver.TransactionsPackage.RoomTransactions_ViewModel;
-import com.ashunevich.finobserver.TransactionsPackage.Transaction_Item;
-import com.ashunevich.finobserver.TransactionsPackage.Transaction_CreateTransaction;
+import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
+import com.ashunevich.finobserver.transactions.TransactionItem;
+import com.ashunevich.finobserver.transactions.TransactionCreateActivty;
 
 import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
@@ -46,34 +46,34 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.BALANCE;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.EXPENDITURES;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.INCOME;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_CREATE;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_DIALOG;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_UPDATE;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.BALANCE;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.EXPENDITURES;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.INCOME;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_CREATE;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_DIALOG;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 
 
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.getDate;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.getImageInt;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnString;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.returnStringFromObj;
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.textToDouble;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.getDate;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.getImageInt;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnStringFromObj;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.textToDouble;
 
 
-public class Dashboard_Fragment extends Fragment {
+public class DashboardFragment extends Fragment {
 
     private DashboardFragmentBinding binding;
     DialogFragment newAccountDialogFragment;
-    private final List<Dashboard_Account> AccountItemList = new ArrayList<>();
+    private final List<AccountItem> AccountItemList = new ArrayList<>();
 
-    private RoomDashboard_VewModel dashboardViewModel;
+    private RoomDashboardVewModel dashboardViewModel;
 
-    RecyclerView_Adapter adapter;
+    RecyclerAdapter adapter;
     double incomeValue,expValue,balanceValue;
-    RoomTransactions_ViewModel transactionsViewModel;
+    RoomTransactionsViewModel transactionsViewModel;
     ActivityResultLauncher<Intent> ResultLauncher;
-    private Dashboard_SharedPrefManager prefManager;
+    private DashboardSharedPrefManager prefManager;
     String date = getDate();
 
 
@@ -82,7 +82,7 @@ public class Dashboard_Fragment extends Fragment {
     double  accountBasicValue, transactionValue;
     String currencyAccount = "UAH";
 
-    public Dashboard_Fragment() {
+    public DashboardFragment() {
         // Required empty public constructor
     }
 
@@ -120,14 +120,14 @@ public class Dashboard_Fragment extends Fragment {
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
         binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new Dashboard_Account_Dialog();
+            newAccountDialogFragment = new AccountDialog();
             Bundle bundle = new Bundle();
             bundle.putString("operationKey",KEY_CREATE);
             newAccountDialogFragment.setArguments(bundle);
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
         });
 
-        prefManager = new Dashboard_SharedPrefManager(requireActivity(), Utils_Dashboard.PREFERENCE_NAME);
+        prefManager = new DashboardSharedPrefManager(requireActivity(), DashboardUtils.PREFERENCE_NAME);
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
         getSharedPrefValues();
@@ -138,8 +138,8 @@ public class Dashboard_Fragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactions_ViewModel.class);
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboard_VewModel.class);
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboardVewModel.class);
         setRecyclerView();
 
         setupFragmentResultListener();
@@ -175,7 +175,7 @@ public class Dashboard_Fragment extends Fragment {
 
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerView_Adapter(AccountItemList,getParentFragmentManager());
+        adapter = new RecyclerAdapter(AccountItemList,getParentFragmentManager());
         dashboardViewModel.getAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
         setupItemTouchHelper();
@@ -183,7 +183,7 @@ public class Dashboard_Fragment extends Fragment {
 
 
     private void newTransaction(){
-        Intent intent = new Intent(getContext(), Transaction_CreateTransaction.class);
+        Intent intent = new Intent(getContext(), TransactionCreateActivty.class);
 
         //int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos
         ArrayList<String> idLists = new ArrayList<>();
@@ -191,7 +191,7 @@ public class Dashboard_Fragment extends Fragment {
         ArrayList<String> valuesLists = new ArrayList<>();
         ArrayList<String> imagePos = new ArrayList<>();
            for (int i=0;i <binding.accountView.getChildCount();i++) {
-               Dashboard_Account account = adapter.getAccountAtPosition(i);
+               AccountItem account = adapter.getAccountAtPosition(i);
                namesLists.add(account.getAccountName());
                idLists.add(String.valueOf(account.getAccountID()));
                valuesLists.add(String.valueOf(account.getAccountValue()));
@@ -239,12 +239,12 @@ public class Dashboard_Fragment extends Fragment {
 
 
     private void updateAccount(int accountId, String accountName, double accountValue, String accountCurrency, int accountDrawablePos){
-        dashboardViewModel.update(new Dashboard_Account(accountId,accountName,accountValue,accountCurrency,accountDrawablePos));
+        dashboardViewModel.update(new AccountItem(accountId,accountName,accountValue,accountCurrency,accountDrawablePos));
         countSumAfterDelay();
     }
 
     private void insertAccount(String accountName,double accountValue, String accountCurrency,int accountDrawablePos ){
-        dashboardViewModel.insert(new Dashboard_Account(accountName,accountValue,accountCurrency,accountDrawablePos));
+        dashboardViewModel.insert(new AccountItem(accountName,accountValue,accountCurrency,accountDrawablePos));
         countSumAfterDelay();
     }
 
@@ -317,7 +317,7 @@ public class Dashboard_Fragment extends Fragment {
 
         onIncExpTransactionResult(transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
 
-        transactionsViewModel.insert(new Transaction_Item(transactionAccount,transactionCategory,
+        transactionsViewModel.insert(new TransactionItem(transactionAccount,transactionCategory,
                 transactionValue,currencyAccount,date,imageType));
     }
 
@@ -346,7 +346,7 @@ public class Dashboard_Fragment extends Fragment {
         updateAccount(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
         updateAccount(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
 
-        transactionsViewModel.insert(new Transaction_Item(targetAccountName,transactionCategory,
+        transactionsViewModel.insert(new TransactionItem(targetAccountName,transactionCategory,
                 transferValue,currencyAccount,date,imageType));
     }
 

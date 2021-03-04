@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 
 import android.content.Context;
@@ -23,16 +23,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.ashunevich.finobserver.DashboardPackage.Utils_Dashboard.KEY_UPDATE;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 
 
-class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyViewHolder>  {
-    private final List<Dashboard_Account> pad_list;
+class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>  {
+    private final List<AccountItem> pad_list;
     Context context;
     FragmentManager manager;
 
 
-    public RecyclerView_Adapter(List<Dashboard_Account> data, FragmentManager manager){
+    public RecyclerAdapter(List<AccountItem> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;
     }
@@ -49,7 +49,7 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         if(pad_list!=null){
-            final Dashboard_Account account  = pad_list.get(position);
+            final AccountItem account  = pad_list.get(position);
             holder.binding.accountIco.setImageDrawable(returnDrawableByID(account.getImageID()));
             holder.binding.accountType.setText(account.getAccountName());
             holder.binding.accountValue.setText(String.valueOf(account.getAccountValue()));
@@ -57,7 +57,7 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
 
                 //TEST
             holder.binding.redactButon.setOnClickListener(view -> {
-                DialogFragment UpdateAccountDialogFragment = new Dashboard_Account_Dialog();
+                DialogFragment UpdateAccountDialogFragment = new AccountDialog();
                 setBundleArgs(UpdateAccountDialogFragment,position);
                 UpdateAccountDialogFragment.show(manager,"UpdateDialog");
             });
@@ -67,7 +67,7 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
 
    private void setBundleArgs (DialogFragment fragment, int position){
         Bundle bundle = new Bundle();
-        Dashboard_Account account = getAccountAtPosition(position);
+        AccountItem account = getAccountAtPosition(position);
        bundle.putInt("accountID",account.getAccountID());
        bundle.putString("accountName",account.getAccountName());
        bundle.putDouble("accountValue",account.getAccountValue());
@@ -87,8 +87,8 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
         }
     }
 
-    protected void updateList(List<Dashboard_Account> accounts){
-        final RecyclerView_DiffUtil diffCallback = new RecyclerView_DiffUtil(this.pad_list, accounts);
+    protected void updateList(List<AccountItem> accounts){
+        final RecyclerDiffUtil diffCallback = new RecyclerDiffUtil(this.pad_list, accounts);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();
@@ -97,7 +97,7 @@ class RecyclerView_Adapter extends RecyclerView.Adapter<RecyclerView_Adapter.MyV
     }
 
     //Setting the List
-    public Dashboard_Account getAccountAtPosition (int position) {
+    public AccountItem getAccountAtPosition (int position) {
         return pad_list.get(position);
     }
 

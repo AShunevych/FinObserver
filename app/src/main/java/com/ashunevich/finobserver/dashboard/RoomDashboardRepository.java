@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 import android.app.Application;
 
@@ -8,25 +8,25 @@ import androidx.lifecycle.LiveData;
 
 import static com.ashunevich.finobserver.UtilsPackage.Utils.singleThreadExecutor;
 
-class RoomDashboard_Repository {
-    private final RoomDashboard_DAO mDashboardDao;
-    private final LiveData<List<Dashboard_Account>> mAllAccounts;
+class RoomDashboardRepository {
+    private final RoomDashboardDAO mDashboardDao;
+    private final LiveData<List<AccountItem>> mAllAccounts;
 
-    RoomDashboard_Repository(Application application) {
-        RoomDashboard_Database db = RoomDashboard_Database.getDatabase(application);
+    RoomDashboardRepository(Application application) {
+        RoomDashboardDatabase db = RoomDashboardDatabase.getDatabase(application);
         mDashboardDao = db.dashboard_dao();
         mAllAccounts = mDashboardDao.getAllAccounts();
     }
 
-    LiveData<List<Dashboard_Account>> getAllAccounts(){
+    LiveData<List<AccountItem>> getAllAccounts(){
         return mAllAccounts;
     }
 
-     void insert (Dashboard_Account account) {
+     void insert (AccountItem account) {
          singleThreadExecutor.execute(() -> mDashboardDao.insert(account));
     }
 
-     void deleteAccount(Dashboard_Account account)  {
+     void deleteAccount(AccountItem account)  {
          singleThreadExecutor.execute(() -> mDashboardDao.delete(account));
     }
 
@@ -34,7 +34,7 @@ class RoomDashboard_Repository {
          singleThreadExecutor.execute(mDashboardDao::deleteAll);
     }
 
-     void updateEntity(Dashboard_Account account)  {
+     void updateEntity(AccountItem account)  {
          singleThreadExecutor.execute(() -> mDashboardDao.update(account));
     }
      /*

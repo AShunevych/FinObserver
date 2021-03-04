@@ -1,20 +1,21 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.transactions;
+
 
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-class RecyclerView_DiffUtil extends DiffUtil.Callback {
+class RecyclerDiffUtil extends DiffUtil.Callback  {
 
-    List<Dashboard_Account> oldList;
+    List<TransactionItem> oldList;
 
-    public RecyclerView_DiffUtil(List<Dashboard_Account> oldList, List<Dashboard_Account>newList) {
+    public RecyclerDiffUtil(List<TransactionItem> oldList, List<TransactionItem>newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
 
-    List<Dashboard_Account> newList;
+    List<TransactionItem> newList;
 
     @Override
     public int getOldListSize() {
@@ -28,7 +29,7 @@ class RecyclerView_DiffUtil extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getAccountID() == newList.get(newItemPosition).getAccountID();
+        return oldList.get(oldItemPosition).getItemID() == newList.get(newItemPosition).getItemID();
     }
 
     @Override

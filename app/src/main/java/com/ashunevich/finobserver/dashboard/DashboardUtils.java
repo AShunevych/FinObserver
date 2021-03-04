@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.DashboardPackage;
+package com.ashunevich.finobserver.dashboard;
 
 
 import android.widget.Button;
@@ -15,7 +15,7 @@ import java.util.Locale;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getTextFrom;
 
 
-abstract class Utils_Dashboard {
+abstract class DashboardUtils {
 
     protected static String PREFERENCE_NAME ="APP_PREF";
     protected static final String BALANCE="BALANCE";

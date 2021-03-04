@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.TransactionsPackage;
+package com.ashunevich.finobserver.transactions;
 
 import android.app.Application;
 
@@ -8,21 +8,21 @@ import androidx.lifecycle.LiveData;
 
 import static com.ashunevich.finobserver.UtilsPackage.Utils.singleThreadExecutor;
 
-public class RoomTransactions_Repository {
-    private final RoomTransactions_DAO mTransactionsDao;
-    private final LiveData<List<Transaction_Item>> mAllTransactions;
+public class RoomTransactionsRepository {
+    private final RoomTransactionsDAO mTransactionsDao;
+    private final LiveData<List<TransactionItem>> mAllTransactions;
 
-    RoomTransactions_Repository(Application application){
-            RoomTransactions_Database db = RoomTransactions_Database.getDatabase(application);
+    RoomTransactionsRepository(Application application){
+            RoomTransactionsDatabase db = RoomTransactionsDatabase.getDatabase(application);
             mTransactionsDao = db.transactions_dao();
             mAllTransactions = mTransactionsDao.getAllTransactions();
     }
 
-    LiveData<List<Transaction_Item>> getAllTransactions(){
+    LiveData<List<TransactionItem>> getAllTransactions(){
         return mAllTransactions;
     }
 
-     void insertTransaction (Transaction_Item item){
+     void insertTransaction (TransactionItem item){
          singleThreadExecutor.execute(() -> mTransactionsDao.insert(item));
     }
 

@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.TransactionsPackage;
+package com.ashunevich.finobserver.transactions;
 
 import android.annotation.SuppressLint;
 
@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-import com.ashunevich.finobserver.DashboardPackage.Dashboard_Fragment;
+import com.ashunevich.finobserver.dashboard.DashboardFragment;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionDialogBinding;
 import com.google.android.material.chip.Chip;
@@ -28,15 +28,15 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.getSelectedItemFromSpinner;
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.returnActiveChipId;
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.returnChipText;
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.setChipGroupUncheck;
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.stringToDouble;
-import static com.ashunevich.finobserver.TransactionsPackage.Utils_Transactions.stringToInteger;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.getSelectedItemFromSpinner;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.returnActiveChipId;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.returnChipText;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.setChipGroupUncheck;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.stringToDouble;
+import static com.ashunevich.finobserver.transactions.TransactionsUtils.stringToInteger;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
 
-public class Transaction_CreateTransaction extends AppCompatActivity {
+public class TransactionCreateActivty extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip ;
     String categoryChip ;
@@ -162,7 +162,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
 
 
     private void transferResult(){
-        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
+        Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
             newBasicAccountValue = basicValue - transactionValue;
             newTargetAccountValue = targetValue + transactionValue;
@@ -198,7 +198,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
         //for update
         transactionValue = stringToDouble(binding.transactionEstimate.getText().toString());
         transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
-        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
+        Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
             previousScreen.putExtra("ID", basicAccountID); //updatedID
             previousScreen.putExtra("Account",transactionAccount);//updatedName
@@ -214,7 +214,7 @@ public class Transaction_CreateTransaction extends AppCompatActivity {
 
 
     private void onCancelResult(){
-        Intent previousScreen = new Intent(getApplicationContext(), Dashboard_Fragment.class);
+        Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
         setResult(RESULT_CANCELED,previousScreen);
         finish();
     }
