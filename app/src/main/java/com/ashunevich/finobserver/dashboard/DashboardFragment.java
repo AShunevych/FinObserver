@@ -54,6 +54,8 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_DIALOG;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 
 
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.PREFERENCE_NAME;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.TOTAL;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getDate;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getImageInt;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
@@ -106,6 +108,10 @@ public class DashboardFragment extends Fragment {
                     }
                 });
         if (!EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().register(this); }
+
+        if(adapter != null){
+            countSumAfterDelay();
+        }
     }
     
     @Override
@@ -127,7 +133,7 @@ public class DashboardFragment extends Fragment {
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
         });
 
-        prefManager = new DashboardSharedPrefManager(requireActivity(), DashboardUtils.PREFERENCE_NAME);
+        prefManager = new DashboardSharedPrefManager(requireActivity(), PREFERENCE_NAME);
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
         getSharedPrefValues();
@@ -140,13 +146,9 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
         dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboardVewModel.class);
+
         setRecyclerView();
-
         setupFragmentResultListener();
-        if(binding.accountView.getChildCount() != 0){
-            countSumAfterDelay();
-        }
-
 
         super.onViewCreated(view, savedInstanceState);
     }
@@ -271,11 +273,11 @@ public class DashboardFragment extends Fragment {
             binding.balanceView.setText(String.valueOf(balanceValue - result));
         }
 
-        setSharedPrefValues();
     }
 
     private void countSum(){
         binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+        setSharedPrefValues();
     }
 
     private void countSumAfterDelay(){
@@ -296,14 +298,16 @@ public class DashboardFragment extends Fragment {
 
     private void setSharedPrefValues(){
         prefManager.setValue(BALANCE, returnString(binding.balanceView));
-        prefManager.setValue(BALANCE, returnString(binding.balanceView));
+        prefManager.setValue(INCOME, returnString(binding.incomeView));
         prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
+        prefManager.setValue(TOTAL, returnString(binding.totalBalanceValue));
     }
 
     private void getSharedPrefValues(){
         binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
         binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
         binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
+        binding.totalBalanceValue.setText(prefManager.getValue(TOTAL,"0.0"));
     }
 
     private void onTransactionIncomeExp(Intent intent,String transactionType){
@@ -320,6 +324,8 @@ public class DashboardFragment extends Fragment {
         transactionsViewModel.insert(new TransactionItem(transactionAccount,transactionCategory,
                 transactionValue,currencyAccount,date,imageType));
     }
+
+
 
     private void onTransferTransaction(Intent intent,String transactionType){
         //String type,double result, int id, String name, double basicValue, int imagePos
@@ -351,10 +357,6 @@ public class DashboardFragment extends Fragment {
     }
 
     }
-
-
-
-
 
 
 

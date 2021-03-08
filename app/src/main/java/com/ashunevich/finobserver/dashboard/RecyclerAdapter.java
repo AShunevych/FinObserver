@@ -32,6 +32,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>
     FragmentManager manager;
 
 
+
     public RecyclerAdapter(List<AccountItem> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;
@@ -54,14 +55,13 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>
             holder.binding.accountType.setText(account.getAccountName());
             holder.binding.accountValue.setText(String.valueOf(account.getAccountValue()));
             holder.binding.accountCurrency.setText(account.getAccountCurrency());
-
-                //TEST
-            holder.binding.redactButon.setOnClickListener(view -> {
-                DialogFragment UpdateAccountDialogFragment = new AccountDialog();
-                setBundleArgs(UpdateAccountDialogFragment,position);
-                UpdateAccountDialogFragment.show(manager,"UpdateDialog");
-            });
         }
+
+        holder.itemView.setOnClickListener(view -> {
+            DialogFragment UpdateAccountDialogFragment = new AccountDialog();
+            setBundleArgs(UpdateAccountDialogFragment,position);
+            UpdateAccountDialogFragment.show(manager,"UpdateDialog");
+        });
 
     }
 
