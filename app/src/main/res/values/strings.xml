@@ -4,8 +4,7 @@
     <string name="balance">Balance</string>
     <string name="income">Income</string>
     <string name="exp">Expenditures</string>
-    <string name="newAccount">New account</string>
-    <string name="total">Total</string>
+    <string name="newAccount">New Account</string>
     <string name="cat">Category</string>
     <string name="tType">Type</string>
     <string name="Acc">Account</string>
@@ -17,6 +16,6 @@
     <string name="transfer">Transfer</string>
     <string name="filter">Filter</string>
     <string name="acc_name">Account name</string>
-    <string name="acc_balance">Account balance</string>
+    <string name="acc_balance">Accounts</string>
     <string name="acc_icon">Icon</string>
 </resources>

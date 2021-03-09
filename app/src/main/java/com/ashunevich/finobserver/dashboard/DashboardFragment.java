@@ -257,14 +257,15 @@ public class DashboardFragment extends Fragment {
     }
 
     //Sum operations
-    private void countSum(){
+    private void refreshUIElements(){
         binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+        binding.accountView.smoothScrollToPosition(0);
         setSharedPrefValues();
     }
 
     private void countSumAfterDelay(){
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::countSum, 500);
+        handler.postDelayed(this::refreshUIElements, 500);
     }
 
     //erase (set 0.0) data

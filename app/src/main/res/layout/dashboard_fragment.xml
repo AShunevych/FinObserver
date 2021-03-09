@@ -6,6 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/newAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/newAccount" />
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/relativeLayout3"
         android:layout_width="0dp"
@@ -63,14 +77,14 @@
         android:layout_width="0dp"
         android:layout_height="85dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/rectangle_transp2"
         android:elevation="2sp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -111,26 +125,14 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/newAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="@string/newAccount"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="@+id/guideline3" />
-
     <TextView
         android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/total"
+        android:text="@string/acc_balance"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintStart_toStartOf="@+id/accountView"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout3" />
+        app:layout_constraintStart_toStartOf="@+id/relativeLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/newTransactionDialog" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
@@ -142,8 +144,8 @@
         android:elevation="2sp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/relativeLayout1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/relativeLayout1">
 
         <TextView
@@ -204,21 +206,13 @@
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toTopOf="@+id/textView12" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="397dp" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/accountView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
         android:elevation="1sp"
-        app:layout_constraintBottom_toTopOf="@+id/newAccount"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12"
@@ -236,10 +230,11 @@
         android:id="@+id/newTransactionDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:clickable="true"
         android:elevation="2sp"
         app:layout_constraintBottom_toBottomOf="@+id/relativeLayout3"
-        app:layout_constraintEnd_toEndOf="@+id/relativeLayout1"
+        app:layout_constraintEnd_toEndOf="@+id/relativeLayout3"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout3"
         app:srcCompat="@drawable/ic_new_account" />
 
