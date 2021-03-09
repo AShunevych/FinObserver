@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {TransactionItem.class},version = 1,exportSchema = false)
+@Database(entities = {TransactionBoardItem.class},version = 1,exportSchema = false)
 abstract class RoomTransactionsDatabase extends RoomDatabase {
 
     public abstract RoomTransactionsDAO transactions_dao();

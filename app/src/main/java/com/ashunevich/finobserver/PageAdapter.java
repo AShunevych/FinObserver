@@ -1,7 +1,7 @@
 package com.ashunevich.finobserver;
 
 import com.ashunevich.finobserver.dashboard.DashboardFragment;
-import com.ashunevich.finobserver.transactions.TransactionsFragment;
+import com.ashunevich.finobserver.transactions.TransactionBoardFragment;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public class PageAdapter extends FragmentStateAdapter {
     public int getItemCount() {
         fragments = new ArrayList<>();
         fragments.add(0, new DashboardFragment());
-        fragments.add(1,new TransactionsFragment());
+        fragments.add(1,new TransactionBoardFragment());
         return fragments.size();
     }
 }

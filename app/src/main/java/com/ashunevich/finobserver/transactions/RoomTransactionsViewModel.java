@@ -9,7 +9,7 @@ import androidx.lifecycle.LiveData;
 
 public class RoomTransactionsViewModel extends AndroidViewModel {
     private RoomTransactionsRepository mRepo;
-    private LiveData<List<TransactionItem>> mAllTransactions;
+    private LiveData<List<TransactionBoardItem>> mAllTransactions;
 
     public RoomTransactionsViewModel(Application application){
         super(application);
@@ -17,11 +17,11 @@ public class RoomTransactionsViewModel extends AndroidViewModel {
         mAllTransactions  = mRepo.getAllTransactions();
     }
 
-    LiveData<List<TransactionItem>> getAllTransactions(){
+    LiveData<List<TransactionBoardItem>> getAllTransactions(){
         return mAllTransactions;
     }
 
-    public void insert(TransactionItem item){mRepo.insertTransaction(item);}
+    public void insert(TransactionBoardItem item){mRepo.insertTransaction(item);}
     public void deleteAll(){mRepo.deleteAllTransactions();}
 
 }

@@ -10,7 +10,7 @@ import static com.ashunevich.finobserver.UtilsPackage.Utils.singleThreadExecutor
 
 public class RoomTransactionsRepository {
     private final RoomTransactionsDAO mTransactionsDao;
-    private final LiveData<List<TransactionItem>> mAllTransactions;
+    private final LiveData<List<TransactionBoardItem>> mAllTransactions;
 
     RoomTransactionsRepository(Application application){
             RoomTransactionsDatabase db = RoomTransactionsDatabase.getDatabase(application);
@@ -18,11 +18,11 @@ public class RoomTransactionsRepository {
             mAllTransactions = mTransactionsDao.getAllTransactions();
     }
 
-    LiveData<List<TransactionItem>> getAllTransactions(){
+    LiveData<List<TransactionBoardItem>> getAllTransactions(){
         return mAllTransactions;
     }
 
-     void insertTransaction (TransactionItem item){
+     void insertTransaction (TransactionBoardItem item){
          singleThreadExecutor.execute(() -> mTransactionsDao.insert(item));
     }
 

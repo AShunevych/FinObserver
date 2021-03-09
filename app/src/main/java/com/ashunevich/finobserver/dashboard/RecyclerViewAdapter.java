@@ -26,14 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 
 
-class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>  {
+class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>  {
     private final List<AccountItem> pad_list;
     Context context;
     FragmentManager manager;
 
 
 
-    public RecyclerAdapter(List<AccountItem> data, FragmentManager manager){
+    public RecyclerViewAdapter(List<AccountItem> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;
     }
@@ -88,7 +88,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>
     }
 
     protected void updateList(List<AccountItem> accounts){
-        final RecyclerDiffUtil diffCallback = new RecyclerDiffUtil(this.pad_list, accounts);
+        final RecyclerViewDiffUtil diffCallback = new RecyclerViewDiffUtil(this.pad_list, accounts);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();

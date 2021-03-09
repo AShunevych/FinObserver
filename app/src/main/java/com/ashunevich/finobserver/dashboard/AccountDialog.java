@@ -34,8 +34,8 @@ public class AccountDialog extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;
     ArrayList<Drawable> images;
     int id;
-    String currency;
-    private String keyType;
+    String currency,keyType;
+
 
     //receive bundle
 
@@ -45,27 +45,32 @@ public class AccountDialog extends DialogFragment {
         // Inflate the layout for this fragment
         assert inflater != null;
         binding = DashboardNewAccountDialogBinding.inflate(inflater, container, false);
-        setTextWatcher();
-        binding.okButton.setEnabled(false);
-        binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));
-        binding.okButton.setOnClickListener(view -> onDismiss(Objects.requireNonNull(getDialog())));
-        fillSpinner();
+        initTextWatchers();
+        initUIStatus();
+        initClickListeners();
 
-        assert getArguments() != null;
-        keyType = getArguments().getString("operationKey");
-        if (keyType.matches(KEY_UPDATE)){
-            setTextFromBundle();
-        }
-        Objects.requireNonNull(getDialog()).setCanceledOnTouchOutside(true);
+        initSpinner();
+
+        initKeyType();
+
         return binding.getRoot();
     }
 
-    private void setTextWatcher(){
+    //init methods
+    private void initTextWatchers(){
         binding.newAccountName.addTextChangedListener(watcher);
         binding.newAccountValue.addTextChangedListener(watcher);
     }
 
-    private void setTextFromBundle(){
+    private void initSpinner(){
+        images = new ArrayList<>();
+        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wallet_balance,null));
+        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_bank_balance,null));
+        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_other_balance,null));
+        binding.drawableSpinner.setAdapter(new CustomSpinnerAdapter(requireContext(), images));
+    }
+
+    private void initTextFromBundle(){
         assert getArguments() != null;
         binding.newAccountName.setText(getArguments().getString("accountName"));
         binding.newAccountValue.setText(String.valueOf(getArguments().getDouble("accountValue")));
@@ -74,7 +79,26 @@ public class AccountDialog extends DialogFragment {
        currency = getArguments().getString("accountCurrency");
     }
 
-       TextWatcher watcher = new TextWatcher() {
+    private void initKeyType(){
+        assert getArguments() != null;
+        keyType = getArguments().getString("operationKey");
+        if (keyType.matches(KEY_UPDATE)){
+            initTextFromBundle();
+        }
+    }
+
+    private void initUIStatus(){
+        binding.okButton.setEnabled(false);
+        Objects.requireNonNull(getDialog()).setCanceledOnTouchOutside(true);
+    }
+
+    private void initClickListeners(){
+        binding.cancelButton.setOnClickListener(view -> onCancel(Objects.requireNonNull(getDialog())));
+        binding.okButton.setOnClickListener(view -> onDismiss(Objects.requireNonNull(getDialog())));
+    }
+
+    //Utils
+    TextWatcher watcher = new TextWatcher() {
            @Override
            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -91,7 +115,7 @@ public class AccountDialog extends DialogFragment {
            }
        };
 
-
+    //create result bundle
     private void submitToActivity() {
         if(!TextUtils.isEmpty(returnString(binding.newAccountName))
                 && !TextUtils.isEmpty(returnString(binding.newAccountValue))){
@@ -115,14 +139,8 @@ public class AccountDialog extends DialogFragment {
         getParentFragmentManager().setFragmentResult(KEY_DIALOG,result);
     }
 
-    private void fillSpinner(){
-        images = new ArrayList<>();
-        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wallet_balance,null));
-        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_bank_balance,null));
-        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_other_balance,null));
-        binding.drawableSpinner.setAdapter(new CustomSpinnerAdapter(requireContext(), images));
-    }
 
+    //Dialog methods
     public void onDismiss(@NonNull DialogInterface dialog) {
             submitToActivity();
             super.onDismiss(dialog);

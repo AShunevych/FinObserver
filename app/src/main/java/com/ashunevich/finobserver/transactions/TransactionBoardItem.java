@@ -4,11 +4,13 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "transactions")
-public class TransactionItem {
+public class TransactionBoardItem {
 
-    public TransactionItem(){}
-    public TransactionItem(String transactionAccount, String transactionCategory, double transactionValue,
-                           String transactionCurrency, String transactionDate , int imageInt) {
+
+    public TransactionBoardItem(){}
+
+    public TransactionBoardItem(String transactionAccount, String transactionCategory, double transactionValue,
+                                String transactionCurrency, String transactionDate , int imageInt) {
         this.transactionAccount = transactionAccount;
         this.transactionCategory = transactionCategory;
         this.transactionValue = transactionValue;

@@ -19,8 +19,7 @@ import android.widget.Toast;
 
 
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
-import com.ashunevich.finobserver.transactions.TransactionItem;
-import com.ashunevich.finobserver.transactions.TransactionCreateActivty;
+import com.ashunevich.finobserver.transactions.TransactionBoardItem;
 
 import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
@@ -52,10 +51,9 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.INCOME;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_CREATE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_DIALOG;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
-
-
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.PREFERENCE_NAME;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.TOTAL;
+
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getDate;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getImageInt;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
@@ -66,24 +64,29 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.textToDouble;
 public class DashboardFragment extends Fragment {
 
     private DashboardFragmentBinding binding;
+    private DashboardUtilsSharedPref prefManager;
+    ActivityResultLauncher<Intent> ResultLauncher;
     DialogFragment newAccountDialogFragment;
+
     private final List<AccountItem> AccountItemList = new ArrayList<>();
+    RecyclerViewAdapter adapter;
 
     private RoomDashboardVewModel dashboardViewModel;
-
-    RecyclerAdapter adapter;
-    double incomeValue,expValue,balanceValue;
     RoomTransactionsViewModel transactionsViewModel;
-    ActivityResultLauncher<Intent> ResultLauncher;
-    private DashboardSharedPrefManager prefManager;
+
+
+    double incomeValue,expValue,balanceValue;
+
     String date = getDate();
+    String currencyAccount = "UAH";
 
-
+    //late init
     int idAccount,imagePos,imageType;
     String transactionAccount,transactionType,transactionCategory;
     double  accountBasicValue, transactionValue;
-    String currencyAccount = "UAH";
 
+
+    //Lifecycle
     public DashboardFragment() {
         // Required empty public constructor
     }
@@ -133,14 +136,13 @@ public class DashboardFragment extends Fragment {
             newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
         });
 
-        prefManager = new DashboardSharedPrefManager(requireActivity(), PREFERENCE_NAME);
+        prefManager = new DashboardUtilsSharedPref(requireActivity(), PREFERENCE_NAME);
 
         binding.newTransactionDialog.setOnClickListener(view -> newTransaction());
         getSharedPrefValues();
 
         return binding.getRoot();
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -153,6 +155,20 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    @Override
+    public void onDetach() {
+        if (EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().unregister(this); }
+        super.onDetach();
+    }
+
+    @Override
+    public void onDestroyView() {
+        binding = null;
+        super.onDestroyView();
+    }
+
+        //  !-----UTILS----!
+    //DialorFragmentListener
     private void setupFragmentResultListener(){
 
         getParentFragmentManager().setFragmentResultListener(KEY_DIALOG, getViewLifecycleOwner(), (requestKey, result) -> {
@@ -173,59 +189,17 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-
-
+    //RecyclerView
     private void setRecyclerView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerAdapter(AccountItemList,getParentFragmentManager());
+        adapter = new RecyclerViewAdapter(AccountItemList,getParentFragmentManager());
         dashboardViewModel.getAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
         setupItemTouchHelper();
     }
 
-
-    private void newTransaction(){
-        Intent intent = new Intent(getContext(), TransactionCreateActivty.class);
-
-        //int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos
-        ArrayList<String> idLists = new ArrayList<>();
-        ArrayList<String> namesLists = new ArrayList<>();
-        ArrayList<String> valuesLists = new ArrayList<>();
-        ArrayList<String> imagePos = new ArrayList<>();
-           for (int i=0;i <binding.accountView.getChildCount();i++) {
-               AccountItem account = adapter.getAccountAtPosition(i);
-               namesLists.add(account.getAccountName());
-               idLists.add(String.valueOf(account.getAccountID()));
-               valuesLists.add(String.valueOf(account.getAccountValue()));
-               imagePos.add(String.valueOf(account.getImageID()));
-           }
-        if (binding.accountView.getChildCount() !=0) {
-            intent.putStringArrayListExtra("AccountNames", namesLists);
-            intent.putStringArrayListExtra("AccountIDs", idLists);
-            intent.putStringArrayListExtra("AccountValues", valuesLists);
-            intent.putStringArrayListExtra("AccountImages", imagePos);
-            ResultLauncher.launch(intent);
-        } else {
-            Toast.makeText(requireContext(),"There is no active accounts.",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    @Override
-    public void onDetach() {
-        if (EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().unregister(this); }
-        super.onDetach();
-    }
-
-    @Override
-    public void onDestroyView() {
-        binding = null;
-        super.onDestroyView();
-    }
-
     private void setupItemTouchHelper() {
         ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
-
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
@@ -239,7 +213,34 @@ public class DashboardFragment extends Fragment {
         helper.attachToRecyclerView(binding.accountView);
     }
 
+    //
+    private void newTransaction(){
+        Intent intent = new Intent(getContext(), DashboardNewTransaction.class);
 
+        //int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos
+        ArrayList<String> idLists = new ArrayList<>();
+        ArrayList<String> namesLists = new ArrayList<>();
+        ArrayList<String> valuesLists = new ArrayList<>();
+        ArrayList<String> imagePos = new ArrayList<>();
+        for (int i=0;i <binding.accountView.getChildCount();i++) {
+            AccountItem account = adapter.getAccountAtPosition(i);
+            namesLists.add(account.getAccountName());
+            idLists.add(String.valueOf(account.getAccountID()));
+            valuesLists.add(String.valueOf(account.getAccountValue()));
+            imagePos.add(String.valueOf(account.getImageID()));
+        }
+        if (binding.accountView.getChildCount() !=0) {
+            intent.putStringArrayListExtra("AccountNames", namesLists);
+            intent.putStringArrayListExtra("AccountIDs", idLists);
+            intent.putStringArrayListExtra("AccountValues", valuesLists);
+            intent.putStringArrayListExtra("AccountImages", imagePos);
+            ResultLauncher.launch(intent);
+        } else {
+            Toast.makeText(requireContext(),"There is no active accounts.",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //Room operations
     private void updateAccount(int accountId, String accountName, double accountValue, String accountCurrency, int accountDrawablePos){
         dashboardViewModel.update(new AccountItem(accountId,accountName,accountValue,accountCurrency,accountDrawablePos));
         countSumAfterDelay();
@@ -255,7 +256,46 @@ public class DashboardFragment extends Fragment {
         countSumAfterDelay();
     }
 
+    //Sum operations
+    private void countSum(){
+        binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+        setSharedPrefValues();
+    }
 
+    private void countSumAfterDelay(){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::countSum, 500);
+    }
+
+    //erase (set 0.0) data
+    @Subscribe
+    public void receiveEvent(PostPOJO postPOJO){
+        String zeroString = returnStringFromObj(postPOJO);
+        binding.balanceView.setText(zeroString);
+        binding.incomeView.setText(zeroString);
+        binding.expendView.setText(zeroString);
+        binding.totalBalanceValue.setText(zeroString);
+        setSharedPrefValues();
+    }
+
+    //Shared pref managers
+    private void setSharedPrefValues(){
+        prefManager.setValue(BALANCE, returnString(binding.balanceView));
+        prefManager.setValue(INCOME, returnString(binding.incomeView));
+        prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
+        prefManager.setValue(TOTAL, returnString(binding.totalBalanceValue));
+    }
+
+    private void getSharedPrefValues(){
+        binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
+        binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
+        binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
+        binding.totalBalanceValue.setText(prefManager.getValue(TOTAL,"0.0"));
+    }
+
+
+    //Result handlers
+    // TODO merge onIncExpTransactionResult & onTransactionIncomeExp --> onIncomeExpendituresTransactions
     private void onIncExpTransactionResult(String type, double result, int id, String name, double basicValue, int imagePos){
         incomeValue = textToDouble(binding.incomeView);
         expValue = textToDouble(binding.expendView);
@@ -275,41 +315,6 @@ public class DashboardFragment extends Fragment {
 
     }
 
-    private void countSum(){
-        binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
-        setSharedPrefValues();
-    }
-
-    private void countSumAfterDelay(){
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::countSum, 500);
-    }
-
-
-    @Subscribe
-    public void receiveEvent(PostPOJO postPOJO){
-        String zeroString = returnStringFromObj(postPOJO);
-        binding.balanceView.setText(zeroString);
-        binding.incomeView.setText(zeroString);
-        binding.expendView.setText(zeroString);
-        binding.totalBalanceValue.setText(zeroString);
-        setSharedPrefValues();
-    }
-
-    private void setSharedPrefValues(){
-        prefManager.setValue(BALANCE, returnString(binding.balanceView));
-        prefManager.setValue(INCOME, returnString(binding.incomeView));
-        prefManager.setValue(EXPENDITURES,returnString(binding.expendView));
-        prefManager.setValue(TOTAL, returnString(binding.totalBalanceValue));
-    }
-
-    private void getSharedPrefValues(){
-        binding.balanceView.setText(prefManager.getValue(BALANCE,"0.0"));
-        binding.incomeView.setText(prefManager.getValue(INCOME,"0.0"));
-        binding.expendView.setText(prefManager.getValue(EXPENDITURES,"0.0"));
-        binding.totalBalanceValue.setText(prefManager.getValue(TOTAL,"0.0"));
-    }
-
     private void onTransactionIncomeExp(Intent intent,String transactionType){
         idAccount = intent.getIntExtra("ID",0);
         transactionAccount = intent.getStringExtra("Account");
@@ -321,11 +326,9 @@ public class DashboardFragment extends Fragment {
 
         onIncExpTransactionResult(transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
 
-        transactionsViewModel.insert(new TransactionItem(transactionAccount,transactionCategory,
+        transactionsViewModel.insert(new TransactionBoardItem(transactionAccount,transactionCategory,
                 transactionValue,currencyAccount,date,imageType));
     }
-
-
 
     private void onTransferTransaction(Intent intent,String transactionType){
         //String type,double result, int id, String name, double basicValue, int imagePos
@@ -352,7 +355,7 @@ public class DashboardFragment extends Fragment {
         updateAccount(basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
         updateAccount(targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
 
-        transactionsViewModel.insert(new TransactionItem(targetAccountName,transactionCategory,
+        transactionsViewModel.insert(new TransactionBoardItem(targetAccountName,transactionCategory,
                 transferValue,currencyAccount,date,imageType));
     }
 

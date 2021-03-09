@@ -16,26 +16,26 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>  {
-    private List<TransactionItem> pad_list;
+class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>  {
+    private List<TransactionBoardItem> pad_list;
     Context context;
 
-    public RecyclerAdapter(List<TransactionItem> data){
+    public RecyclerViewAdapter(List<TransactionBoardItem> data){
         this.pad_list = data;
     }
     //This method inflates view present in the RecyclerView
     @NonNull
     @Override
-    public RecyclerAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new RecyclerAdapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+        return new RecyclerViewAdapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
     //Binding the data using get() method of POJO object
     @Override
-    public void onBindViewHolder(final RecyclerAdapter.MyViewHolder holder, int position) {
-        final TransactionItem item  = pad_list.get(position);
+    public void onBindViewHolder(final RecyclerViewAdapter.MyViewHolder holder, int position) {
+        final TransactionBoardItem item  = pad_list.get(position);
       holder.binding.transactionTypeImage.setImageDrawable(getTypeImage(item.getImageInt()));
          holder.binding.transactionValue.setText(String.valueOf(item.getTransactionValue()));
         holder.binding.transactionCurrency.setText(item.getTransactionCurrency());
@@ -75,8 +75,8 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>
     }
 
     //Setting the arraylist
-     void updateItemList(List<TransactionItem> items){
-        final RecyclerDiffUtil diffCallback = new RecyclerDiffUtil(this.pad_list, items);
+     void updateItemList(List<TransactionBoardItem> items){
+        final RecyclerViewDiffUtil diffCallback = new RecyclerViewDiffUtil(this.pad_list, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();
@@ -84,7 +84,7 @@ class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>
         diffResult.dispatchUpdatesTo(this);
     }
 
-    void filter(ArrayList<TransactionItem> filter) {
+    void filter(ArrayList<TransactionBoardItem> filter) {
         this.pad_list = filter;
         notifyDataSetChanged();
     }

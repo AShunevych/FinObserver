@@ -10,13 +10,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 
 import com.ashunevich.finobserver.dashboard.RoomDashboardVewModel;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
 import com.ashunevich.finobserver.databinding.ActivityMainBinding;
+
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -24,13 +24,16 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+
     private final ArrayList<String> tabNames = new ArrayList<>();
     private final ArrayList<Integer> drawables = new ArrayList<>();
+
     private RoomTransactionsViewModel transactionsRoomData;
     private RoomDashboardVewModel dashboardRoomData;
     private final static String zero = "0.0";
@@ -38,19 +41,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         transactionsRoomData = new ViewModelProvider(this).get(RoomTransactionsViewModel.class);
         dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardVewModel.class);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
-        setContentView(view);
+
         init();
 
     }
 
     private void init(){
         binding.viewPager.setAdapter( new PageAdapter(getSupportFragmentManager(),getLifecycle()));
-        tabNames.add("Dashboard");
-        tabNames.add("Transaction");
+        tabNames.addAll(Arrays.asList(getResources().getStringArray(R.array.tabNames)));
+
         drawables.add(R.drawable.ic_dashboard);
         drawables.add(R.drawable.ic_transactions);
         TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {

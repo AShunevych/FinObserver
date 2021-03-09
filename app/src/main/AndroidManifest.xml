@@ -11,7 +11,7 @@
         android:theme="@style/Theme.FinObserver">
 
         <activity
-            android:name=".transactions.TransactionCreateActivty"
+            android:name=".dashboard.DashboardNewTransaction"
             android:screenOrientation="portrait"
             android:label="New transaction"
             android:theme="@style/Theme.FinObserver">

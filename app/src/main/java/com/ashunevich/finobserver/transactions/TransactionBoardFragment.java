@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +24,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import static com.ashunevich.finobserver.transactions.TransactionsUtils.hideProgressBar;
 
-public class TransactionsFragment extends Fragment {
+
+public class TransactionBoardFragment extends Fragment {
     private TransactionsFragmentBinding binding;
-    private final List<TransactionItem> listContentArr = new ArrayList<>();
-    RecyclerAdapter adapter;
+
+    private final List<TransactionBoardItem> listContentArr = new ArrayList<>();
+    RecyclerViewAdapter adapter;
+
     RoomTransactionsViewModel modelDatabase;
+
     Boolean FILTER_TYPE = true;
 
-    public TransactionsFragment() {
+    public TransactionBoardFragment() {
         // Required empty public constructor
     }
 
@@ -42,8 +44,6 @@ public class TransactionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-
 
 
     @Override
@@ -68,22 +68,9 @@ public class TransactionsFragment extends Fragment {
         UICondition(false);
         setCheckBoxListener();
     }
-    //init RecyclerView
-    private void initRecView() {
-        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerAdapter(listContentArr);
-        binding.transactionView.setAdapter(adapter);
-        modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
-        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> {
-            adapter.updateItemList(transaction_items);
-            binding.transactionView.smoothScrollToPosition(0);
-        });
-        hideProgressBar(binding.progressBar,binding.loadingText);
-        Log.d("ITEMS COUNT",String.valueOf(adapter.getItemCount()));
-    }
 
 
-
+    //Utils for UI
     private void setTextWatcher(){
         binding.filterPlainText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,8 +95,6 @@ public class TransactionsFragment extends Fragment {
                 R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.filterTypes));
         binding.filterType.setAdapter(adapter);
     }
-
-
 
     private void setSpinnerListeners(){
         binding.filterType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -143,10 +128,17 @@ public class TransactionsFragment extends Fragment {
         binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> UICondition(b));
     }
 
-    private void setFilter(String text, Boolean bool){
-        ArrayList<TransactionItem> filteredList = new ArrayList<>();
+    private void hideProgressBar(){
+        binding.progressBar.setVisibility(View.GONE);
+        binding.loadingText.setVisibility(View.GONE);
+    }
 
-        for(TransactionItem item:listContentArr){
+
+    //Recycler Utils
+    private void setFilter(String text, Boolean bool){
+        ArrayList<TransactionBoardItem> filteredList = new ArrayList<>();
+
+        for(TransactionBoardItem item:listContentArr){
             if(bool){
                 if (item.getTransactionDate().toLowerCase().contains(text.toLowerCase())) {
                     filteredList.add(item);
@@ -159,6 +151,20 @@ public class TransactionsFragment extends Fragment {
             }
         }
         adapter.filter(filteredList);
+    }
+
+    private void initRecView() {
+        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new RecyclerViewAdapter(listContentArr);
+        binding.transactionView.setAdapter(adapter);
+
+        modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
+        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> {
+            adapter.updateItemList(transaction_items);
+            binding.transactionView.smoothScrollToPosition(0);
+        });
+
+        hideProgressBar();
     }
 
 

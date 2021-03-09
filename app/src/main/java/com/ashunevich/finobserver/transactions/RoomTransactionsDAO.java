@@ -10,10 +10,10 @@ import androidx.room.Dao;
 import androidx.room.Query;
 
 @Dao
-public interface RoomTransactionsDAO extends FactoryDAO<TransactionItem> {
+public interface RoomTransactionsDAO extends FactoryDAO<TransactionBoardItem> {
 
     @Query ("SELECT * FROM transactions ORDER BY itemID DESC")
-    LiveData<List<TransactionItem>> getAllTransactions();
+    LiveData<List<TransactionBoardItem>> getAllTransactions();
 
     @Query("DELETE FROM transactions")
     void deleteAll();
