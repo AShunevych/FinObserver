@@ -8,8 +8,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 public class RoomTransactionsViewModel extends AndroidViewModel {
-    private RoomTransactionsRepository mRepo;
-    private LiveData<List<TransactionBoardItem>> mAllTransactions;
+    private final RoomTransactionsRepository mRepo;
+    private final LiveData<List<TransactionBoardItem>> mAllTransactions;
 
     public RoomTransactionsViewModel(Application application){
         super(application);
