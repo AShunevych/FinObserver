@@ -4,7 +4,7 @@
     <string name="balance">Balance</string>
     <string name="income">Income</string>
     <string name="exp">Expenditures</string>
-    <string name="newAccount">New Account</string>
+    <string name="newTransaction">+ add transaction</string>
     <string name="cat">Category</string>
     <string name="tType">Type</string>
     <string name="Acc">Account</string>
