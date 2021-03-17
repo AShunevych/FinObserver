@@ -23,7 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_DIALOG;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.DIALOG_STATIC;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_CANCEL;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.enableSubmitIfReady;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
@@ -48,7 +49,6 @@ public class AccountDialog extends DialogFragment {
         initTextWatchers();
         initUIStatus();
         initClickListeners();
-
         initSpinner();
 
         initKeyType();
@@ -119,11 +119,11 @@ public class AccountDialog extends DialogFragment {
     private void submitToActivity() {
         if(!TextUtils.isEmpty(returnString(binding.newAccountName))
                 && !TextUtils.isEmpty(returnString(binding.newAccountValue))){
-            bundlePackage(keyType);
+            submitPositiveResult(keyType);
         }
     }
 
-    private void bundlePackage(String key){
+    private void submitPositiveResult(String key){
         Bundle result = new Bundle();
         result.putString("accountName",returnString(binding.newAccountName));
         result.putDouble("accountValue",textToDouble(binding.newAccountValue));
@@ -136,7 +136,7 @@ public class AccountDialog extends DialogFragment {
             result.putInt("accountID",id);
         }
         result.putString("operationType",keyType);
-        getParentFragmentManager().setFragmentResult(KEY_DIALOG,result);
+        getParentFragmentManager().setFragmentResult(DIALOG_STATIC,result);
     }
 
 
@@ -147,8 +147,11 @@ public class AccountDialog extends DialogFragment {
     }
 
     public void onCancel(@NonNull DialogInterface dialog) {
-        dialog.cancel();
         super.onCancel(dialog);
+        Bundle result = new Bundle();
+        result.putString("operationType", KEY_CANCEL);
+        getParentFragmentManager().setFragmentResult(DIALOG_STATIC,result);
+        dialog.cancel();
     }
 
 

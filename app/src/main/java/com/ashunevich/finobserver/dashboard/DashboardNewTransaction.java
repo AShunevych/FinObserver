@@ -27,6 +27,7 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.extractDouble;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getSelectedItemFromSpinner;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnActiveChipId;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnChipText;
@@ -34,12 +35,13 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.setChipGroupUn
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringToDouble;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringToInteger;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.sumDouble;
 
 public class DashboardNewTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
     String typeChip, categoryChip ;
 
-    Double transactionValue = 0.0;
+    Double transactionEstimate = 0.0;
 
     String transactionAccount, targetAccount;
     int basicAccountID,targetAccountID;
@@ -214,7 +216,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
     //Result handlers
     private void onSubmitAction() {
-        transactionValue = stringToDouble(binding.transactionEstimate.getText().toString());
+        transactionEstimate = stringToDouble(binding.transactionEstimate.getText().toString());
         transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
         targetAccount = getSelectedItemFromSpinner(binding.targetAccount);
         typeChip = returnChipText(binding.transactionType);
@@ -229,8 +231,8 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void transferResult(){
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
-            newBasicAccountValue = basicValue - transactionValue;
-            newTargetAccountValue = targetValue + transactionValue;
+            newBasicAccountValue = basicValue - transactionEstimate;
+            newTargetAccountValue = targetValue + transactionEstimate;
 
             previousScreen.putExtra("Type",typeChip);
 
@@ -245,7 +247,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
             previousScreen.putExtra("Category",categoryChip);
 
-            previousScreen.putExtra("transferValue",transactionValue);//updatedValue
+            previousScreen.putExtra("transferValue", transactionEstimate);//updatedValue
             previousScreen.putExtra("newBasicAccountValue",newBasicAccountValue);//updatedValue
             previousScreen.putExtra("newTargetAccountValue",newTargetAccountValue);//updatedValue
             if(basicAccountID == targetAccountID){
@@ -261,20 +263,26 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void incomeExpResult(){
         ////int updatedID, String updatedName, double updatedValue, int updatedImagePos
         //for update
-        transactionValue = stringToDouble(binding.transactionEstimate.getText().toString());
+        transactionEstimate = stringToDouble(binding.transactionEstimate.getText().toString());
         transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
+        if(typeChip.matches("Income")){
+            newBasicAccountValue = sumDouble(basicValue,transactionEstimate);
+        }
+        else{
+            newBasicAccountValue = extractDouble(basicValue,transactionEstimate);
+        }
+
             previousScreen.putExtra("ID", basicAccountID); //updatedID
             previousScreen.putExtra("Account",transactionAccount);//updatedName
-            previousScreen.putExtra("BasicValue",basicValue);//updatedValue
+            previousScreen.putExtra("Estimate",transactionEstimate);//updatedValue
             previousScreen.putExtra("ImagePos", basicAccountImagePos);//updatedImagePos
             previousScreen.putExtra("Category",categoryChip);
             previousScreen.putExtra("Type",typeChip);
-            previousScreen.putExtra("Value", transactionValue);
+            previousScreen.putExtra("Value", newBasicAccountValue);
             setResult(RESULT_OK,previousScreen);
             finish();
-
     }
 
     private void onCancelResult(){

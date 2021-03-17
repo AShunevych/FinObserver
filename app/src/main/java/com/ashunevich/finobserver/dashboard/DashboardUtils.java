@@ -28,10 +28,12 @@ abstract class DashboardUtils {
      static final String EXPENDITURES="EXPENDITURES";
      static final String TOTAL = "TOTAL";
 
-    //Operations keys constants
+    //Operations constants
      static final String KEY_UPDATE = "UPDATE";
      static final String KEY_CREATE = "CREATE";
-     static final String KEY_DIALOG = "DIALOG";
+     static final String KEY_CANCEL = "CANCEL";
+     static final String DIALOG_STATIC = "DIALOG";
+
 
 
     static int getImageInt(String type){
@@ -56,6 +58,10 @@ abstract class DashboardUtils {
         SimpleDateFormat df = new SimpleDateFormat("d MMM, yyyy ", Locale.UK);
         return df.format(c);
     }
+
+    static String returnSumAsString(double a, double b){return String.valueOf(a+b); }
+
+    static String returnExtractionAsString(double a, double b){return String.valueOf(b-a); }
 
     static String returnStringFromObj(PostPOJO postPOJO) {
         return postPOJO.getZero();
@@ -99,9 +105,15 @@ abstract class DashboardUtils {
         return  spinner.getSelectedItem().toString();
     }
 
+    static double sumDouble (double basic , double value){
+        return basic+value;
+    }
 
+    static double extractDouble (double basic , double value){
+        return basic-value;
+    }
 
-    static Double textToDouble(TextView view){
+    static double textToDouble(TextView view){
         return Double.parseDouble(view.getText().toString());
     }
 

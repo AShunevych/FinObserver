@@ -49,15 +49,17 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.BALANCE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.EXPENDITURES;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.INCOME;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_CREATE;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_DIALOG;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.DIALOG_STATIC;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.PREFERENCE_NAME;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.TOTAL;
 
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getDate;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.getImageInt;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnExtractionAsString;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnStringFromObj;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnSumAsString;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.textToDouble;
 
 
@@ -81,9 +83,9 @@ public class DashboardFragment extends Fragment {
     String currencyAccount = "UAH";
 
     //late init
-    int idAccount,imagePos,imageType;
-    String transactionAccount,transactionType,transactionCategory;
-    double  accountBasicValue, transactionValue;
+    int accountID, accountImagePos, accountImageType;
+    String accountName,transactionType, accountTransactionCategory;
+    double  accountTransactionEstimate, accountValue;
 
 
     //Lifecycle
@@ -102,7 +104,7 @@ public class DashboardFragment extends Fragment {
                         assert data != null;
                         transactionType = data.getStringExtra("Type");
                         if(transactionType.matches("Income") || transactionType.matches("Expenditures") ){
-                            onTransactionIncomeExp(data,transactionType);
+                            onIncomeExpendituresTransactions(data,transactionType);
                         }
                         else {
                             onTransferTransaction(data,transactionType);
@@ -171,7 +173,7 @@ public class DashboardFragment extends Fragment {
     //DialorFragmentListener
     private void setupFragmentResultListener(){
 
-        getParentFragmentManager().setFragmentResultListener(KEY_DIALOG, getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener(DIALOG_STATIC, getViewLifecycleOwner(), (requestKey, result) -> {
             String operationType = result.getString("operationType");
             Log.d("OPERATION KEY", operationType);
             String name = result.getString("accountName");
@@ -182,8 +184,11 @@ public class DashboardFragment extends Fragment {
                 int id = result.getInt("accountID");
                 updateAccount(id,name,value,currency,drawablePos);
             }
-            else{
+            else if (operationType.matches(KEY_CREATE)){
                 insertAccount(name,value,currency,drawablePos);
+            }
+            else{
+                Toast.makeText(requireContext(),"Operation Canceled",Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -222,21 +227,21 @@ public class DashboardFragment extends Fragment {
         ArrayList<String> namesLists = new ArrayList<>();
         ArrayList<String> valuesLists = new ArrayList<>();
         ArrayList<String> imagePos = new ArrayList<>();
-        for (int i=0;i <binding.accountView.getChildCount();i++) {
-            AccountItem account = adapter.getAccountAtPosition(i);
-            namesLists.add(account.getAccountName());
-            idLists.add(String.valueOf(account.getAccountID()));
-            valuesLists.add(String.valueOf(account.getAccountValue()));
-            imagePos.add(String.valueOf(account.getImageID()));
-        }
         if (binding.accountView.getChildCount() !=0) {
+            for (int i=0;i <binding.accountView.getChildCount();i++) {
+                AccountItem account = adapter.getAccountAtPosition(i);
+                namesLists.add(account.getAccountName());
+                idLists.add(String.valueOf(account.getAccountID()));
+                valuesLists.add(String.valueOf(account.getAccountValue()));
+                imagePos.add(String.valueOf(account.getImageID()));
+            }
             intent.putStringArrayListExtra("AccountNames", namesLists);
             intent.putStringArrayListExtra("AccountIDs", idLists);
             intent.putStringArrayListExtra("AccountValues", valuesLists);
             intent.putStringArrayListExtra("AccountImages", imagePos);
             ResultLauncher.launch(intent);
         } else {
-            Toast.makeText(requireContext(),"There is no active accounts.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(),"There are no active accounts.",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -296,44 +301,36 @@ public class DashboardFragment extends Fragment {
 
 
     //Result handlers
-    // TODO merge onIncExpTransactionResult & onTransactionIncomeExp --> onIncomeExpendituresTransactions
-    private void onIncExpTransactionResult(String type, double result, int id, String name, double basicValue, int imagePos){
+
+    private void onIncomeExpendituresTransactions(Intent intent,String transactionType){
+        accountID = intent.getIntExtra("ID",0);
+        accountName = intent.getStringExtra("Account");
+        accountTransactionEstimate = intent.getDoubleExtra("Estimate", 0);
+        accountImagePos = intent.getIntExtra("ImagePos",0);
+        accountTransactionCategory = intent.getStringExtra("Category");
+        accountValue = intent.getDoubleExtra("Value", 0);
+        accountImageType = getImageInt(transactionType);
+
         incomeValue = textToDouble(binding.incomeView);
         expValue = textToDouble(binding.expendView);
         balanceValue = textToDouble(binding.balanceView);
-        double positiveValue = basicValue+result;
-        double negativeValue = basicValue-result;
 
-        if (type.matches("Income")) {
-            updateAccount(id,name,positiveValue,currencyAccount,imagePos);
-            binding.incomeView.setText(String.valueOf(result + incomeValue));
-            binding.balanceView.setText(String.valueOf(balanceValue + result));
+        if (transactionType.matches("Income")) {
+            binding.incomeView.setText(returnSumAsString(accountTransactionEstimate,incomeValue));
+            binding.balanceView.setText(returnSumAsString(accountTransactionEstimate,balanceValue));
         } else {
-            updateAccount(id,name,negativeValue,currencyAccount,imagePos);
-            binding.expendView.setText(String.valueOf(result + expValue));
-            binding.balanceView.setText(String.valueOf(balanceValue - result));
+            binding.expendView.setText(returnSumAsString(accountTransactionEstimate,expValue));
+            binding.balanceView.setText(returnExtractionAsString(accountTransactionEstimate,balanceValue));
         }
 
-    }
+        updateAccount(accountID,accountName,accountValue,currencyAccount,accountImagePos);
 
-    private void onTransactionIncomeExp(Intent intent,String transactionType){
-        idAccount = intent.getIntExtra("ID",0);
-        transactionAccount = intent.getStringExtra("Account");
-        accountBasicValue = intent.getDoubleExtra("BasicValue",0);
-        imagePos = intent.getIntExtra("ImagePos",0);
-        transactionCategory = intent.getStringExtra("Category");
-        transactionValue = intent.getDoubleExtra("Value", 0);
-        imageType = getImageInt(transactionType);
+        transactionsViewModel.insert(new TransactionBoardItem(accountName,accountTransactionCategory,
+                accountTransactionEstimate,currencyAccount,date,accountImageType));
 
-        onIncExpTransactionResult(transactionType,transactionValue,idAccount,transactionAccount,accountBasicValue,imagePos);
-
-        transactionsViewModel.insert(new TransactionBoardItem(transactionAccount,transactionCategory,
-                transactionValue,currencyAccount,date,imageType));
     }
 
     private void onTransferTransaction(Intent intent,String transactionType){
-        //String type,double result, int id, String name, double basicValue, int imagePos
-      //updateResult(id,name,positiveValue,"UAH",imagePos);
 
         int basicAccountID = intent.getIntExtra("basicAccountID",0);
         int targetAccountID = intent.getIntExtra("targetAccountID",0);
