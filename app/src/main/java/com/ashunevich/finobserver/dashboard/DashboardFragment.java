@@ -68,10 +68,10 @@ public class DashboardFragment extends Fragment {
     private DashboardFragmentBinding binding;
     private DashboardUtilsSharedPref prefManager;
     ActivityResultLauncher<Intent> ResultLauncher;
-    DialogFragment newAccountDialogFragment;
+    private DialogFragment newAccountDialogFragment;
 
     private final List<AccountItem> AccountItemList = new ArrayList<>();
-    RecyclerViewAdapter adapter;
+    private RecyclerViewAdapter adapter;
 
     private RoomDashboardVewModel dashboardViewModel;
     RoomTransactionsViewModel transactionsViewModel;

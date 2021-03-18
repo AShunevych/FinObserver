@@ -117,9 +117,9 @@ public class DashboardNewTransaction extends AppCompatActivity {
     //UI
 
     private void setSpinner(ArrayList<String> array){
-           ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, array);
-           binding.ActiveAccounts.setAdapter(adapter);
-         binding.targetAccount.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, array);
+        binding.ActiveAccounts.setAdapter(adapter);
+        binding.targetAccount.setAdapter(adapter);
     }
 
     private void setUIStatusOnStart(){
@@ -172,7 +172,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
             switch (returnActiveChipId(group)){
-                case R.id.incomeChip :  chipViewHandlerPos(1);break;
+                case R.id.incomeChip : chipViewHandlerPos(1);break;
                 case R.id.spendingChip : chipViewHandlerPos(2);break;
                 case R.id.transferChip : chipViewHandlerPos(3); enableSubmitButton();break;
             }
@@ -231,33 +231,31 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void transferResult(){
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
-            newBasicAccountValue = basicValue - transactionEstimate;
-            newTargetAccountValue = targetValue + transactionEstimate;
+        newBasicAccountValue = basicValue - transactionEstimate;
+        newTargetAccountValue = targetValue + transactionEstimate;
 
-            previousScreen.putExtra("Type",typeChip);
+        previousScreen.putExtra("Type",typeChip);
 
-            previousScreen.putExtra("basicAccountID", basicAccountID);
-            previousScreen.putExtra("targetAccountID", targetAccountID);
+        previousScreen.putExtra("basicAccountID", basicAccountID);
+        previousScreen.putExtra("targetAccountID", targetAccountID);
 
-            previousScreen.putExtra("basicAccountImagePos", basicAccountImagePos);
-            previousScreen.putExtra("targetAccountImagePos", targetAccountImagePos);
+        previousScreen.putExtra("basicAccountImagePos", basicAccountImagePos);
+        previousScreen.putExtra("targetAccountImagePos", targetAccountImagePos);
 
-            previousScreen.putExtra("basicAccountName",transactionAccount);
-            previousScreen.putExtra("targetAccountName",targetAccount);
+        previousScreen.putExtra("basicAccountName",transactionAccount);
+        previousScreen.putExtra("targetAccountName",targetAccount);
 
-            previousScreen.putExtra("Category",categoryChip);
+        previousScreen.putExtra("Category",categoryChip);
 
-            previousScreen.putExtra("transferValue", transactionEstimate);//updatedValue
-            previousScreen.putExtra("newBasicAccountValue",newBasicAccountValue);//updatedValue
-            previousScreen.putExtra("newTargetAccountValue",newTargetAccountValue);//updatedValue
-            if(basicAccountID == targetAccountID){
-                Toast.makeText(this, "Same account", Toast.LENGTH_SHORT).show();
-            }
-            else {
-            setResult(RESULT_OK,previousScreen);
-            finish();
-            }
-
+        previousScreen.putExtra("transferValue", transactionEstimate);//updatedValue
+        previousScreen.putExtra("newBasicAccountValue",newBasicAccountValue);//updatedValue
+        previousScreen.putExtra("newTargetAccountValue",newTargetAccountValue);//updatedValue
+        if(basicAccountID == targetAccountID){
+            Toast.makeText(this, "Same account", Toast.LENGTH_SHORT).show();
+        }
+        else {
+        setResult(RESULT_OK,previousScreen);finish();
+        }
     }
 
     private void incomeExpResult(){

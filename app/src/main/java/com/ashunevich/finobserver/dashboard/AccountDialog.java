@@ -74,9 +74,9 @@ public class AccountDialog extends DialogFragment {
         assert getArguments() != null;
         binding.newAccountName.setText(getArguments().getString("accountName"));
         binding.newAccountValue.setText(String.valueOf(getArguments().getDouble("accountValue")));
-       binding.drawableSpinner.setSelection(getArguments().getInt("imageID"));
-       id = getArguments().getInt("accountID");
-       currency = getArguments().getString("accountCurrency");
+        binding.drawableSpinner.setSelection(getArguments().getInt("imageID"));
+        id = getArguments().getInt("accountID");
+        currency = getArguments().getString("accountCurrency");
     }
 
     private void initKeyType(){
@@ -142,8 +142,8 @@ public class AccountDialog extends DialogFragment {
 
     //Dialog methods
     public void onDismiss(@NonNull DialogInterface dialog) {
-            submitToActivity();
-            super.onDismiss(dialog);
+        submitToActivity();
+        super.onDismiss(dialog);
     }
 
     public void onCancel(@NonNull DialogInterface dialog) {

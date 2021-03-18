@@ -67,21 +67,21 @@ abstract class DashboardUtils {
         return postPOJO.getZero();
     }
 
-    protected static void setChipGroupUncheck(ChipGroup chipGroup){
+    static void setChipGroupUncheck(ChipGroup chipGroup){
         chipGroup.clearCheck();
     }
 
     //string
-    protected static double stringToDouble(String string){
+    static double stringToDouble(String string){
         return Double.parseDouble(string);
     }
 
-    protected static int stringToInteger(String string){
+    static int stringToInteger(String string){
         return Integer.parseInt(string);
     }
 
     //ChipGroup
-    protected static String returnChipText(ChipGroup chipGroup){
+    static String returnChipText(ChipGroup chipGroup){
         String text = null;
         List<Integer> ids = chipGroup.getCheckedChipIds();
         for (Integer id:ids){
@@ -91,7 +91,7 @@ abstract class DashboardUtils {
         return text;
     }
 
-    protected static int returnActiveChipId(ChipGroup chipGroup){
+    static int returnActiveChipId(ChipGroup chipGroup){
         int idChip = 0;
         List<Integer> ids = chipGroup.getCheckedChipIds();
         for (Integer id:ids){
@@ -101,7 +101,7 @@ abstract class DashboardUtils {
         return idChip;
     }
 
-    protected static String getSelectedItemFromSpinner(Spinner spinner){
+    static String getSelectedItemFromSpinner(Spinner spinner){
         return  spinner.getSelectedItem().toString();
     }
 
