@@ -10,6 +10,9 @@ import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -120,6 +123,13 @@ abstract class DashboardUtils {
 
     static void enableSubmitIfReady(Button button,EditText text1, EditText text2) {
         button.setEnabled(getTextFrom(text1).length() > 0 && getTextFrom(text2).length() > 0);
+    }
+
+    static String formatValue(double a) {
+        DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
+        otherSymbols.setDecimalSeparator('.');
+        DecimalFormat formatter = new DecimalFormat("###.##",otherSymbols);
+        return (formatter.format(a));
     }
 
 }

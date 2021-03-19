@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.formatValue;
 
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>  {
@@ -118,7 +119,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     }
 //
     
-    protected String summAllItemsValue(RecyclerView viewRec){
+    protected String getSumOfAllItems(RecyclerView viewRec){
         double totalPrice = 0;
         for (int i = 0; i<viewRec.getChildCount(); i++)
         {
@@ -126,7 +127,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
             TextView view = holder.itemView.findViewById(R.id.accountValue);
             totalPrice += Double.parseDouble(view.getText().toString());
         }
-        return String.valueOf(totalPrice);
+        return formatValue(totalPrice);
     }
 
 }

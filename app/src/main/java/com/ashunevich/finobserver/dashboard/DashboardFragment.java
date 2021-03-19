@@ -263,7 +263,7 @@ public class DashboardFragment extends Fragment {
 
     //Sum operations
     private void refreshUIElements(){
-        binding.totalBalanceValue.setText(adapter.summAllItemsValue(binding.accountView));
+        binding.totalBalanceValue.setText(adapter.getSumOfAllItems(binding.accountView));
         binding.accountView.smoothScrollToPosition(0);
         setSharedPrefValues();
     }
