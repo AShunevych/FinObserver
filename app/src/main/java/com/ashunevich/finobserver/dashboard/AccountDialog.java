@@ -27,8 +27,8 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.DIALOG_STATIC;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_CANCEL;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.enableSubmitIfReady;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnString;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.textToDouble;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromTextView;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
 
 public class AccountDialog extends DialogFragment {
@@ -50,7 +50,6 @@ public class AccountDialog extends DialogFragment {
         initUIStatus();
         initClickListeners();
         initSpinner();
-
         initKeyType();
 
         return binding.getRoot();
@@ -115,18 +114,18 @@ public class AccountDialog extends DialogFragment {
            }
        };
 
-    //create result bundle
+    //submit result
     private void submitToActivity() {
-        if(!TextUtils.isEmpty(returnString(binding.newAccountName))
-                && !TextUtils.isEmpty(returnString(binding.newAccountValue))){
+        if(!TextUtils.isEmpty(stringFromTextView (binding.newAccountName))
+                && !TextUtils.isEmpty(stringFromTextView (binding.newAccountValue))){
             submitPositiveResult(keyType);
         }
     }
 
     private void submitPositiveResult(String key){
         Bundle result = new Bundle();
-        result.putString("accountName",returnString(binding.newAccountName));
-        result.putDouble("accountValue",textToDouble(binding.newAccountValue));
+        result.putString("accountName", stringFromTextView (binding.newAccountName));
+        result.putDouble("accountValue", doubleFromTextView (binding.newAccountValue));
         if(currency == null){
             currency = getResources().getString(R.string.UAH);
         }
@@ -139,8 +138,13 @@ public class AccountDialog extends DialogFragment {
         getParentFragmentManager().setFragmentResult(DIALOG_STATIC,result);
     }
 
+    private void submitNegativeResult(){
+        Bundle result = new Bundle();
+        result.putString("operationType", KEY_CANCEL);
+        getParentFragmentManager().setFragmentResult(DIALOG_STATIC,result);
+    }
 
-    //Dialog methods
+    //Dialog
     public void onDismiss(@NonNull DialogInterface dialog) {
         submitToActivity();
         super.onDismiss(dialog);
@@ -148,9 +152,7 @@ public class AccountDialog extends DialogFragment {
 
     public void onCancel(@NonNull DialogInterface dialog) {
         super.onCancel(dialog);
-        Bundle result = new Bundle();
-        result.putString("operationType", KEY_CANCEL);
-        getParentFragmentManager().setFragmentResult(DIALOG_STATIC,result);
+        submitNegativeResult();
         dialog.cancel();
     }
 

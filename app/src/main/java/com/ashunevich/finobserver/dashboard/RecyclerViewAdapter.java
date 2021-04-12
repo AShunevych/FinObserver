@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.formatValue;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringSetDoubleFormat;
 
 
 class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>  {
@@ -127,7 +127,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
             TextView view = holder.itemView.findViewById(R.id.accountValue);
             totalPrice += Double.parseDouble(view.getText().toString());
         }
-        return formatValue(totalPrice);
+        return stringSetDoubleFormat (totalPrice);
     }
 
 }

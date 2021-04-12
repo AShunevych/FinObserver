@@ -27,15 +27,15 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.extractDouble;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.getSelectedItemFromSpinner;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnActiveChipId;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.returnChipText;
+import static com.ashunevich.finobserver.UtilsPackage.Utils.returnActiveChipId;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleExtraction;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringAsTextFromSpinner;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromActiveChip;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.setChipGroupUncheck;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringToDouble;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringToInteger;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromString;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.intFromString;
 import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
-import static com.ashunevich.finobserver.dashboard.DashboardUtils.sumDouble;
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleSum;
 
 public class DashboardNewTransaction extends AppCompatActivity {
     private TransactionDialogBinding binding;
@@ -55,11 +55,11 @@ public class DashboardNewTransaction extends AppCompatActivity {
         binding = TransactionDialogBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getIntents();
+        initIntents ();
         setUIStatusOnStart();
 
         setTextWatcher();
-        setChipsOnStart();
+        initCreateChipOnStart ();
         setChipsGroupListener();
         setCLickListeners();
 
@@ -67,23 +67,23 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
 
     //init methods
-    private void getIntents(){
+    private void initIntents(){
         setSpinner(getIntent().getStringArrayListExtra("AccountNames"));
-        setAdditionalInfo(getIntent().getStringArrayListExtra("AccountIDs"),
+        initBundleFromActivity (getIntent().getStringArrayListExtra("AccountIDs"),
                 getIntent().getStringArrayListExtra("AccountValues"),
                 getIntent().getStringArrayListExtra("AccountImages"));
     }
 
-    private void setAdditionalInfo(ArrayList<String> idArray,
-                                   ArrayList<String> valueArray,
-                                   ArrayList<String> imagesArray){
+    private void initBundleFromActivity(ArrayList<String> idArray,
+                                        ArrayList<String> valueArray,
+                                        ArrayList<String> imagesArray){
         binding.ActiveAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 int spinnerPos = getSelectedItemOnSpinnerPosition(binding.ActiveAccounts);
-                basicAccountID = stringToInteger(idArray.get(spinnerPos));
-                basicValue = stringToDouble(valueArray.get(spinnerPos));
-                basicAccountImagePos = stringToInteger(imagesArray.get(spinnerPos));
+                basicAccountID = intFromString (idArray.get(spinnerPos));
+                basicValue = doubleFromString (valueArray.get(spinnerPos));
+                basicAccountImagePos = intFromString (imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -96,9 +96,9 @@ public class DashboardNewTransaction extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 int spinnerPos = getSelectedItemOnSpinnerPosition(binding.targetAccount);
-                targetAccountID = stringToInteger(idArray.get(spinnerPos));
-                targetValue = stringToDouble(valueArray.get(spinnerPos));
-                targetAccountImagePos = stringToInteger(imagesArray.get(spinnerPos));
+                targetAccountID = intFromString (idArray.get(spinnerPos));
+                targetValue = doubleFromString (valueArray.get(spinnerPos));
+                targetAccountImagePos = intFromString (imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -109,9 +109,9 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
     }
 
-    private void setChipsOnStart(){
-        chipFactory(getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
-        chipFactory(getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
+    private void initCreateChipOnStart(){
+        utilsChipFactory (getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
+        utilsChipFactory (getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
     }
 
     //UI
@@ -130,7 +130,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
         binding.transactionType.setVisibility(View.INVISIBLE);
     }
 
-    private void chipViewHandlerPos(int UIHandlingPos){
+    private void setChipViewHandlerPos(int UIHandlingPos){
         switch (UIHandlingPos){
             case 1 :
                 binding.IncomeChipGroup.setVisibility(View.VISIBLE);
@@ -172,20 +172,20 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
             switch (returnActiveChipId(group)){
-                case R.id.incomeChip : chipViewHandlerPos(1);break;
-                case R.id.spendingChip : chipViewHandlerPos(2);break;
-                case R.id.transferChip : chipViewHandlerPos(3); enableSubmitButton();break;
+                case R.id.incomeChip : setChipViewHandlerPos (1);break;
+                case R.id.spendingChip : setChipViewHandlerPos (2);break;
+                case R.id.transferChip : setChipViewHandlerPos (3); uiSubmitButtonStatus ();break;
             }
         });
 
         binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            categoryChip = returnChipText(group);
-            enableSubmitButton();
+            categoryChip = stringFromActiveChip (group);
+            uiSubmitButtonStatus ();
         });
 
         binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            categoryChip = returnChipText(group);
-            enableSubmitButton();
+            categoryChip = stringFromActiveChip (group);
+            uiSubmitButtonStatus ();
         });
 
     }
@@ -204,31 +204,31 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                enableChipWhenValueEntered(binding.transactionEstimate);
+                uiChipValueStatus (binding.transactionEstimate);
             }
         });
     }
     
     private void setCLickListeners(){
-        binding.resumeDialog.setOnClickListener(v -> onSubmitAction());
-        binding.cancelDialog.setOnClickListener(v -> onCancelResult());
+        binding.resumeDialog.setOnClickListener(v -> resultOnSubmit ());
+        binding.cancelDialog.setOnClickListener(v -> resultCancelOperation ());
     }
 
     //Result handlers
-    private void onSubmitAction() {
-        transactionEstimate = stringToDouble(binding.transactionEstimate.getText().toString());
-        transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
-        targetAccount = getSelectedItemFromSpinner(binding.targetAccount);
-        typeChip = returnChipText(binding.transactionType);
+    private void resultOnSubmit() {
+        transactionEstimate = doubleFromString (binding.transactionEstimate.getText().toString());
+        transactionAccount = stringAsTextFromSpinner (binding.ActiveAccounts);
+        targetAccount = stringAsTextFromSpinner (binding.targetAccount);
+        typeChip = stringFromActiveChip (binding.transactionType);
 
         if (typeChip.matches(getResources().getString(R.string.transfer))) {
-            transferResult();
+            resultSetTransferOperation ();
         } else {
-            incomeExpResult();
+            resultBasicOperation ();
         }
     }
 
-    private void transferResult(){
+    private void resultSetTransferOperation(){
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
         newBasicAccountValue = basicValue - transactionEstimate;
@@ -258,18 +258,18 @@ public class DashboardNewTransaction extends AppCompatActivity {
         }
     }
 
-    private void incomeExpResult(){
+    private void resultBasicOperation(){
         ////int updatedID, String updatedName, double updatedValue, int updatedImagePos
         //for update
-        transactionEstimate = stringToDouble(binding.transactionEstimate.getText().toString());
-        transactionAccount = getSelectedItemFromSpinner(binding.ActiveAccounts);
+        transactionEstimate = doubleFromString (binding.transactionEstimate.getText().toString());
+        transactionAccount = stringAsTextFromSpinner (binding.ActiveAccounts);
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
 
         if(typeChip.matches("Income")){
-            newBasicAccountValue = sumDouble(basicValue,transactionEstimate);
+            newBasicAccountValue = doubleSum (basicValue,transactionEstimate);
         }
         else{
-            newBasicAccountValue = extractDouble(basicValue,transactionEstimate);
+            newBasicAccountValue = doubleExtraction (basicValue,transactionEstimate);
         }
 
             previousScreen.putExtra("ID", basicAccountID); //updatedID
@@ -283,7 +283,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
             finish();
     }
 
-    private void onCancelResult(){
+    private void resultCancelOperation(){
         Intent previousScreen = new Intent(getApplicationContext(), DashboardFragment.class);
         setResult(RESULT_CANCELED,previousScreen);
         finish();
@@ -291,11 +291,11 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
 
     //Utils
-    private String getText(EditText text) {
+    private String utilsGetText(EditText text) {
         return text.getText().toString().trim();
     }
 
-    private void chipFactory(String [] list, ChipGroup chipGroup){
+    private void utilsChipFactory(String [] list, ChipGroup chipGroup){
         for (String category :
                 list)
         {
@@ -317,20 +317,18 @@ public class DashboardNewTransaction extends AppCompatActivity {
     }
 
     //switches
-    private void enableSubmitButton() {
+    private void uiSubmitButtonStatus() {
         binding.resumeDialog.setEnabled(true);
     }
 
-    private void enableChipWhenValueEntered(EditText editText){
-        if(getText(editText).length() > 0){
+    private void uiChipValueStatus(EditText editText){
+        if(utilsGetText (editText).length() > 0){
             binding.transactionType.setVisibility(View.VISIBLE);
         }
         else{
-            chipViewHandlerPos(4);
+            setChipViewHandlerPos (4);
         }
 
     }
-
-
 
 }

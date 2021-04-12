@@ -12,7 +12,6 @@ import com.google.android.material.chip.ChipGroup;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,8 +37,8 @@ abstract class DashboardUtils {
      static final String DIALOG_STATIC = "DIALOG";
 
 
-
-    static int getImageInt(String type){
+    //int
+    static int intFromImageType(String type){
        if(type.matches("Income")){
            return 0;
        }
@@ -51,40 +50,30 @@ abstract class DashboardUtils {
        }
    }
 
-
-    static String returnString(TextView textView){
-        return textView.getText().toString();
-    }
-
-    static String getDate(){
-        Date c = Calendar.getInstance().getTime();
-        SimpleDateFormat df = new SimpleDateFormat("d MMM, yyyy ", Locale.UK);
-        return df.format(c);
-    }
-
-    static String returnSumAsString(double a, double b){return String.valueOf(a+b); }
-
-    static String returnExtractionAsString(double a, double b){return String.valueOf(b-a); }
-
-    static String returnStringFromObj(PostPOJO postPOJO) {
-        return postPOJO.getZero();
-    }
-
-    static void setChipGroupUncheck(ChipGroup chipGroup){
-        chipGroup.clearCheck();
-    }
-
-    //string
-    static double stringToDouble(String string){
-        return Double.parseDouble(string);
-    }
-
-    static int stringToInteger(String string){
+    static int intFromString(String string){
         return Integer.parseInt(string);
     }
 
-    //ChipGroup
-    static String returnChipText(ChipGroup chipGroup){
+    //string
+    static String stringFromTextView(TextView textView){
+        return textView.getText().toString();
+    }
+
+    static String stringDate(){
+        Date c = Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("d MMMM, yyyy ", Locale.UK);
+        return df.format(c);
+    }
+
+    static String stringSumFromDoubles(double a, double b){return stringSetDoubleFormat (a+b); }
+
+    static String stringExtractionFromDoubles(double a, double b){return String.valueOf(b-a); }
+
+    static String stringFromObject(PostPOJO postPOJO) {
+        return postPOJO.getZero();
+    }
+
+    static String stringFromActiveChip(ChipGroup chipGroup){
         String text = null;
         List<Integer> ids = chipGroup.getCheckedChipIds();
         for (Integer id:ids){
@@ -94,42 +83,46 @@ abstract class DashboardUtils {
         return text;
     }
 
-    static int returnActiveChipId(ChipGroup chipGroup){
-        int idChip = 0;
-        List<Integer> ids = chipGroup.getCheckedChipIds();
-        for (Integer id:ids){
-            Chip chip = chipGroup.findViewById(id);
-            idChip = chip.getId();
-        }
-        return idChip;
-    }
-
-    static String getSelectedItemFromSpinner(Spinner spinner){
+    static String stringAsTextFromSpinner(Spinner spinner){
         return  spinner.getSelectedItem().toString();
     }
 
-    static double sumDouble (double basic , double value){
-        return basic+value;
-    }
-
-    static double extractDouble (double basic , double value){
-        return basic-value;
-    }
-
-    static double textToDouble(TextView view){
-        return Double.parseDouble(view.getText().toString());
-    }
-
-
-    static void enableSubmitIfReady(Button button,EditText text1, EditText text2) {
-        button.setEnabled(getTextFrom(text1).length() > 0 && getTextFrom(text2).length() > 0);
-    }
-
-    static String formatValue(double a) {
+    static String stringSetDoubleFormat(double a) {
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
         otherSymbols.setDecimalSeparator('.');
         DecimalFormat formatter = new DecimalFormat("###.##",otherSymbols);
         return (formatter.format(a));
     }
 
+    static String stringFormat(String x){
+        double a = Double.parseDouble (x);
+        return stringSetDoubleFormat(a);
+    }
+
+
+    //doubles
+    static double doubleFromString(String string){
+        return Double.parseDouble(string);
+    }
+
+    static double doubleSum(double basic , double value){
+        return basic+value;
+    }
+
+    static double doubleExtraction(double basic , double value){
+        return basic-value;
+    }
+
+    static double doubleFromTextView(TextView view){
+        return Double.parseDouble(view.getText().toString());
+    }
+
+    //void
+    static void enableSubmitIfReady(Button button,EditText text1, EditText text2) {
+        button.setEnabled(getTextFrom(text1).length() > 0 && getTextFrom(text2).length() > 0);
+    }
+
+    static void setChipGroupUncheck(ChipGroup chipGroup){
+        chipGroup.clearCheck();
+    }
 }

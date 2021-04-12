@@ -78,13 +78,12 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
      void updateItemList(List<TransactionBoardItem> items){
         final RecyclerViewDiffUtil diffCallback = new RecyclerViewDiffUtil(this.pad_list, items);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        this.pad_list.clear();
+         this.pad_list.clear ();
         this.pad_list.addAll(items);
         diffResult.dispatchUpdatesTo(this);
     }
 
-    void filter(ArrayList<TransactionBoardItem> filter) {
+    void filter(List<TransactionBoardItem> filter) {
         this.pad_list = filter;
         notifyDataSetChanged();
     }

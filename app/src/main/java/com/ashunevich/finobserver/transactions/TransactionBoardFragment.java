@@ -1,5 +1,6 @@
 package com.ashunevich.finobserver.transactions;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,8 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
@@ -24,12 +23,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import static com.ashunevich.finobserver.UtilsPackage.Utils.returnActiveChipId;
 
 
 public class TransactionBoardFragment extends Fragment {
     private TransactionsFragmentBinding binding;
 
     private final List<TransactionBoardItem> listContentArr = new ArrayList<>();
+    private ArrayList<TransactionBoardItem> filteredList;
     RecyclerViewAdapter adapter;
 
     RoomTransactionsViewModel modelDatabase;
@@ -58,21 +59,18 @@ public class TransactionBoardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         //fix for  bug that freeze app, when app launch after was closed, when user switching to Transaction tab
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::initRecView, 1000);
+        initDelayForDatabaseRecView();
         super.onViewCreated(view, savedInstanceState);
 
-        setSpinnerListeners();
-        setTextWatcher();
-        setSpinner();
-        UICondition(false);
-        setCheckBoxListener();
+        setListenerTextWatcher ();
+        uiHandlerMechanism (false);
+        setListenerCheckBox ();
     }
 
 
-    //Utils for UI
-    private void setTextWatcher(){
-        binding.filterPlainText.addTextChangedListener(new TextWatcher() {
+    //Listeners
+    private void setListenerTextWatcher(){
+        binding.findByAccount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -85,59 +83,81 @@ public class TransactionBoardFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                setFilter(editable.toString(),FILTER_TYPE);
+                filterMechanism (editable.toString(),FILTER_TYPE);
             }
         });
     }
 
-    private void setSpinner(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.support_simple_spinner_dropdown_item, getResources().getStringArray(R.array.filterTypes));
-        binding.filterType.setAdapter(adapter);
-    }
-
-    private void setSpinnerListeners(){
-        binding.filterType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                switch (i){
-                    case 1: FILTER_TYPE = true;
-                    case 2: FILTER_TYPE = false;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+    @SuppressLint("NonConstantResourceId")
+    private void setListenerCheckBox(){
+        binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> uiHandlerMechanism (b));
+        binding.monthChip.setOnCheckedChangeListener ((group, checkedId) -> {
+            switch (returnActiveChipId(group)){
+                case R.id.byDate : FILTER_TYPE = true;clearText();break;
+                case R.id.byAccount : FILTER_TYPE = false;clearText();break;
             }
         });
+
     }
 
-    private void UICondition(boolean bool){
+    //UI
+    private void uiHandlerMechanism(boolean bool){
         if(bool){
-            binding.filterType.setVisibility(View.VISIBLE);
-            binding.filterPlainText.setVisibility(View.VISIBLE);
+            clearText ();
+            binding.monthChip.clearCheck ();
+            binding.monthChip.check (binding.byDate.getId ());
+            binding.monthChip.setVisibility (View.VISIBLE);
+            binding.findByAccount.setVisibility (View.VISIBLE);
         }
         else {
-            binding.filterType.setVisibility(View.GONE);
-            binding.filterPlainText.setVisibility(View.GONE);
-            binding.filterPlainText.getText().clear();
+            if(filteredList != null){
+                filteredList.clear ();
+                rewriteFilterRecView();
+            }
+            binding.monthChip.clearCheck ();
+            binding.findByAccount.setVisibility (View.GONE);
+            binding.monthChip.setVisibility (View.GONE);
         }
+
     }
 
-    private void setCheckBoxListener(){
-        binding.checkBox.setOnCheckedChangeListener((compoundButton, b) -> UICondition(b));
-    }
-
-    private void hideProgressBar(){
+    private void uiProgressBarStatus(){
         binding.progressBar.setVisibility(View.GONE);
         binding.loadingText.setVisibility(View.GONE);
     }
 
-
     //Recycler Utils
-    private void setFilter(String text, Boolean bool){
-        ArrayList<TransactionBoardItem> filteredList = new ArrayList<>();
+    private void initDatabaseRecView() {
+        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        adapter = new RecyclerViewAdapter(listContentArr);
+        binding.transactionView.setAdapter(adapter);
+        modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
+        initViewModel ();
+        uiProgressBarStatus ();
+    }
 
+    private void initDelayForDatabaseRecView(){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::initDatabaseRecView, 1000);
+    }
+
+    private void initViewModel() {
+        modelDatabase.getAllTransactions ().observe (requireActivity (), transaction_items -> {
+            adapter.updateItemList (transaction_items);
+            binding.transactionView.smoothScrollToPosition (0);
+        });
+    }
+
+    private void rewriteFilterRecView(){
+        modelDatabase.getAllTransactions ().observe (requireActivity (), transaction_items -> {
+            adapter.filter (transaction_items);
+            binding.transactionView.smoothScrollToPosition (0);
+        });
+    }
+
+        //filter
+    private void filterMechanism (String text, Boolean bool){
+        filteredList = new ArrayList<>();
         for(TransactionBoardItem item:listContentArr){
             if(bool){
                 if (item.getTransactionDate().toLowerCase().contains(text.toLowerCase())) {
@@ -153,19 +173,13 @@ public class TransactionBoardFragment extends Fragment {
         adapter.filter(filteredList);
     }
 
-    private void initRecView() {
-        binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerViewAdapter(listContentArr);
-        binding.transactionView.setAdapter(adapter);
 
-        modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
-        modelDatabase.getAllTransactions().observe(requireActivity(), transaction_items -> {
-            adapter.updateItemList(transaction_items);
-            binding.transactionView.smoothScrollToPosition(0);
-        });
-
-        hideProgressBar();
+    //Utils
+    private void clearText(){
+        binding.findByAccount.setText ("");
     }
+
+
 
 
     @Override
