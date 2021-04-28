@@ -1,3 +1,3 @@
 # FinObserver 
 Demo budget control app    
-RecyclerView + Android Room persistance library + ViewModel using JAVA
+App demonstrates use of model-view-viewmodel (MVVM) pattern with Android Room + RecyclerView
