@@ -1,3 +1,3 @@
 # FinObserver 
 Demo budget control app    
-App demonstrates use of model-view-viewmodel (MVVM) pattern with Android Room + RecyclerView
+App demonstrator of model-view-ViewModel (MVVM) pattern with Android Room + RecyclerView
