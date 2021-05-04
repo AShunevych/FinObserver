@@ -99,6 +99,10 @@ abstract class DashboardUtils {
         return stringSetDoubleFormat(a);
     }
 
+    static String setTransferText(String accountName){
+        return "Transfer from " + accountName;
+    }
+
 
     //doubles
     static double doubleFromString(String string){

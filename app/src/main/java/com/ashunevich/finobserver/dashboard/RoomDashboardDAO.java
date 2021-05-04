@@ -17,4 +17,7 @@ public interface RoomDashboardDAO extends FactoryDAO<AccountItem> {
 
     @Query("SELECT * FROM active_accounts ORDER BY accountID DESC" )
     LiveData<List<AccountItem>> getAllAccounts();
+
+    @Query ("UPDATE active_accounts SET accountValue =:value WHERE accountID =:id ")
+    void updateAccountAfterTransaction(int id, double value);
 }

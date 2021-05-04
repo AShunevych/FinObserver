@@ -54,6 +54,7 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.PREFERENCE_NAME;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.TOTAL;
 
+import static com.ashunevich.finobserver.dashboard.DashboardUtils.setTransferText;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringDate;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.intFromImageType;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringExtractionFromDoubles;
@@ -84,7 +85,7 @@ public class DashboardFragment extends Fragment {
     String currencyAccount = "UAH";
 
     //late init
-    int accountID, accountImagePos, accountImageType;
+    int accountID,accountImageType;
     String accountName,transactionType, accountTransactionCategory;
     double  accountTransactionEstimate, accountValue;
 
@@ -233,23 +234,20 @@ public class DashboardFragment extends Fragment {
     private void startNewTransaction(){
         Intent intent = new Intent(getContext(), DashboardNewTransaction.class);
 
-        //int updatedID, String updatedName, double updatedValue, String updatedCurrency, int updatedImagePos
+        //int updatedID, String updatedName, double updatedValue, String updatedCurrency
         ArrayList<String> idLists = new ArrayList<>();
         ArrayList<String> namesLists = new ArrayList<>();
         ArrayList<String> valuesLists = new ArrayList<>();
-        ArrayList<String> imagePos = new ArrayList<>();
         if (binding.accountView.getChildCount() !=0) {
             for (int i=0;i <binding.accountView.getChildCount();i++) {
                 AccountItem account = adapter.getAccountAtPosition(i);
                 namesLists.add(account.getAccountName());
                 idLists.add(String.valueOf(account.getAccountID()));
                 valuesLists.add(String.valueOf(account.getAccountValue()));
-                imagePos.add(String.valueOf(account.getImageID()));
             }
             intent.putStringArrayListExtra("AccountNames", namesLists);
             intent.putStringArrayListExtra("AccountIDs", idLists);
             intent.putStringArrayListExtra("AccountValues", valuesLists);
-            intent.putStringArrayListExtra("AccountImages", imagePos);
             ResultLauncher.launch(intent);
         } else {
             Toast.makeText(requireContext(),"There are no active accounts.",Toast.LENGTH_SHORT).show();
@@ -257,8 +255,14 @@ public class DashboardFragment extends Fragment {
     }
 
     //Room operations
-    private void roomUpdateAccount(int accountId, String accountName, double accountValue, String accountCurrency, int accountDrawablePos){
+    private void roomUpdateAccount(int accountId, String accountName, double accountValue,
+                                   String accountCurrency, int accountDrawablePos){
         dashboardViewModel.update(new AccountItem(accountId,accountName,accountValue,accountCurrency,accountDrawablePos));
+        uiUpdateWithDelay ();
+    }
+
+    private void roomUpdateAccountAfterTransaction(int accountID, double accountValue){
+        dashboardViewModel.updateAccountAfterTransaction(accountID,accountValue);
         uiUpdateWithDelay ();
     }
 
@@ -300,7 +304,7 @@ public class DashboardFragment extends Fragment {
 
     //EventBus event
     @Subscribe
-    public void eventReceive(PostPOJO postPOJO){
+    public void eventReceiver(PostPOJO postPOJO){
         String zeroString = stringFromObject (postPOJO);
         binding.balanceView.setText(zeroString);
         binding.incomeView.setText(zeroString);
@@ -314,7 +318,6 @@ public class DashboardFragment extends Fragment {
         accountID = intent.getIntExtra("ID",0);
         accountName = intent.getStringExtra("Account");
         accountTransactionEstimate = intent.getDoubleExtra("Estimate", 0);
-        accountImagePos = intent.getIntExtra("ImagePos",0);
         accountTransactionCategory = intent.getStringExtra("Category");
         accountValue = intent.getDoubleExtra("Value", 0);
         accountImageType = intFromImageType (transactionType);
@@ -331,7 +334,7 @@ public class DashboardFragment extends Fragment {
             binding.balanceView.setText(stringExtractionFromDoubles (accountTransactionEstimate,balanceValue));
         }
 
-        roomUpdateAccount (accountID,accountName,accountValue,currencyAccount,accountImagePos);
+        roomUpdateAccountAfterTransaction(accountID,accountValue);
 
         transactionsViewModel.insert(new TransactionBoardItem(accountName,accountTransactionCategory,
                 accountTransactionEstimate,currencyAccount,date,accountImageType));
@@ -343,25 +346,19 @@ public class DashboardFragment extends Fragment {
         int basicAccountID = intent.getIntExtra("basicAccountID",0);
         int targetAccountID = intent.getIntExtra("targetAccountID",0);
 
-        int basicAccountImagePos = intent.getIntExtra("basicAccountImagePos",0);
-        int targetAccountImagePos = intent.getIntExtra("targetAccountImagePos",0);
-
         String basicAccountName  = intent.getStringExtra("basicAccountName");
         String targetAccountName  = intent.getStringExtra("targetAccountName");
-
-        String transactionCategory = "Transfer from " + basicAccountName;
 
         double transferValue = intent.getDoubleExtra("transferValue",0);
         double newBasicAccountValue = intent.getDoubleExtra("newBasicAccountValue", 0);
         double newTargetAccountValue = intent.getDoubleExtra("newTargetAccountValue", 0);
 
-
         int imageType = intFromImageType (transactionType);
 
-        roomUpdateAccount (basicAccountID,basicAccountName,newBasicAccountValue,currencyAccount,basicAccountImagePos);
-        roomUpdateAccount (targetAccountID,targetAccountName,newTargetAccountValue,currencyAccount,targetAccountImagePos);
+       roomUpdateAccountAfterTransaction (basicAccountID,newBasicAccountValue);
+       roomUpdateAccountAfterTransaction (targetAccountID,newTargetAccountValue);
 
-        transactionsViewModel.insert(new TransactionBoardItem(targetAccountName,transactionCategory,
+        transactionsViewModel.insert(new TransactionBoardItem(targetAccountName,setTransferText(basicAccountName),
                 transferValue,currencyAccount,date,imageType));
     }
 

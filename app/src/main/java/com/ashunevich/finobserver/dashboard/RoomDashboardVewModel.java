@@ -36,4 +36,6 @@ public class RoomDashboardVewModel extends AndroidViewModel {
 
      void update(AccountItem account) { mRepo.updateEntity(account);}
 
+     void updateAccountAfterTransaction(int id, double value){ mRepo.updateAccountAfterTransaction (id,value);}
+
 }

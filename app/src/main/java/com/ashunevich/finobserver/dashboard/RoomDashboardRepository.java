@@ -37,6 +37,10 @@ class RoomDashboardRepository {
      void updateEntity(AccountItem account)  {
          singleThreadExecutor.execute(() -> mDashboardDao.update(account));
     }
+
+    void updateAccountAfterTransaction(int id, double value){
+        singleThreadExecutor.execute(() -> mDashboardDao.updateAccountAfterTransaction (id,value));
+    }
      /*
     // !-----DEPRECATED ASYNC TASK CODE----!
 

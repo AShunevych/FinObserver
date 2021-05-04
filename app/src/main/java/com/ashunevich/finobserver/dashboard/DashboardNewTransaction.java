@@ -45,7 +45,6 @@ public class DashboardNewTransaction extends AppCompatActivity {
 
     String transactionAccount, targetAccount;
     int basicAccountID,targetAccountID;
-    int basicAccountImagePos, targetAccountImagePos;
     double basicValue, targetValue, newBasicAccountValue,newTargetAccountValue;
 
 
@@ -70,20 +69,17 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void initIntents(){
         setSpinner(getIntent().getStringArrayListExtra("AccountNames"));
         initBundleFromActivity (getIntent().getStringArrayListExtra("AccountIDs"),
-                getIntent().getStringArrayListExtra("AccountValues"),
-                getIntent().getStringArrayListExtra("AccountImages"));
+                getIntent().getStringArrayListExtra("AccountValues"));
     }
 
     private void initBundleFromActivity(ArrayList<String> idArray,
-                                        ArrayList<String> valueArray,
-                                        ArrayList<String> imagesArray){
+                                        ArrayList<String> valueArray){
         binding.ActiveAccounts.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 int spinnerPos = getSelectedItemOnSpinnerPosition(binding.ActiveAccounts);
                 basicAccountID = intFromString (idArray.get(spinnerPos));
                 basicValue = doubleFromString (valueArray.get(spinnerPos));
-                basicAccountImagePos = intFromString (imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -98,7 +94,6 @@ public class DashboardNewTransaction extends AppCompatActivity {
                 int spinnerPos = getSelectedItemOnSpinnerPosition(binding.targetAccount);
                 targetAccountID = intFromString (idArray.get(spinnerPos));
                 targetValue = doubleFromString (valueArray.get(spinnerPos));
-                targetAccountImagePos = intFromString (imagesArray.get(spinnerPos));
             }
 
             @Override
@@ -239,8 +234,6 @@ public class DashboardNewTransaction extends AppCompatActivity {
         previousScreen.putExtra("basicAccountID", basicAccountID);
         previousScreen.putExtra("targetAccountID", targetAccountID);
 
-        previousScreen.putExtra("basicAccountImagePos", basicAccountImagePos);
-        previousScreen.putExtra("targetAccountImagePos", targetAccountImagePos);
 
         previousScreen.putExtra("basicAccountName",transactionAccount);
         previousScreen.putExtra("targetAccountName",targetAccount);
@@ -275,7 +268,6 @@ public class DashboardNewTransaction extends AppCompatActivity {
             previousScreen.putExtra("ID", basicAccountID); //updatedID
             previousScreen.putExtra("Account",transactionAccount);//updatedName
             previousScreen.putExtra("Estimate",transactionEstimate);//updatedValue
-            previousScreen.putExtra("ImagePos", basicAccountImagePos);//updatedImagePos
             previousScreen.putExtra("Category",categoryChip);
             previousScreen.putExtra("Type",typeChip);
             previousScreen.putExtra("Value", newBasicAccountValue);
