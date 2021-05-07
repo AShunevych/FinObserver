@@ -1,7 +1,7 @@
 package com.ashunevich.finobserver.transactions;
 
 
-import com.ashunevich.finobserver.UtilsPackage.FactoryDAO;
+import com.ashunevich.finobserver.utils.FactoryDAO;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
+import com.ashunevich.finobserver.utils.PostPOJO;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static com.ashunevich.finobserver.UtilsPackage.Utils.getTextFrom;
+import static com.ashunevich.finobserver.utils.Utils.getTextFrom;
 
 
 abstract class DashboardUtils {

@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.UtilsPackage;
+package com.ashunevich.finobserver.utils;
 
 import android.widget.EditText;
 import android.widget.Spinner;

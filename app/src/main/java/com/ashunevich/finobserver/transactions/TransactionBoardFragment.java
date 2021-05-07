@@ -23,7 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import static com.ashunevich.finobserver.UtilsPackage.Utils.returnActiveChipId;
+import static com.ashunevich.finobserver.utils.Utils.returnActiveChipId;
 
 
 public class TransactionBoardFragment extends Fragment {

@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.transactions.TransactionBoardItem;
 
-import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
+import com.ashunevich.finobserver.utils.PostPOJO;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
 
 

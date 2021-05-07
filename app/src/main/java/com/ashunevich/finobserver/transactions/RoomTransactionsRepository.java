@@ -6,7 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-import static com.ashunevich.finobserver.UtilsPackage.Utils.singleThreadExecutor;
+import static com.ashunevich.finobserver.utils.Utils.singleThreadExecutor;
 
 public class RoomTransactionsRepository {
     private final RoomTransactionsDAO mTransactionsDao;

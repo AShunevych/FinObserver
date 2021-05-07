@@ -14,7 +14,7 @@ import android.view.MenuItem;
 
 import com.ashunevich.finobserver.dashboard.RoomDashboardVewModel;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
-import com.ashunevich.finobserver.UtilsPackage.PostPOJO;
+import com.ashunevich.finobserver.utils.PostPOJO;
 import com.ashunevich.finobserver.databinding.ActivityMainBinding;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;

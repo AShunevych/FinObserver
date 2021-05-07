@@ -6,7 +6,7 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-import static com.ashunevich.finobserver.UtilsPackage.Utils.singleThreadExecutor;
+import static com.ashunevich.finobserver.utils.Utils.singleThreadExecutor;
 
 class RoomDashboardRepository {
     private final RoomDashboardDAO mDashboardDao;

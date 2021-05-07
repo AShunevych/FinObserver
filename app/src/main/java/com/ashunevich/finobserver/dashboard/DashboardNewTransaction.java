@@ -27,14 +27,14 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import static com.ashunevich.finobserver.UtilsPackage.Utils.returnActiveChipId;
+import static com.ashunevich.finobserver.utils.Utils.returnActiveChipId;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleExtraction;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringAsTextFromSpinner;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromActiveChip;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.setChipGroupUncheck;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromString;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.intFromString;
-import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
+import static com.ashunevich.finobserver.utils.Utils.getSelectedItemOnSpinnerPosition;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleSum;
 
 public class DashboardNewTransaction extends AppCompatActivity {

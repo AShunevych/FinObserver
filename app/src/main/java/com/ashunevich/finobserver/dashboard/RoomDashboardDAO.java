@@ -1,6 +1,6 @@
 package com.ashunevich.finobserver.dashboard;
 
-import com.ashunevich.finobserver.UtilsPackage.FactoryDAO;
+import com.ashunevich.finobserver.utils.FactoryDAO;
 
 import java.util.List;
 

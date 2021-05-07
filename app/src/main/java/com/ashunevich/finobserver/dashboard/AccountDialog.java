@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashunevich.finobserver.R;
-import com.ashunevich.finobserver.UtilsPackage.CustomSpinnerAdapter;
+import com.ashunevich.finobserver.utils.CustomSpinnerAdapter;
 import com.ashunevich.finobserver.databinding.DashboardNewAccountDialogBinding;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.KEY_UPDATE;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.enableSubmitIfReady;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromTextView;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
-import static com.ashunevich.finobserver.UtilsPackage.Utils.getSelectedItemOnSpinnerPosition;
+import static com.ashunevich.finobserver.utils.Utils.getSelectedItemOnSpinnerPosition;
 
 public class AccountDialog extends DialogFragment {
     private DashboardNewAccountDialogBinding binding;

@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.UtilsPackage;
+package com.ashunevich.finobserver.utils;
 
 public class PostPOJO {
     public String getZero() {

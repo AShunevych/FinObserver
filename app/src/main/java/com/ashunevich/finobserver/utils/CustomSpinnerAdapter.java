@@ -1,4 +1,4 @@
-package com.ashunevich.finobserver.UtilsPackage;
+package com.ashunevich.finobserver.utils;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
