@@ -26,6 +26,12 @@ public class RoomTransactionsRepository {
          singleThreadExecutor.execute(() -> mTransactionsDao.insert(item));
     }
 
+    void getAllTransactionInCategory (String category, TransactionStatisticListener listener){
+        singleThreadExecutor.execute(() -> listener.onReturned(mTransactionsDao.getAllTransactionInCategory (category)));
+    }
+
+
+
      void deleteAllTransactions (){
          singleThreadExecutor.execute(mTransactionsDao::deleteAll);
     }

@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ashunevich.finobserver.R;
+import com.ashunevich.finobserver.databinding.DashboardNewaccountBinding;
 import com.ashunevich.finobserver.utils.CustomSpinnerAdapter;
-import com.ashunevich.finobserver.databinding.DashboardNewAccountDialogBinding;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -32,7 +32,7 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromText
 import static com.ashunevich.finobserver.utils.Utils.getSelectedItemOnSpinnerPosition;
 
 public class AccountDialog extends DialogFragment {
-    private DashboardNewAccountDialogBinding binding;
+    private DashboardNewaccountBinding binding;
     ArrayList<Drawable> images;
     int id;
     String currency,keyType;
@@ -45,7 +45,7 @@ public class AccountDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         assert inflater != null;
-        binding = DashboardNewAccountDialogBinding.inflate(inflater, container, false);
+        binding = DashboardNewaccountBinding.inflate(inflater, container, false);
         initTextWatchers();
         initUIStatus();
         initClickListeners();

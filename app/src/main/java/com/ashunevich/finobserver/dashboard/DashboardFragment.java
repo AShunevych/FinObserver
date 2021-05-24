@@ -337,7 +337,7 @@ public class DashboardFragment extends Fragment {
         roomUpdateAccountAfterTransaction(accountID,accountValue);
 
         transactionsViewModel.insert(new TransactionBoardItem(accountName,accountTransactionCategory,
-                accountTransactionEstimate,currencyAccount,date,accountImageType));
+                accountTransactionEstimate,currencyAccount,date,accountImageType,transactionType));
 
     }
 
@@ -359,7 +359,7 @@ public class DashboardFragment extends Fragment {
        roomUpdateAccountAfterTransaction (targetAccountID,newTargetAccountValue);
 
         transactionsViewModel.insert(new TransactionBoardItem(targetAccountName,setTransferText(basicAccountName),
-                transferValue,currencyAccount,date,imageType));
+                transferValue,currencyAccount,date,imageType,transactionType));
     }
 
     }

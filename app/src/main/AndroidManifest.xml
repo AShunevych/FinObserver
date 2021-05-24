@@ -17,6 +17,21 @@
             android:theme="@style/Theme.FinObserver">
         </activity>
 
+        <activity
+            android:name=".transactions.TransactionStatisticActivity"
+            android:screenOrientation="portrait"
+            android:label="Statistic"
+            android:theme="@style/Theme.FinObserver">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

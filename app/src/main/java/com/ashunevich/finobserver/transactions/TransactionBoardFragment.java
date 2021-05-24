@@ -1,6 +1,7 @@
 package com.ashunevich.finobserver.transactions;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ashunevich.finobserver.MainActivity;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
@@ -63,6 +65,7 @@ public class TransactionBoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setListenerTextWatcher ();
+        setButtonListener();
         uiHandlerMechanism (false);
         setListenerCheckBox ();
     }
@@ -100,6 +103,9 @@ public class TransactionBoardFragment extends Fragment {
 
     }
 
+    private void setButtonListener(){
+        binding.statisticButton.setOnClickListener (view -> startActivity(new Intent(getActivity (),TransactionStatisticActivity.class)));
+    }
     //UI
     private void uiHandlerMechanism(boolean bool){
         if(bool){

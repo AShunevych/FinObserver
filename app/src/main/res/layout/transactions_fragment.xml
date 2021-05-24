@@ -96,4 +96,13 @@
             app:checkedIcon="@drawable/ic_baseline_search_24" />
     </com.google.android.material.chip.ChipGroup>
 
+    <Button
+        android:id="@+id/statisticButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Statistic"
+        app:layout_constraintBottom_toBottomOf="@+id/checkBox"
+        app:layout_constraintEnd_toEndOf="@+id/transactionView"
+        app:layout_constraintTop_toTopOf="@+id/checkBox" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

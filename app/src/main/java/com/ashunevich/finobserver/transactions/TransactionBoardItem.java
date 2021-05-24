@@ -1,22 +1,25 @@
 package com.ashunevich.finobserver.transactions;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "transactions")
 public class TransactionBoardItem {
 
-
+    @Ignore
     public TransactionBoardItem(){}
 
     public TransactionBoardItem(String transactionAccount, String transactionCategory, double transactionValue,
-                                String transactionCurrency, String transactionDate , int imageInt) {
+                                String transactionCurrency, String transactionDate , int imageInt, String transactionType) {
         this.transactionAccount = transactionAccount;
         this.transactionCategory = transactionCategory;
         this.transactionValue = transactionValue;
         this.transactionCurrency = transactionCurrency;
         this.transactionDate = transactionDate;
         this.imageInt = imageInt;
+        this.transactionType = transactionType;
     }
 
     @PrimaryKey(autoGenerate = true)
@@ -28,55 +31,50 @@ public class TransactionBoardItem {
         this.itemID = itemID;
     }
 
-
+    @ColumnInfo(name = "account")
     String transactionAccount;//+
     public String getTransactionAccount() {
         return transactionAccount;
     }
-    public void setTransactionAccount(String transactionAccount) { this.transactionAccount = transactionAccount; }
 
 
+    @ColumnInfo(name = "date")
     String transactionDate;
     public String getTransactionDate() {
         return transactionDate;
     }
-    public void setTransactionDate(String transactionDate) {
-        this.transactionDate = transactionDate;
-    }
 
 
+    @ColumnInfo(name = "currency")
     String transactionCurrency;//+
     public String getTransactionCurrency() {
         return transactionCurrency;
     }
-    public void setTransactionCurrency(String transactionCurrency) {
-        this.transactionCurrency = transactionCurrency;
-    }
 
 
+    @ColumnInfo(name = "value")
     double transactionValue;//+
-    public double getTransactionValue() {
+    public Double getTransactionValue() {
         return transactionValue;
     }
-    public void setTransactionValue(double transactionValue) {
-        this.transactionValue = transactionValue;
-    }
 
 
+    @ColumnInfo(name = "category")
     String transactionCategory;//+
     public String getTransactionCategory() {
         return transactionCategory;
     }
-    public void setTransactionCategory(String transactionCategory) {
-        this.transactionCategory = transactionCategory;
-    }
 
 
+    //TODO (1) add  with string type Income / Expenditure / Transfer
+
+    @ColumnInfo(name = "imageValue")
     int imageInt;//+
     public int getImageInt() { return imageInt; }
-    public void setImageInt(int imageInt) {
-        this.imageInt = imageInt;
-    }
 
+
+    @ColumnInfo(name = "type")
+    String transactionType;
+    public String getTransactionType() { return transactionType; }
 
 }

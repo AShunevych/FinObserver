@@ -13,4 +13,6 @@
 
     <color name="backGround">#90fafafa</color>
     <color name="backGround_70">#fafafa</color>
+
+    <color name="textColor">#FFFFFFFF</color>
 </resources>

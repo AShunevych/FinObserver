@@ -2,6 +2,7 @@ package com.ashunevich.finobserver.dashboard;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity (tableName = "active_accounts")
@@ -23,7 +24,7 @@ class AccountItem {
     @ColumnInfo(name = "imageID")
      int imageID;
 
-
+    @Ignore
     protected AccountItem() {
 
     }
