@@ -35,6 +35,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
     ArrayList<String> sortedCategoriesList = new ArrayList<> ();
     List<String>  categoriesList;
     List<BarEntry> data  = new ArrayList<>();
+    List<TransactionStatisticItem> itemList  = new ArrayList<>();
     RoomTransactionsViewModel model;
     BarData barData;
 
@@ -55,10 +56,9 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         for (String s : categoriesList) {
             model.getAllTransactionInCategory (s, item -> {
                 if (item != null) {
-                    sortedCategoriesList.add (item.getTransactionCategory ());
-                    data.add (new BarEntry (sortedCategoriesList.indexOf (s),Double.valueOf (item.getTransactionValue ()).floatValue ()));
-                    Log.d ("SIZE_OF_LIST", String.valueOf (data.size ()));
-            }
+                    itemList.add (item);
+                    Log.d ("SIZE_OF_ITEM_LIST", String.valueOf (itemList.size ()));
+                }
         });
         }
     }
@@ -69,12 +69,19 @@ public class TransactionStatisticActivity extends AppCompatActivity {
     }
 
 
-
-
     private void chartCreate(){
-        if(data.size () !=0){
+        if(itemList.size () !=0){
+            for(int i=0;i<itemList.size ();i++) {
+                TransactionStatisticItem item = itemList.get (i);
+                data.add (new BarEntry (i, Double.valueOf (item.getTransactionValue ()).floatValue ()));
+                sortedCategoriesList.add (item.getTransactionCategory ());
+                Log.d ("SIZE_OF_DATA_LIST", String.valueOf (data.size ()));
+            }
+
             chartAppearance ();
             barData = chartBarData (data);
+            barData.setBarWidth (0.5f);
+
             chartPrepareChart(barData);
         }
         binding.barChart.setVisibility (View.VISIBLE);
@@ -85,34 +92,43 @@ public class TransactionStatisticActivity extends AppCompatActivity {
 
         binding.barChart.getDescription().setEnabled(false);
         binding.barChart.setDrawValueAboveBar(false);
+
         Log.d ("CATEGORIES LIST_SIZE",String.valueOf (sortedCategoriesList.size ()));
         XAxis xAxis = binding.barChart.getXAxis();
+        xAxis.setLabelCount(sortedCategoriesList.size ());
+
         xAxis.setValueFormatter (new ValueFormatter () {
             @Override
             public String getFormattedValue(float value) {
+                int valueInt = Math.round (value);
                 Log.d ("CATEGORIES value",String.valueOf (value));
-                return sortedCategoriesList.get ((int)value);
+                if(valueInt < sortedCategoriesList.size ()){
+                    return sortedCategoriesList.get (valueInt);
+                }
+               return "";
             }
         });
+        xAxis.setAxisMaximum (sortedCategoriesList.size());
+
+        xAxis.setDrawGridLines(true);
         xAxis.setTextColor (chartColor);
 
         YAxis axisLeft = binding.barChart.getAxisLeft();
-        axisLeft.setGranularity(10f);
         axisLeft.setAxisMinimum(0);
         axisLeft.setTextColor(chartColor);
 
         YAxis axisRight = binding.barChart.getAxisRight();
-        axisRight.setGranularity(10f);
         axisRight.setAxisMinimum(0);
-        axisLeft.setTextColor(chartColor);
+        axisRight.setTextColor(chartColor);
 
         binding.barChart.getLegend ().setTextColor (chartColor);
         binding.barChart.setTouchEnabled (false);
     }
 
     private void chartPrepareChart(BarData data) {
-        data.setValueTextSize(12f);
+        data.setValueTextSize(10f);
         binding.barChart.setData(data);
+        binding.barChart.notifyDataSetChanged();
         binding.barChart.invalidate();
     }
 
