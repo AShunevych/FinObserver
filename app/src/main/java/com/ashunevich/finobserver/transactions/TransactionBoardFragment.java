@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.ashunevich.finobserver.MainActivity;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
 
@@ -60,7 +59,7 @@ public class TransactionBoardFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        //fix for  bug that freeze app, when app launch after was closed, when user switching to Transaction tab
+
         initDelayForDatabaseRecView();
         super.onViewCreated(view, savedInstanceState);
 
@@ -118,7 +117,7 @@ public class TransactionBoardFragment extends Fragment {
         else {
             if(filteredList != null){
                 filteredList.clear ();
-                rewriteFilterRecView();
+                initFilter ();
             }
             binding.monthChip.clearCheck ();
             binding.findByAccount.setVisibility (View.GONE);
@@ -127,9 +126,10 @@ public class TransactionBoardFragment extends Fragment {
 
     }
 
-    private void uiProgressBarStatus(){
+    private void uiBasicUiStatus(){
         binding.progressBar.setVisibility(View.GONE);
         binding.loadingText.setVisibility(View.GONE);
+        binding.transactionView.setVisibility (View.VISIBLE);
     }
 
     //Recycler Utils
@@ -139,12 +139,12 @@ public class TransactionBoardFragment extends Fragment {
         binding.transactionView.setAdapter(adapter);
         modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
         initViewModel ();
-        uiProgressBarStatus ();
+        uiBasicUiStatus ();
     }
 
     private void initDelayForDatabaseRecView(){
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::initDatabaseRecView, 1000);
+        handler.postDelayed(this::initDatabaseRecView, 500);
     }
 
     private void initViewModel() {
@@ -154,7 +154,7 @@ public class TransactionBoardFragment extends Fragment {
         });
     }
 
-    private void rewriteFilterRecView(){
+    private void initFilter(){
         modelDatabase.getAllTransactions ().observe (requireActivity (), transaction_items -> {
             adapter.filter (transaction_items);
             binding.transactionView.smoothScrollToPosition (0);
@@ -184,8 +184,6 @@ public class TransactionBoardFragment extends Fragment {
     private void clearText(){
         binding.findByAccount.setText ("");
     }
-
-
 
 
     @Override

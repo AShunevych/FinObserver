@@ -65,7 +65,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
 
     private void initChartWithDelay(){
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::chartCreate, 400);
+        handler.postDelayed(this::chartCreate, 200);
     }
 
 
@@ -134,7 +134,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
 
     private BarData chartBarData(List<BarEntry> barEntries) {
         BarDataSet set1 = new BarDataSet(barEntries, "Expenditures, UAH");
-        set1.setColors (ColorTemplate.COLORFUL_COLORS);
+        set1.setColors (ColorTemplate.PASTEL_COLORS );
 
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
