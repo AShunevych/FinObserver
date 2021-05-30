@@ -19,7 +19,6 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -31,27 +30,23 @@ import androidx.lifecycle.ViewModelProvider;
 
 
 public class TransactionStatisticActivity extends AppCompatActivity {
-    TransacationStatisticActivityBinding binding;
-    ArrayList<String> sortedCategoriesList = new ArrayList<> ();
-    List<String>  categoriesList;
-    List<BarEntry> data  = new ArrayList<>();
-    List<TransactionStatisticItem> itemList  = new ArrayList<>();
-    RoomTransactionsViewModel model;
-    BarData barData;
+    private TransacationStatisticActivityBinding binding;
+    private final ArrayList<String> sortedCategoriesList = new ArrayList<> ();
+    private final List<BarEntry> data  = new ArrayList<>();
+    private final List<TransactionStatisticItem> itemList  = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         binding = TransacationStatisticActivityBinding.inflate (getLayoutInflater ());
         setContentView (binding.getRoot ());
-        model = new ViewModelProvider (this).get (RoomTransactionsViewModel.class);
         initGetDataFromDB();
         initChartWithDelay();
     }
 
     void initGetDataFromDB(){
         RoomTransactionsViewModel model = new ViewModelProvider (this).get(RoomTransactionsViewModel.class);
-        categoriesList = Arrays.asList (getResources ().getStringArray (R.array.expendituresCategory));
+        String[] categoriesList = getResources ().getStringArray (R.array.expendituresCategory);
 
         for (String s : categoriesList) {
             model.getAllTransactionInCategory (s, item -> {
@@ -79,7 +74,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
             }
 
             chartAppearance ();
-            barData = chartBarData (data);
+            BarData barData = chartBarData (data);
             barData.setBarWidth (0.5f);
 
             chartPrepareChart(barData);

@@ -1,5 +1,5 @@
 package com.ashunevich.finobserver.transactions;
 
-public interface TransactionStatisticListener {
+interface TransactionStatisticListener {
     void onReturned(TransactionStatisticItem item);
 }

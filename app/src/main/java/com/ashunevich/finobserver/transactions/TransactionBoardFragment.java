@@ -32,11 +32,11 @@ public class TransactionBoardFragment extends Fragment {
 
     private final List<TransactionBoardItem> listContentArr = new ArrayList<>();
     private ArrayList<TransactionBoardItem> filteredList;
-    RecyclerViewAdapter adapter;
+    private  RecyclerViewAdapter adapter;
 
-    RoomTransactionsViewModel modelDatabase;
+    private  RoomTransactionsViewModel modelDatabase;
 
-    Boolean FILTER_TYPE = true;
+    private Boolean FILTER_TYPE = true;
 
     public TransactionBoardFragment() {
         // Required empty public constructor

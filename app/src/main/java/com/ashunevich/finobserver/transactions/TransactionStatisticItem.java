@@ -3,22 +3,23 @@ package com.ashunevich.finobserver.transactions;
 import androidx.room.ColumnInfo;
 
 
-public class TransactionStatisticItem {
-    @ColumnInfo(name = "value")
-    double  transactionValue;//+
+class TransactionStatisticItem {
 
-    public double getTransactionValue() {
+    @ColumnInfo(name = "value")
+    double transactionValue;
+
+    protected double getTransactionValue() {
         return transactionValue;
     }
 
-    public String getTransactionCategory() {
+    protected String getTransactionCategory() {
         return transactionCategory;
     }
 
-    public TransactionStatisticItem(String transactionCategory, double transactionValue) {
+    protected TransactionStatisticItem(String transactionCategory, double transactionValue) {
         this.transactionValue = transactionValue;
         this.transactionCategory = transactionCategory;
     }
     @ColumnInfo(name = "category")
-    String transactionCategory;//+
+    String transactionCategory;
 }
