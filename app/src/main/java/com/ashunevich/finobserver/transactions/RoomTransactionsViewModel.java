@@ -10,7 +10,6 @@ import androidx.lifecycle.LiveData;
 public class RoomTransactionsViewModel extends AndroidViewModel {
     private final RoomTransactionsRepository mRepo;
     private final LiveData<List<TransactionBoardItem>> mAllTransactions;
-    LiveData<TransactionStatisticItem> getAllTransactionInCategory;
 
     public RoomTransactionsViewModel(Application application){
         super(application);

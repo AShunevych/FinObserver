@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
