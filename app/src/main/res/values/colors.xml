@@ -5,7 +5,6 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="teal_TR">#99018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
@@ -14,5 +13,4 @@
     <color name="backGround">#90fafafa</color>
     <color name="backGround_70">#fafafa</color>
 
-    <color name="textColor">#FFFFFFFF</color>
 </resources>

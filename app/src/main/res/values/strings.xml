@@ -14,7 +14,6 @@
     <string name="loadData">Loading data…</string>
     <string name="target">Target account</string>
     <string name="transfer">Transfer</string>
-    <string name="filter">Filter</string>
     <string name="acc_name">Account name</string>
     <string name="acc_balance">Accounts</string>
     <string name="acc_icon">Icon</string>
