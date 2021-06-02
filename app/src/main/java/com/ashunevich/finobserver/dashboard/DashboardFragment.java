@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
+import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.transactions.TransactionBoardItem;
 
@@ -105,7 +106,8 @@ public class DashboardFragment extends Fragment {
                         Intent data = result.getData();
                         assert data != null;
                         transactionType = data.getStringExtra("Type");
-                        if(transactionType.matches("Income") || transactionType.matches("Expenditures") ){
+                        if(transactionType.matches(getResources ().getString (R.string.income))
+                                || transactionType.matches(getResources ().getString (R.string.exp)) ){
                             resultOnStandardOperations (data,transactionType);
                         }
                         else {
@@ -143,7 +145,7 @@ public class DashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initViewModels();
 
-        initRecView ();
+        initRecViewOnStart ();
         initDialogFragmentListener ();
 
         super.onViewCreated(view, savedInstanceState);
@@ -186,12 +188,18 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void initRecView(){
+    private void initSetRecView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new RecyclerViewAdapter(AccountItemList,getParentFragmentManager());
         dashboardViewModel.getAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
         binding.accountView.setAdapter(adapter);
         initRecViewTouchHelper ();
+        binding.accountView.setVisibility (View.VISIBLE);
+    }
+
+    private void initRecViewOnStart(){
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(this::initSetRecView, 250);
     }
 
     private void initRecViewTouchHelper() {

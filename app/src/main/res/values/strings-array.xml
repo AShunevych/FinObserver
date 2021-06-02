@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="incomeCategory">
-        <item>Salary/Wage</item>
-        <item>Investment</item>
+    <string-array name="Income">
+        <item>Salary</item>
         <item>Credit</item>
-        <item>Interest payment</item>
         <item>Rent</item>
         <item>Dividends</item>
-        <item>Other</item>
+        <item>Other incomes</item>
     </string-array>
 
-    <string-array name="expendituresCategory">
+    <string-array name="Expenses">
         <item>Lifestyle</item>
         <item>Mobile Phone</item>
         <item>Car</item>
@@ -19,10 +17,11 @@
         <item>Internet</item>
         <item>Housing</item>
         <item>Investment</item>
+        <item>Taxes</item>
         <item>Banking</item>
         <item>Transfer</item>
         <item>Insurance</item>
-        <item>Other</item>
+        <item>Other expenses</item>
     </string-array>
 
 

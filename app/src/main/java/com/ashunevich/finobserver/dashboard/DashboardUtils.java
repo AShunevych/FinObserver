@@ -27,7 +27,7 @@ abstract class DashboardUtils {
      static String PREFERENCE_NAME ="APP_PREF";
      static final String BALANCE="BALANCE";
      static final String INCOME="INCOME";
-     static final String EXPENDITURES="EXPENDITURES";
+     static final String EXPENDITURES="EXPENSES";
      static final String TOTAL = "TOTAL";
 
     //Operations constants
@@ -42,7 +42,7 @@ abstract class DashboardUtils {
        if(type.matches("Income")){
            return 0;
        }
-       else if (type.matches("Expenditures")){
+       else if (type.matches("Expenses")){
            return 1;
        }
        else{

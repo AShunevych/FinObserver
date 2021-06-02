@@ -105,8 +105,8 @@ public class DashboardNewTransaction extends AppCompatActivity {
     }
 
     private void initCreateChipOnStart(){
-        utilsChipFactory (getResources().getStringArray(R.array.expendituresCategory),binding.SpendingChipGroup);
-        utilsChipFactory (getResources().getStringArray(R.array.incomeCategory),binding.IncomeChipGroup);
+        utilsChipFactory (getResources().getStringArray(R.array.Expenses),binding.SpendingChipGroup);
+        utilsChipFactory (getResources().getStringArray(R.array.Income),binding.IncomeChipGroup);
     }
 
     //UI

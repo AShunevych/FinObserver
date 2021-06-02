@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,29 +42,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    super.onCreate(savedInstanceState);
+    binding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        transactionsRoomData = new ViewModelProvider(this).get(RoomTransactionsViewModel.class);
-        dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardVewModel.class);
-
-        init();
-
+    setContentView(binding.getRoot());
+    init();
+    initModelsWithDelay();
     }
 
     private void init(){
-        binding.viewPager.setAdapter( new PageAdapter(getSupportFragmentManager(),getLifecycle()));
-        tabNames.addAll(Arrays.asList(getResources().getStringArray(R.array.tabNames)));
+    binding.viewPager.setAdapter( new PageAdapter(getSupportFragmentManager(),getLifecycle()));
+    tabNames.addAll(Arrays.asList(getResources().getStringArray(R.array.tabNames)));
 
-        drawables.add(R.drawable.ic_dashboard);
-        drawables.add(R.drawable.ic_transactions);
-        TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
+    drawables.add(R.drawable.ic_dashboard);
+    drawables.add(R.drawable.ic_transactions);
+    TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
                   tab.setIcon(drawables.get(position));
                    tab.setText(tabNames.get(position));
         });
-        tabLayoutMediator.attach();
+    tabLayoutMediator.attach();
     }
 
     @Override
@@ -78,6 +76,16 @@ public class MainActivity extends AppCompatActivity {
             createAlertDialog();
         }
         return true;
+    }
+
+    private void initModels(){
+        transactionsRoomData = new ViewModelProvider(this).get(RoomTransactionsViewModel.class);
+        dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardVewModel.class);
+    }
+
+    private void initModelsWithDelay(){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(this::initModels, 500);
     }
 
     private void createAlertDialog(){
