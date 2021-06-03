@@ -11,14 +11,13 @@ import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransacationStatisticActivityBinding;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +38,14 @@ public class TransactionStatisticActivity extends AppCompatActivity {
     private final List<BarEntry> incomeData = new ArrayList<>();
     private final List<TransactionStatisticItem> expendituresItems = new ArrayList<>();
     private final List<TransactionStatisticItem> incomeItems  = new ArrayList<>();
+    private int [] colors;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         binding = TransacationStatisticActivityBinding.inflate (getLayoutInflater ());
         setContentView (binding.getRoot ());
+        colors = getResources ().getIntArray (R.array.CustomColors);
         initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Expenses),expendituresItems);
         initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Income),incomeItems);
 
@@ -70,15 +71,15 @@ public class TransactionStatisticActivity extends AppCompatActivity {
 
 
     private void createCharts(){
-        chartConstructor(incomeItems,incomeData,sortedIncomeCategoriesList,binding.incomeChart,"Income, UAH");
-        chartConstructor(expendituresItems,expendituresData,sortedExpendituresCategoriesList,binding.expendituresChart,"Expenditures, UAH");
+        chartConstructor(incomeItems,incomeData,sortedIncomeCategoriesList,binding.incomeChart,getResources ().getString (R.string.incomeUAH));
+        chartConstructor(expendituresItems,expendituresData,sortedExpendituresCategoriesList,binding.expendituresChart,getResources ().getString (R.string.expUAH));
     }
 
 
     private void chartConstructor(List<TransactionStatisticItem> items,
                                   List<BarEntry> barEntryList,
                                   List<String> categoriesList,
-                                  BarChart chart, String name ){
+                                  BarChart chart, String chartDescription ){
 
         if(items.size () !=0){
             for(int i = 0; i< items.size (); i++) {
@@ -87,67 +88,93 @@ public class TransactionStatisticActivity extends AppCompatActivity {
                 categoriesList.add (item.getTransactionCategory ());
                 Log.d ("SIZE_OF_DATA_LIST", String.valueOf (barEntryList.size ()));
             }
-
-            chartConstructorAppearance (chart,categoriesList);
-            BarData barData = chartConstructorBarData (barEntryList,name);
-            barData.setBarWidth (0.5f);
-
-            chartConstructorInit (chart,barData);
         }
+
+        chartConstructorAppearance (chart,categoriesList,chartDescription);
+        BarData barData = chartConstructorBarData (barEntryList,chartDescription);
+        if(barEntryList.size ()<4){
+            barData.setBarWidth(0.5f);
+        }
+        else{
+            barData.setBarWidth (1f);
+        }
+
+        chartConstructorInit (chart,barData);
         chart.setVisibility (View.VISIBLE);
 
     }
 
-    private void chartConstructorAppearance(BarChart chart, List<String> categoriesList ){
+    private void chartConstructorAppearance(BarChart chart, List<String> categoriesList, String description){
         int chartColor = ContextCompat.getColor(this, R.color.drawableColor);
 
-        chart.getDescription().setEnabled(false);
+        int width = chart.getWidth ();
+        int height = chart.getHeight ();
+
+        chart.getDescription().setEnabled(true);
+        chart.getDescription().setText (description);
+        chart.getDescription().setTextSize (11f);
+        chart.getDescription().setPosition (width-50,height-900);
+        chart.getDescription().setTextColor(chartColor);
         chart.setDrawValueAboveBar(false);
-
-
 
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(categoriesList.size ());
-
-        xAxis.setValueFormatter (new ValueFormatter () {
-            @Override
-            public String getFormattedValue(float value) {
-                int valueInt = Math.round (value);
-                Log.d ("CATEGORIES value",String.valueOf (value));
-                if(valueInt < categoriesList.size ()){
-                    return categoriesList.get (valueInt);
-                }
-               return "";
-            }
-        });
-    //    xAxis.setPosition(XAxis.XAxisPosition.TOP_INSIDE);
         xAxis.setTextSize (10f);
         xAxis.setAxisMaximum (categoriesList.size());
         xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine (false);
+        xAxis.setDrawLabels (false);
         xAxis.setTextColor (chartColor);
 
         YAxis axisLeft = chart.getAxisLeft();
         axisLeft.setAxisMinimum(0);
         axisLeft.setGranularity(5f);
         axisLeft.setTextColor(chartColor);
-
+        axisLeft.setDrawGridLines (false);
+        axisLeft.setDrawAxisLine (false);
 
         YAxis axisRight = chart.getAxisRight();
         axisRight.setAxisMinimum(0);
         axisRight.setGranularity(5f);
+        axisLeft.setDrawGridLines (false);
+        axisLeft.setDrawAxisLine (false);
+
 
         axisRight.setTextColor(chartColor);
 
 
-        chart.getLegend().setTextColor (chartColor);
-        chart.getLegend().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
+        List<LegendEntry> entries = new ArrayList<> ();
+        for(String s :categoriesList){
+            entries.add
+                    (new LegendEntry
+                            (s,Legend.LegendForm.SQUARE,10f,10f,null,
+                                    colors[categoriesList.indexOf (s)]));
+        }
 
+        chart.getLegend().setCustom (entries);
+        chart.getLegend().setEnabled (true);
+        chart.getLegend().setTextSize (10f);
+        chart.getLegend().setHorizontalAlignment (Legend.LegendHorizontalAlignment.LEFT);
+        chart.getLegend().setFormToTextSpace (5f);
+        chart.getLegend().setWordWrapEnabled (true);
+        chart.getLegend().setTextColor (chartColor);
+
+        if(description.equals (getResources ().getString (R.string.expUAH))){
+           chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
+            axisLeft.setDrawLabels (true);
+            axisRight.setDrawLabels (false);
+        }
+        else{
+            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
+            axisLeft.setDrawLabels (false);
+            axisRight.setDrawLabels (true);
+        }
         chart.setTouchEnabled (false);
     }
 
     private BarData chartConstructorBarData(List<BarEntry> barEntries, String name) {
         BarDataSet set1 = new BarDataSet(barEntries, name);
-        set1.setColors (ColorTemplate.PASTEL_COLORS );
+        set1.setColors (colors );
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);

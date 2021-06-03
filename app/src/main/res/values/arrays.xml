@@ -24,6 +24,22 @@
         <item>Other expenses</item>
     </string-array>
 
+    <integer-array name="CustomColors">
+        <item>@color/n1CustomColor</item>
+        <item>@color/n2CustomColor</item>
+        <item>@color/n3CustomColor</item>
+        <item>@color/n4CustomColor</item>
+        <item>@color/n5CustomColor</item>
+        <item>@color/n6CustomColor</item>
+        <item>@color/n7CustomColor</item>
+        <item>@color/n8CustomColor</item>
+        <item>@color/n9CustomColor</item>
+        <item>@color/n10CustomColor</item>
+        <item>@color/n11CustomColor</item>
+        <item>@color/n12CustomColor</item>
+        <item>@color/n13CustomColor</item>
+    </integer-array>
+
 
     <string-array name="tabNames">
         <item>Dashboard</item>
