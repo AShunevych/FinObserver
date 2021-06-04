@@ -32,8 +32,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     Context context;
     FragmentManager manager;
 
-
-
     public RecyclerViewAdapter(List<AccountItem> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;

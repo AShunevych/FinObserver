@@ -30,7 +30,7 @@ abstract class DashboardUtils {
      static final String EXPENDITURES="EXPENSES";
      static final String TOTAL = "TOTAL";
 
-    //Operations constants
+    //Operations key constants
      static final String KEY_UPDATE = "UPDATE";
      static final String KEY_CREATE = "CREATE";
      static final String KEY_CANCEL = "CANCEL";

@@ -38,12 +38,9 @@ public class AccountDialog extends DialogFragment {
     String currency,keyType;
 
 
-    //receive bundle
-
     @Override
     public View onCreateView(@Nullable LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         assert inflater != null;
         binding = DashboardNewaccountBinding.inflate(inflater, container, false);
         initTextWatchers();

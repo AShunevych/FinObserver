@@ -65,9 +65,6 @@ public class TransactionBoardItem {
         return transactionCategory;
     }
 
-
-    //TODO (1) add  with string type Income / Expenditure / Transfer
-
     @ColumnInfo(name = "imageValue")
     int imageInt;//+
     public int getImageInt() { return imageInt; }
