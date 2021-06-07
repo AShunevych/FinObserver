@@ -1,34 +1,31 @@
 package com.ashunevich.finobserver.utils;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
+import android.content.res.TypedArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
-import com.ashunevich.finobserver.R;
+import com.ashunevich.finobserver.dashboard.AccountDialog;
+import com.ashunevich.finobserver.databinding.CustomAccountSpinneritemBinding;
 
-import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class CustomSpinnerAdapter extends BaseAdapter {
+    AccountDialog activity;
+    private final TypedArray spinnerImages;
 
-    private final ArrayList<Drawable> spinnerImages;
-    LayoutInflater mInflater;
 
-    public CustomSpinnerAdapter(@NonNull Context context, ArrayList<Drawable> images ) {
+    public CustomSpinnerAdapter(@NonNull AccountDialog dialog, TypedArray images ) {
         this.spinnerImages = images;
-        mInflater = (LayoutInflater.from(context));
+        this.activity = dialog;
 
     }
 
     @Override
     public int getCount() {
-        return spinnerImages.size();
+        return spinnerImages.length ();
     }
 
     @Override
@@ -44,20 +41,19 @@ public class CustomSpinnerAdapter extends BaseAdapter {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ImageItem item = new ImageItem();
+
+        CustomAccountSpinneritemBinding binding;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.custom_account_spinneritem, parent, false);
-            item.image = convertView.findViewById(R.id.imIcon);
-            convertView.setTag(item);
+            binding = CustomAccountSpinneritemBinding.inflate(activity.getLayoutInflater (), parent, false);
+            convertView = binding.getRoot();
+            convertView.setTag(binding);
         }
         else{
-            item = (ImageItem) convertView.getTag();
+            binding = (CustomAccountSpinneritemBinding) convertView.getTag();
         }
-        item.image.setImageDrawable(spinnerImages.get(position));
-
+        binding.imIcon.setImageResource (spinnerImages.getResourceId (position,0));
 
         return convertView;
-
     }
 
         @Override
@@ -66,12 +62,6 @@ public class CustomSpinnerAdapter extends BaseAdapter {
             return getView(position, convertView, parent);
         }
 
-
-
-    private static class ImageItem {
-
-        ImageView image;
-    }
 }
 
 

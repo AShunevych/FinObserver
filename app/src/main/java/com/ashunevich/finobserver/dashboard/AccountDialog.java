@@ -2,7 +2,7 @@ package com.ashunevich.finobserver.dashboard;
 
 
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -15,12 +15,10 @@ import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardNewaccountBinding;
 import com.ashunevich.finobserver.utils.CustomSpinnerAdapter;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.DIALOG_STATIC;
@@ -33,9 +31,8 @@ import static com.ashunevich.finobserver.utils.Utils.getSelectedItemOnSpinnerPos
 
 public class AccountDialog extends DialogFragment {
     private DashboardNewaccountBinding binding;
-    ArrayList<Drawable> images;
-    int id;
-    String currency,keyType;
+    private int id;
+    private String currency,keyType;
 
 
     @Override
@@ -59,11 +56,8 @@ public class AccountDialog extends DialogFragment {
     }
 
     private void initSpinner(){
-        images = new ArrayList<>();
-        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_wallet_balance,null));
-        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_bank_balance,null));
-        images.add(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_other_balance,null));
-        binding.drawableSpinner.setAdapter(new CustomSpinnerAdapter(requireContext(), images));
+        TypedArray typedImagesArrays = getResources().obtainTypedArray(R.array.Icons);
+        binding.drawableSpinner.setAdapter(new CustomSpinnerAdapter(AccountDialog.this, typedImagesArrays));
     }
 
     private void initTextFromBundle(){
