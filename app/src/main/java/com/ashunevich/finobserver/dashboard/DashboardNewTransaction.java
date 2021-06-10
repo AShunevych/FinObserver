@@ -133,6 +133,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
                 binding.targetAccount.setVisibility(View.GONE);
                 binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 setChipGroupUncheck(binding.SpendingChipGroup);
+                uiDisableSubmitButton ();
                 break;
             case 2:
                 binding.SpendingChipGroup.setVisibility(View.VISIBLE);
@@ -158,7 +159,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
                 binding.categoryTextView.setText(getResources().getString(R.string.cat));
                 binding.transactionType.setVisibility(View.INVISIBLE);
                 binding.targetAccount.setVisibility(View.GONE);
-                binding.resumeDialog.setEnabled(false);
+                uiDisableSubmitButton ();
         }
     }
 
@@ -167,22 +168,21 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void setChipsGroupListener(){
         binding.transactionType.setOnCheckedChangeListener((group, checkedId) -> {
             switch (returnActiveChipId(group)){
-                case R.id.incomeChip : setChipViewHandlerPos (1);break;
-                case R.id.spendingChip : setChipViewHandlerPos (2);break;
-                case R.id.transferChip : setChipViewHandlerPos (3); uiSubmitButtonStatus ();break;
+                case R.id.incomeChip : setChipViewHandlerPos (1); uiDisableSubmitButton ();break;
+                case R.id.spendingChip : setChipViewHandlerPos (2);uiDisableSubmitButton ();break;
+                case R.id.transferChip : setChipViewHandlerPos (3); uiEnableSubmitButton ();break;
             }
         });
 
         binding.IncomeChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             categoryChip = stringFromActiveChip (group);
-            uiSubmitButtonStatus ();
+            uiEnableSubmitButton ();
         });
 
         binding.SpendingChipGroup.setOnCheckedChangeListener((group, checkedId) -> {
             categoryChip = stringFromActiveChip (group);
-            uiSubmitButtonStatus ();
+            uiEnableSubmitButton ();
         });
-
     }
 
     private void setTextWatcher(){
@@ -287,6 +287,15 @@ public class DashboardNewTransaction extends AppCompatActivity {
         return text.getText().toString().trim();
     }
 
+    private void utilsCheckResumeButtonStatus(){
+       if(binding.resumeDialog.isEnabled ()){
+           uiDisableSubmitButton ();
+       }
+       else{
+           uiEnableSubmitButton ();
+       }
+    }
+
     private void utilsChipFactory(String [] list, ChipGroup chipGroup){
         for (String category :
                 list)
@@ -309,8 +318,12 @@ public class DashboardNewTransaction extends AppCompatActivity {
     }
 
     //switches
-    private void uiSubmitButtonStatus() {
+    private void uiEnableSubmitButton() {
         binding.resumeDialog.setEnabled(true);
+    }
+
+    private void uiDisableSubmitButton() {
+        binding.resumeDialog.setEnabled(false);
     }
 
     private void uiChipValueStatus(EditText editText){
