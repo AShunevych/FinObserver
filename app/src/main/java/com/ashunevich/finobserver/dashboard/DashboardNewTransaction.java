@@ -287,15 +287,6 @@ public class DashboardNewTransaction extends AppCompatActivity {
         return text.getText().toString().trim();
     }
 
-    private void utilsCheckResumeButtonStatus(){
-       if(binding.resumeDialog.isEnabled ()){
-           uiDisableSubmitButton ();
-       }
-       else{
-           uiEnableSubmitButton ();
-       }
-    }
-
     private void utilsChipFactory(String [] list, ChipGroup chipGroup){
         for (String category :
                 list)
