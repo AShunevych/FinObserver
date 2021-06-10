@@ -380,11 +380,11 @@ public class DashboardFragment extends Fragment {
     //   (1.2) Count all accounts balance
     //       (1.2.1) Count accounts balance when account removed
     //    (1.3) Permanent account holder with ROOM
-    //        (1.3.1) Create Room persistance and insert data in it
+    //        (1.3.1) Create Room persistence and insert data in it
     //        (1.3.2) remove all data and specific item from room and Recyclerview
     //        (1.3.3) update  data in the room
     //   (1.4) LiveData to TransactionFragment
-    //   (1.5) Make LiveData observe pernament
+    //   (1.5) Make LiveData observe permanent
     //    (1.6) Update item when accountValue change
     //   (1.7) Save in SharedPreferences all TextView;
 
