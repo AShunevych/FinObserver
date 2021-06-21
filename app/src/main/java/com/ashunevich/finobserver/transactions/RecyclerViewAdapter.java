@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.TransactionItemBinding;
+import com.ashunevich.finobserver.factories.FactoryRecViewDiffUtil;
 
 import java.util.List;
 
@@ -75,8 +76,10 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
 
     //Setting the arraylist
      void updateItemList(List<TransactionBoardItem> items){
-        final RecyclerViewDiffUtil diffCallback = new RecyclerViewDiffUtil(this.pad_list, items);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+         final FactoryRecViewDiffUtil<TransactionBoardItem> diffCallback = new FactoryRecViewDiffUtil<>(this.pad_list, items);
+         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+
          this.pad_list.clear ();
         this.pad_list.addAll(items);
         diffResult.dispatchUpdatesTo(this);

@@ -1,25 +1,23 @@
-package com.ashunevich.finobserver.transactions;
-
+package com.ashunevich.finobserver.factories;
 
 import java.util.List;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-class RecyclerViewDiffUtil extends DiffUtil.Callback  {
+public class FactoryRecViewDiffUtil<T> extends DiffUtil.Callback {
 
-    List<TransactionBoardItem> oldList;
+    List<T> oldList;
+    List<T> newList;
 
-    public RecyclerViewDiffUtil(List<TransactionBoardItem> oldList, List<TransactionBoardItem>newList) {
+    public FactoryRecViewDiffUtil(List<T> oldList, List<T>newList) {
         this.oldList = oldList;
         this.newList = newList;
     }
 
-    List<TransactionBoardItem> newList;
-
     @Override
     public int getOldListSize() {
-        return oldList.size();
+        return oldList.size ();
     }
 
     @Override
@@ -29,7 +27,7 @@ class RecyclerViewDiffUtil extends DiffUtil.Callback  {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldList.get(oldItemPosition).getItemID() == newList.get(newItemPosition).getItemID();
+        return true;
     }
 
     @Override
@@ -43,5 +41,4 @@ class RecyclerViewDiffUtil extends DiffUtil.Callback  {
         //you can return particular field for changed item.
         return super.getChangePayload(oldItemPosition, newItemPosition);
     }
-
 }

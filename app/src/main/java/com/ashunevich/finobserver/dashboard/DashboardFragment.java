@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -65,11 +64,10 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromObje
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringSumFromDoubles;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
 
-
 public class DashboardFragment extends Fragment {
 
     private DashboardFragmentBinding binding;
-    private DashboardUtilsSharedPref prefManager;
+    private DashboardSharedPrefManager prefManager;
     ActivityResultLauncher<Intent> ResultLauncher;
     private DialogFragment newAccountDialogFragment;
 
@@ -144,10 +142,8 @@ public class DashboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initViewModels();
-
         initRecViewOnStart ();
         initDialogFragmentListener ();
-
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -235,7 +231,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void initPrefManager(){
-        prefManager = new DashboardUtilsSharedPref(requireActivity(), PREFERENCE_NAME);
+        prefManager = new DashboardSharedPrefManager (requireActivity(), PREFERENCE_NAME);
         uiSetSharedPrefValues ();
     }
     //

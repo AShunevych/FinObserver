@@ -2,14 +2,10 @@ package com.ashunevich.finobserver.transactions;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "transactions")
 public class TransactionBoardItem {
-
-    @Ignore
-    public TransactionBoardItem(){}
 
     public TransactionBoardItem(String transactionAccount, String transactionCategory, double transactionValue,
                                 String transactionCurrency, String transactionDate , int imageInt, String transactionType) {

@@ -4,6 +4,7 @@ package com.ashunevich.finobserver.dashboard;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
+import com.ashunevich.finobserver.factories.FactoryRecViewDiffUtil;
 
 import java.util.List;
 
@@ -76,8 +78,6 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
        fragment.setArguments(bundle);
    }
 
-
-
     private Drawable returnDrawableByID(int i){
         switch (i){
             case 0 : return ContextCompat.getDrawable(context,R.drawable.ic_wallet_balance);
@@ -87,12 +87,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     }
 
     protected void updateList(List<AccountItem> accounts){
-        final RecyclerViewDiffUtil diffCallback = new RecyclerViewDiffUtil(this.pad_list, accounts);
+        final FactoryRecViewDiffUtil<AccountItem> diffCallback = new FactoryRecViewDiffUtil<> (this.pad_list, accounts);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();
         this.pad_list.addAll(accounts);
         diffResult.dispatchUpdatesTo(this);
+        Log.d("New List Size",String.valueOf (pad_list.size ()));
     }
 
     //Setting the List
@@ -129,3 +130,4 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     }
 
 }
+

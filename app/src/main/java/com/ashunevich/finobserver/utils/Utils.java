@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
 
 
 public class Utils {
+
     public static String getTextFrom(EditText text) {
         return text.getText().toString().trim();
     }
