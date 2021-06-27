@@ -9,7 +9,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import android.content.res.TypedArray;
 import android.os.Bundle;
 
 import android.view.Menu;
@@ -24,8 +23,6 @@ import com.ashunevich.finobserver.transactions.TransactionBoardFragment;
 import com.ashunevich.finobserver.utils.PostPOJO;
 import com.ashunevich.finobserver.databinding.ActivityMainBinding;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import org.greenrobot.eventbus.EventBus;
