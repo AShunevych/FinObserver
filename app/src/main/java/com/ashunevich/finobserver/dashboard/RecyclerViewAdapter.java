@@ -80,9 +80,9 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
 
     private Drawable returnDrawableByID(int i){
         switch (i){
-            case 0 : return ContextCompat.getDrawable(context,R.drawable.ic_wallet_balance);
-            case 1 : return ContextCompat.getDrawable(context,R.drawable.ic_bank_balance);
-            default: return ContextCompat.getDrawable(context,R.drawable.ic_other_balance);
+            case 0 : return ContextCompat.getDrawable(context,R.drawable.ic_wallet_balance_ico);
+            case 1 : return ContextCompat.getDrawable(context,R.drawable.ic_bank_account_icon);
+            default: return ContextCompat.getDrawable(context,R.drawable.ic_other_balance_ico);
         }
     }
 

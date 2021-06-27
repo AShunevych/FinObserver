@@ -32,7 +32,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/rectangle_transp2"
+        android:background="@drawable/ic_rectangle_drawable"
         android:elevation="2sp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout1"
@@ -85,7 +85,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/rectangle_transp2"
+        android:background="@drawable/ic_rectangle_drawable"
         android:elevation="2sp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
@@ -147,7 +147,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/rectangle_transp2"
+        android:background="@drawable/ic_rectangle_drawable"
         android:elevation="2sp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/relativeLayout1"
@@ -245,7 +245,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/accountView"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
         app:layout_constraintTop_toBottomOf="@+id/accountView"
-        app:srcCompat="@drawable/ic_baseline_more_horiz_24" />
+        app:srcCompat="@drawable/ic_more_ico_gorizontal" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAccount"
@@ -258,7 +258,7 @@
         app:layout_constraintBottom_toTopOf="@+id/actionButton"
         app:layout_constraintEnd_toEndOf="@+id/actionButton"
         app:layout_constraintStart_toStartOf="@+id/actionButton"
-        app:srcCompat="@drawable/ic_new_account"
+        app:srcCompat="@drawable/ic_new_account_ico"
         tools:visibility="visible" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -272,7 +272,7 @@
         app:layout_constraintBottom_toTopOf="@+id/addAccount"
         app:layout_constraintEnd_toEndOf="@+id/actionButton"
         app:layout_constraintStart_toStartOf="@+id/actionButton"
-        app:srcCompat="@drawable/ic_baseline_delete_sweep_24"
+        app:srcCompat="@drawable/ic_accdelete_ico"
         tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

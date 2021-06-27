@@ -14,5 +14,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/ic_wallet_balance" />
+        tools:srcCompat="@drawable/ic_wallet_balance_ico" />
 </androidx.constraintlayout.widget.ConstraintLayout>

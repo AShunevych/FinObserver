@@ -188,8 +188,8 @@ public class DashboardFragment extends Fragment {
     }
 
     private void initAnimations(){
-        fabOpen = AnimationUtils.loadAnimation (requireContext (),R.anim.fab_open);
-        fabClose = AnimationUtils.loadAnimation (requireContext (),R.anim.fab_close);
+        fabOpen = AnimationUtils.loadAnimation (requireContext (),R.anim.anim_fab_open);
+        fabClose = AnimationUtils.loadAnimation (requireContext (),R.anim.anim_fab_close);
     }
 
     private void initSetRecView(){
@@ -325,29 +325,25 @@ public class DashboardFragment extends Fragment {
         if(isOpen){
             binding.addAccount.startAnimation (fabClose);
             binding.deleteAccountData.startAnimation (fabClose);
-            binding.addAccount.setClickable (false);
-            binding.deleteAccountData.setClickable (false);
             uiFabAnimationRotate(isOpen);
             isOpen= false;
         }
         else{
             binding.addAccount.startAnimation (fabOpen);
             binding.deleteAccountData.startAnimation (fabOpen);
-            binding.addAccount.setClickable (true);
-            binding.deleteAccountData.setClickable (true);
             uiFabAnimationRotate(isOpen);
             isOpen= true;
         }
     }
 
     private void uiFabAnimationRotate(boolean buttonStatus){
-        ObjectAnimator.ofFloat(binding.actionButton, "rotation", 0f, 90f).setDuration(100).start();
+        ObjectAnimator.ofFloat(binding.actionButton, "rotation", 0f, 90f).setDuration(200).start();
             if (buttonStatus){
                 binding.actionButton.setImageDrawable
-                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_baseline_more_vert));
+                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_more_ico_vertical));
             } else {
                 binding.actionButton.setImageDrawable
-                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_baseline_more_horiz_24));
+                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_more_ico_gorizontal));
             }
     }
 

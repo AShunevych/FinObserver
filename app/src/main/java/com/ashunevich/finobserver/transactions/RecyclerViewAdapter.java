@@ -64,13 +64,13 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     private Drawable getTypeImage(int i) {
 
         if(i == 0){
-            return ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_up);
+            return ContextCompat.getDrawable(context, R.drawable.ic_arrow_up_ico);
         }
         else if (i==1){
-            return ContextCompat.getDrawable(context, R.drawable.ic_arrow_drop_down);
+            return ContextCompat.getDrawable(context, R.drawable.ic_arrow_down_ico);
         }
         else{
-            return ContextCompat.getDrawable(context, R.drawable.ic_transfer);
+            return ContextCompat.getDrawable(context, R.drawable.ic_transfer_ico);
         }
     }
 

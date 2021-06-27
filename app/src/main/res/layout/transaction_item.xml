@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/transactionValue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/transactionCategory"
-        tools:srcCompat="@drawable/ic_transfer" />
+        tools:srcCompat="@drawable/ic_transfer_ico" />
 
     <TextView
         android:id="@+id/transactionDate"

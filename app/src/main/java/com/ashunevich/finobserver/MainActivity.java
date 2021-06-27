@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
     binding.viewPager.setAdapter(new PageAdapter (getSupportFragmentManager (), getLifecycle ()));
     tabNames.addAll(Arrays.asList(getResources().getStringArray(R.array.tabNames)));
 
-    drawables.add(R.drawable.ic_dashboard);
-    drawables.add(R.drawable.ic_transactions);
+    drawables.add(R.drawable.ic_dashboard_ico);
+    drawables.add(R.drawable.ic_transactions_ico);
 
     TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
                   tab.setIcon(drawables.get(position));

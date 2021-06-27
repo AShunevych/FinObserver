@@ -291,7 +291,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
         for (String category :
                 list)
         {
-            @SuppressLint("InflateParams") Chip mChip = (Chip) this.getLayoutInflater().inflate(R.layout.transaction_chip_item, null, false);
+            @SuppressLint("InflateParams") Chip mChip = (Chip) this.getLayoutInflater().inflate(R.layout.custom_chip_item, null, false);
             mChip.setText(category);
             int paddingDp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics()
             );

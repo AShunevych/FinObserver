@@ -41,9 +41,9 @@
     </integer-array>
 
     <integer-array name="Icons">
-        <item>@drawable/ic_wallet_balance</item>
-        <item>@drawable/ic_bank_balance</item>
-        <item>@drawable/ic_other_balance</item>
+        <item>@drawable/ic_wallet_balance_ico</item>
+        <item>@drawable/ic_bank_account_icon</item>
+        <item>@drawable/ic_other_balance_ico</item>
     </integer-array>
 
     <string-array name="tabNames">
