@@ -2,6 +2,7 @@ package com.ashunevich.finobserver.dashboard;
 
 
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 
@@ -24,7 +27,6 @@ import com.ashunevich.finobserver.transactions.TransactionBoardItem;
 
 import com.ashunevich.finobserver.utils.PostPOJO;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
-
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +40,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -63,31 +67,31 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromText
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromObject;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringSumFromDoubles;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
+import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
 
 public class DashboardFragment extends Fragment {
 
     private DashboardFragmentBinding binding;
     private DashboardSharedPrefManager prefManager;
     ActivityResultLauncher<Intent> ResultLauncher;
-    private DialogFragment newAccountDialogFragment;
 
     private final List<AccountItem> AccountItemList = new ArrayList<>();
     private RecyclerViewAdapter adapter;
 
     private RoomDashboardVewModel dashboardViewModel;
-    RoomTransactionsViewModel transactionsViewModel;
+    private RoomTransactionsViewModel transactionsViewModel;
 
+    private boolean isOpen = false;
 
-    double incomeValue,expValue,balanceValue;
-
-    String date = stringDate ();
-    String currencyAccount = "UAH";
+    private final String DATE = stringDate ();
+    private final String CURRENCY_ACCOUNT = "UAH";
 
     //late init
-    int accountID,accountImageType;
-    String accountName,transactionType, accountTransactionCategory;
-    double  accountTransactionEstimate, accountValue;
-
+    protected int accountID,accountImageType;
+    protected String accountName,transactionType, accountTransactionCategory;
+    protected double  accountTransactionEstimate, accountValue;
+    protected double incomeValue,expValue,balanceValue;
+    protected Animation fabOpen,fabClose;
 
     //Lifecycle
     public DashboardFragment() {
@@ -132,7 +136,7 @@ public class DashboardFragment extends Fragment {
         // Inflate the layout for this fragment
         assert inflater != null;
         binding = DashboardFragmentBinding.inflate(inflater, container, false);
-
+        initAnimations();
         initClickListeners();
         initPrefManager();
 
@@ -159,7 +163,6 @@ public class DashboardFragment extends Fragment {
         super.onDestroyView();
     }
 
-
     //init methods
     private void initDialogFragmentListener(){
 
@@ -182,6 +185,11 @@ public class DashboardFragment extends Fragment {
             }
 
         });
+    }
+
+    private void initAnimations(){
+        fabOpen = AnimationUtils.loadAnimation (requireContext (),R.anim.fab_open);
+        fabClose = AnimationUtils.loadAnimation (requireContext (),R.anim.fab_close);
     }
 
     private void initSetRecView(){
@@ -219,22 +227,18 @@ public class DashboardFragment extends Fragment {
     }
 
     private void initClickListeners(){
-        binding.newAccount.setOnClickListener(view -> {
-            newAccountDialogFragment = new AccountDialog();
-            Bundle bundle = new Bundle();
-            bundle.putString("operationKey",KEY_CREATE);
-            newAccountDialogFragment.setArguments(bundle);
-            newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
-        });
-
+        binding.actionButton.setOnClickListener(view -> uiFabAnimation ());
+        binding.addAccount.setOnClickListener(view -> startDialogFragment ());
         binding.newTransactionDialog.setOnClickListener(view -> startNewTransaction ());
+        binding.deleteAccountData.setOnClickListener(view -> startAlertDialog ());
     }
 
     private void initPrefManager(){
         prefManager = new DashboardSharedPrefManager (requireActivity(), PREFERENCE_NAME);
         uiSetSharedPrefValues ();
     }
-    //
+
+    //activities and dialogs
     private void startNewTransaction(){
         Intent intent = new Intent(getContext(), DashboardNewTransaction.class);
 
@@ -256,6 +260,25 @@ public class DashboardFragment extends Fragment {
         } else {
             Toast.makeText(requireContext(),"There are no active accounts.",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void startDialogFragment(){
+        DialogFragment newAccountDialogFragment = new AccountDialog ();
+        Bundle bundle = new Bundle();
+        bundle.putString("operationKey",KEY_CREATE);
+        newAccountDialogFragment.setArguments(bundle);
+        newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
+    }
+
+    private void startAlertDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext ());
+
+        builder.setTitle("WARNING").setMessage("You are going to delete all accounts. Proceed?");
+        builder.setPositiveButton("YES", (dialogInterface, i) -> roomDeleteAllAccounts());
+
+        builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     //Room operations
@@ -280,6 +303,12 @@ public class DashboardFragment extends Fragment {
         uiUpdateWithDelay ();
     }
 
+    private void roomDeleteAllAccounts(){
+        dashboardViewModel.deleteAll ();
+        showSnackBar(binding.DashboardLayout,"All accounts were deleted.");
+        uiUpdateWithDelay ();
+    }
+
     //UI
     private void uiUpdateVisibleSum(){
         binding.totalBalanceValue.setText(adapter.getSumOfAllItems(binding.accountView));
@@ -290,6 +319,36 @@ public class DashboardFragment extends Fragment {
     private void uiUpdateWithDelay(){
         final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(this::uiUpdateVisibleSum, 500);
+    }
+
+    private void uiFabAnimation(){
+        if(isOpen){
+            binding.addAccount.startAnimation (fabClose);
+            binding.deleteAccountData.startAnimation (fabClose);
+            binding.addAccount.setClickable (false);
+            binding.deleteAccountData.setClickable (false);
+            uiFabAnimationRotate(isOpen);
+            isOpen= false;
+        }
+        else{
+            binding.addAccount.startAnimation (fabOpen);
+            binding.deleteAccountData.startAnimation (fabOpen);
+            binding.addAccount.setClickable (true);
+            binding.deleteAccountData.setClickable (true);
+            uiFabAnimationRotate(isOpen);
+            isOpen= true;
+        }
+    }
+
+    private void uiFabAnimationRotate(boolean buttonStatus){
+        ObjectAnimator.ofFloat(binding.actionButton, "rotation", 0f, 90f).setDuration(100).start();
+            if (buttonStatus){
+                binding.actionButton.setImageDrawable
+                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_baseline_more_vert));
+            } else {
+                binding.actionButton.setImageDrawable
+                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_baseline_more_horiz_24));
+            }
     }
 
     private void uiSetSharedPrefValues(){
@@ -341,7 +400,7 @@ public class DashboardFragment extends Fragment {
         roomUpdateAccountAfterTransaction(accountID,accountValue);
 
         transactionsViewModel.insert(new TransactionBoardItem(accountName,accountTransactionCategory,
-                accountTransactionEstimate,currencyAccount,date,accountImageType,transactionType));
+                accountTransactionEstimate,CURRENCY_ACCOUNT, DATE,accountImageType,transactionType));
 
     }
 
@@ -363,7 +422,7 @@ public class DashboardFragment extends Fragment {
        roomUpdateAccountAfterTransaction (targetAccountID,newTargetAccountValue);
 
         transactionsViewModel.insert(new TransactionBoardItem(targetAccountName,setTransferText(basicAccountName),
-                transferValue,currencyAccount,date,imageType,transactionType));
+                transferValue,CURRENCY_ACCOUNT, DATE,imageType,transactionType));
     }
 
     }

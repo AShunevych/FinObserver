@@ -3,19 +3,24 @@ package com.ashunevich.finobserver;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 
-import android.os.Handler;
-import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
+import com.ashunevich.finobserver.dashboard.DashboardFragment;
 import com.ashunevich.finobserver.dashboard.RoomDashboardVewModel;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
+import com.ashunevich.finobserver.transactions.TransactionBoardFragment;
 import com.ashunevich.finobserver.utils.PostPOJO;
 import com.ashunevich.finobserver.databinding.ActivityMainBinding;
 
@@ -27,18 +32,20 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
 
-    private final ArrayList<String> tabNames = new ArrayList<>();
-    private final ArrayList<Integer> drawables = new ArrayList<>();
-
+    private final List<String> tabNames = new ArrayList<>();
+    private final List<Integer> drawables = new ArrayList<>();
     private RoomTransactionsViewModel transactionsRoomData;
     private RoomDashboardVewModel dashboardRoomData;
-    private final static String zero = "0.0";
+    private final static String ZERO_VALUE = "0.0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,15 +54,16 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(binding.getRoot());
     init();
-    initModelsWithDelay();
+    initModels ();
     }
 
     private void init(){
-    binding.viewPager.setAdapter( new PageAdapter(getSupportFragmentManager(),getLifecycle()));
+    binding.viewPager.setAdapter(new PageAdapter (getSupportFragmentManager (), getLifecycle ()));
     tabNames.addAll(Arrays.asList(getResources().getStringArray(R.array.tabNames)));
 
     drawables.add(R.drawable.ic_dashboard);
     drawables.add(R.drawable.ic_transactions);
+
     TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
                   tab.setIcon(drawables.get(position));
                    tab.setText(tabNames.get(position));
@@ -83,21 +91,16 @@ public class MainActivity extends AppCompatActivity {
         dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardVewModel.class);
     }
 
-    private void initModelsWithDelay(){
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::initModels, 500);
-    }
 
     private void createAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-          builder.setTitle("WARNING");
-          builder.setMessage("You are going to erase all data. Proceed?");
+        builder.setTitle("WARNING").setMessage("You are going to erase all data. Proceed?");
          builder.setPositiveButton("YES", (dialogInterface, i) -> {
              transactionsRoomData.deleteAll();
              dashboardRoomData.deleteAll();
-             EventBus.getDefault().post(new PostPOJO(zero));
-            Snackbar.make(binding.mainLayout,"All data was deleted.", BaseTransientBottomBar.LENGTH_SHORT).show();
+             EventBus.getDefault().post(new PostPOJO(ZERO_VALUE));
+             showSnackBar(binding.mainLayout,"All data was deleted.");
          });
 
         builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());
@@ -106,8 +109,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private static class PageAdapter extends FragmentStateAdapter {
 
+        ArrayList<Fragment> fragments;
 
+        private PageAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getItemCount() {
+            fragments = new ArrayList<>();
+            fragments.add(0, new DashboardFragment ());
+            fragments.add(1,new TransactionBoardFragment ());
+            return fragments.size();
+        }
+    }
 
 
 

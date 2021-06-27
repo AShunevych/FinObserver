@@ -1,10 +1,13 @@
 package com.ashunevich.finobserver.utils;
 
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,6 +22,10 @@ public class Utils {
 
     public static int getSelectedItemOnSpinnerPosition(Spinner spinner){
         return spinner.getSelectedItemPosition();
+    }
+
+    public static void showSnackBar (View view, String text){
+         Snackbar.make (view,text, BaseTransientBottomBar.LENGTH_SHORT).show ();
     }
 
     public static final ExecutorService singleThreadExecutor =

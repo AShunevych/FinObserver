@@ -237,14 +237,42 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/newAccount"
+        android:id="@+id/actionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:clickable="true"
-        app:layout_constraintBottom_toTopOf="@+id/accountView"
+        app:layout_constraintBottom_toBottomOf="@+id/accountView"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
-        app:layout_constraintTop_toTopOf="@+id/accountView"
-        app:srcCompat="@drawable/ic_new_account" />
+        app:layout_constraintTop_toBottomOf="@+id/accountView"
+        app:srcCompat="@drawable/ic_baseline_more_horiz_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/actionButton"
+        app:layout_constraintEnd_toEndOf="@+id/actionButton"
+        app:layout_constraintStart_toStartOf="@+id/actionButton"
+        app:srcCompat="@drawable/ic_new_account"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteAccountData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:visibility="invisible"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/addAccount"
+        app:layout_constraintEnd_toEndOf="@+id/actionButton"
+        app:layout_constraintStart_toStartOf="@+id/actionButton"
+        app:srcCompat="@drawable/ic_baseline_delete_sweep_24"
+        tools:visibility="visible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
