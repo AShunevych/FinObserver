@@ -1,5 +1,6 @@
 package com.ashunevich.finobserver.utils;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -12,6 +13,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import androidx.appcompat.app.AlertDialog;
 
 
 public class Utils {
@@ -39,5 +42,12 @@ public class Utils {
             idChip = chip.getId();
         }
         return idChip;
+    }
+
+    public static AlertDialog.Builder genericDialogBuilder (
+    Context context, String title, String message){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title).setMessage(message);
+        return builder;
     }
 }

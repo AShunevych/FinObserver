@@ -67,6 +67,7 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromText
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromObject;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringSumFromDoubles;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
+import static com.ashunevich.finobserver.utils.Utils.genericDialogBuilder;
 import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
 
 public class DashboardFragment extends Fragment {
@@ -242,7 +243,7 @@ public class DashboardFragment extends Fragment {
     private void startNewTransaction(){
         Intent intent = new Intent(getContext(), DashboardNewTransaction.class);
 
-        //int updatedID, String updatedName, double updatedValue, String updatedCurrency
+        //FIX later
         ArrayList<String> idLists = new ArrayList<>();
         ArrayList<String> namesLists = new ArrayList<>();
         ArrayList<String> valuesLists = new ArrayList<>();
@@ -271,11 +272,10 @@ public class DashboardFragment extends Fragment {
     }
 
     private void startAlertDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext ());
+        AlertDialog.Builder builder = genericDialogBuilder(requireContext (),"WARNING",
+                "You are going to delete all accounts. Proceed?");
 
-        builder.setTitle("WARNING").setMessage("You are going to delete all accounts. Proceed?");
         builder.setPositiveButton("YES", (dialogInterface, i) -> roomDeleteAllAccounts());
-
         builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();

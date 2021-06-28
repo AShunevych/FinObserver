@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.ashunevich.finobserver.utils.Utils.genericDialogBuilder;
 import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
 
 
@@ -90,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void createAlertDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = genericDialogBuilder(this,"WARNING",
+                "You are going to erase all data. Proceed?");
 
-        builder.setTitle("WARNING").setMessage("You are going to erase all data. Proceed?");
          builder.setPositiveButton("YES", (dialogInterface, i) -> {
              transactionsRoomData.deleteAll();
              dashboardRoomData.deleteAll();
