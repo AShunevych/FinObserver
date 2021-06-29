@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:ignore="ContentDescription">
 
     <ImageView
         android:id="@+id/transactionTypeImage"
@@ -13,7 +14,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/transactionValue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/transactionCategory"
-        tools:srcCompat="@drawable/ic_transfer_ico" />
+        tools:srcCompat="@drawable/ic_transfer_ico"
+         />
 
     <TextView
         android:id="@+id/transactionDate"
@@ -42,7 +44,7 @@
         android:id="@+id/transactionCurrency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/transactionValue"
         app:layout_constraintTop_toTopOf="@+id/transactionValue"
         tools:text="UAH" />

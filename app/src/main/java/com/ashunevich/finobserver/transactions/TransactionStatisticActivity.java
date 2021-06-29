@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 
 import com.ashunevich.finobserver.R;
 
@@ -22,12 +21,12 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+
+import static com.ashunevich.finobserver.utils.Utils.uiShowView;
 
 
 public class TransactionStatisticActivity extends AppCompatActivity {
@@ -52,7 +51,6 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         initChartWithDelay();
     }
 
-
     private  void initDownloadCategoryDataFromDB(String [] strings, List<TransactionStatisticItem> items){
         RoomTransactionsViewModel model = new ViewModelProvider (this).get(RoomTransactionsViewModel.class);
         for (String s : strings) {
@@ -75,7 +73,6 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         chartConstructor(expendituresItems,expendituresData,sortedExpendituresCategoriesList,binding.expendituresChart,getResources ().getString (R.string.expUAH));
     }
 
-
     private void chartConstructor(List<TransactionStatisticItem> items,
                                   List<BarEntry> barEntryList,
                                   List<String> categoriesList,
@@ -89,7 +86,6 @@ public class TransactionStatisticActivity extends AppCompatActivity {
                 Log.d ("SIZE_OF_DATA_LIST", String.valueOf (barEntryList.size ()));
             }
         }
-
         chartConstructorAppearance (chart,categoriesList,chartDescription);
         BarData barData = chartConstructorBarData (barEntryList,chartDescription);
         if(barEntryList.size ()<4){
@@ -100,13 +96,11 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         }
 
         chartConstructorInit (chart,barData);
-        chart.setVisibility (View.VISIBLE);
-
+        uiShowView(chart);
     }
 
     private void chartConstructorAppearance(BarChart chart, List<String> categoriesList, String description){
         int chartColor = ContextCompat.getColor(this, R.color.drawableColor);
-
         int width = chart.getWidth ();
         int height = chart.getHeight ();
 
@@ -136,12 +130,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         YAxis axisRight = chart.getAxisRight();
         axisRight.setAxisMinimum(0);
         axisRight.setGranularity(5f);
-        axisLeft.setDrawGridLines (false);
-        axisLeft.setDrawAxisLine (false);
-
-
         axisRight.setTextColor(chartColor);
-
 
         List<LegendEntry> entries = new ArrayList<> ();
         for(String s :categoriesList){

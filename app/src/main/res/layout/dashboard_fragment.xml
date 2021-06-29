@@ -245,7 +245,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/accountView"
         app:layout_constraintEnd_toEndOf="@+id/accountView"
         app:layout_constraintTop_toBottomOf="@+id/accountView"
-        app:srcCompat="@drawable/ic_more_ico_gorizontal" />
+        app:srcCompat="@drawable/ic_more_ico_gorizontal"
+        tools:ignore="ContentDescription" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAccount"
@@ -254,12 +255,14 @@
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:visibility="invisible"
-        app:fabSize="mini"
+        app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/actionButton"
         app:layout_constraintEnd_toEndOf="@+id/actionButton"
         app:layout_constraintStart_toStartOf="@+id/actionButton"
         app:srcCompat="@drawable/ic_new_account_ico"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:contentDescription="Add account"
+        tools:ignore="HardcodedText"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/deleteAccountData"
@@ -268,11 +271,13 @@
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:visibility="invisible"
-        app:fabSize="mini"
+        app:fabSize="auto"
         app:layout_constraintBottom_toTopOf="@+id/addAccount"
         app:layout_constraintEnd_toEndOf="@+id/actionButton"
         app:layout_constraintStart_toStartOf="@+id/actionButton"
         app:srcCompat="@drawable/ic_accdelete_ico"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:contentDescription="Delete all accounts"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

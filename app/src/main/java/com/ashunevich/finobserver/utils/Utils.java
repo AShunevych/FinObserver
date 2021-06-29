@@ -50,4 +50,23 @@ public class Utils {
         builder.setTitle(title).setMessage(message);
         return builder;
     }
+
+    public static void uiHideView(View v){
+        v.setVisibility (View.GONE);
+    }
+
+    public static void uiShowView(View v){
+        v.setVisibility (View.VISIBLE);
+    }
+
+    public static void uiUncheckChipGroup(ChipGroup chipGroup){
+        chipGroup.clearCheck();
+    }
+
+    public static void uiHideHideShow(View x, View y, View z) {
+        uiHideView(x);
+        uiHideView(y);
+        uiShowView(z);
+    }
+
 }

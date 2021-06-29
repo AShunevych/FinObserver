@@ -25,6 +25,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import static com.ashunevich.finobserver.utils.Utils.returnActiveChipId;
+import static com.ashunevich.finobserver.utils.Utils.uiHideHideShow;
+import static com.ashunevich.finobserver.utils.Utils.uiHideView;
+import static com.ashunevich.finobserver.utils.Utils.uiShowView;
+import static com.ashunevich.finobserver.utils.Utils.uiUncheckChipGroup;
 
 
 public class TransactionBoardFragment extends Fragment {
@@ -109,27 +113,25 @@ public class TransactionBoardFragment extends Fragment {
     private void uiHandlerMechanism(boolean bool){
         if(bool){
             clearText ();
-            binding.monthChip.clearCheck ();
+            uiUncheckChipGroup(binding.monthChip);
             binding.monthChip.check (binding.byDate.getId ());
-            binding.monthChip.setVisibility (View.VISIBLE);
-            binding.findByAccount.setVisibility (View.VISIBLE);
+            uiShowView (binding.monthChip);
+            uiShowView (binding.findByAccount);
         }
         else {
             if(filteredList != null){
                 filteredList.clear ();
                 initFilter ();
             }
-            binding.monthChip.clearCheck ();
-            binding.findByAccount.setVisibility (View.GONE);
-            binding.monthChip.setVisibility (View.GONE);
+            uiUncheckChipGroup(binding.monthChip);
+            uiHideView (binding.findByAccount);
+            uiHideView (binding.monthChip);
         }
 
     }
 
     private void uiBasicUiStatus(){
-        binding.progressBar.setVisibility(View.GONE);
-        binding.loadingText.setVisibility(View.GONE);
-        binding.transactionView.setVisibility (View.VISIBLE);
+        uiHideHideShow (binding.progressBar,binding.loadingText,binding.transactionView);
     }
 
     //Recycler Utils

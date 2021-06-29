@@ -14,7 +14,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,9 +59,8 @@ abstract class DashboardUtils {
     }
 
     static String stringDate(){
-        Date c = Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("d MMMM, yyyy ", Locale.UK);
-        return df.format(c);
+        return df.format(Calendar.getInstance().getTime());
     }
 
     static String stringSumFromDoubles(double a, double b){return stringSetDoubleFormat (a+b); }
@@ -95,14 +93,12 @@ abstract class DashboardUtils {
     }
 
     static String stringFormat(String x){
-        double a = Double.parseDouble (x);
-        return stringSetDoubleFormat(a);
+        return stringSetDoubleFormat(Double.parseDouble (x));
     }
 
     static String setTransferText(String accountName){
         return "Transfer from " + accountName;
     }
-
 
     //doubles
     static double doubleFromString(String string){
@@ -126,8 +122,5 @@ abstract class DashboardUtils {
         button.setEnabled(getTextFrom(text1).length() > 0 && getTextFrom(text2).length() > 0);
     }
 
-    static void setChipGroupUncheck(ChipGroup chipGroup){
-        chipGroup.clearCheck();
-    }
 
 }

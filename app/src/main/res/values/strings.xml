@@ -19,4 +19,5 @@
     <string name="acc_name">Account name</string>
     <string name="acc_balance">Accounts</string>
     <string name="acc_icon">Icon</string>
+    <string name="date">Date</string>
 </resources>
