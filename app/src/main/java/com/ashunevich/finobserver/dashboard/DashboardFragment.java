@@ -34,7 +34,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -79,7 +78,7 @@ public class DashboardFragment extends Fragment {
     private final List<AccountItem> AccountItemList = new ArrayList<>();
     private RecyclerViewAdapter adapter;
 
-    private RoomDashboardVewModel dashboardViewModel;
+    private RoomDashboardViewModel dashboardViewModel;
     private RoomTransactionsViewModel transactionsViewModel;
 
     private boolean isOpen = false;
@@ -224,7 +223,7 @@ public class DashboardFragment extends Fragment {
 
     private void initViewModels(){
         transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboardVewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboardViewModel.class);
     }
 
     private void initClickListeners(){
@@ -360,6 +359,7 @@ public class DashboardFragment extends Fragment {
         prefManager.setValue(EXPENDITURES, stringFromTextView (binding.expendView));
         prefManager.setValue(TOTAL, stringFromTextView (binding.totalBalanceValue));
     }
+
 
     //EventBus event
     @Subscribe

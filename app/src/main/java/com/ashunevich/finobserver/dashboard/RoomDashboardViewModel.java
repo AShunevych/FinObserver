@@ -11,12 +11,12 @@ import androidx.lifecycle.LiveData;
 
 
 
-public class RoomDashboardVewModel extends AndroidViewModel {
+public class RoomDashboardViewModel extends AndroidViewModel {
     private final RoomDashboardRepository mRepo;
     private final LiveData<List<AccountItem>> mAllAccounts;
 
 
-    public RoomDashboardVewModel(@NonNull Application application) {
+    public RoomDashboardViewModel(@NonNull Application application) {
         super(application);
         mRepo = new RoomDashboardRepository(application);
         mAllAccounts = mRepo.getAllAccounts();

@@ -17,7 +17,7 @@ import android.view.MenuItem;
 
 
 import com.ashunevich.finobserver.dashboard.DashboardFragment;
-import com.ashunevich.finobserver.dashboard.RoomDashboardVewModel;
+import com.ashunevich.finobserver.dashboard.RoomDashboardViewModel;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.transactions.TransactionBoardFragment;
 import com.ashunevich.finobserver.utils.PostPOJO;
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private final List<String> tabNames = new ArrayList<>();
     private final List<Integer> drawables = new ArrayList<>();
     private RoomTransactionsViewModel transactionsRoomData;
-    private RoomDashboardVewModel dashboardRoomData;
+    private RoomDashboardViewModel dashboardRoomData;
     private final static String ZERO_VALUE = "0.0";
 
     @Override
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initModels(){
         transactionsRoomData = new ViewModelProvider(this).get(RoomTransactionsViewModel.class);
-        dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardVewModel.class);
+        dashboardRoomData = new ViewModelProvider(this).get(RoomDashboardViewModel.class);
     }
 
 
