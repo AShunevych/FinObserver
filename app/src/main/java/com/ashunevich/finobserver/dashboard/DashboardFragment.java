@@ -20,13 +20,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
-
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.transactions.TransactionBoardItem;
 
 import com.ashunevich.finobserver.utils.PostPOJO;
 import com.ashunevich.finobserver.databinding.DashboardFragmentBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -66,7 +66,7 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromText
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromObject;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringSumFromDoubles;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
-import static com.ashunevich.finobserver.utils.Utils.genericDialogBuilder;
+import static com.ashunevich.finobserver.utils.Utils.genericDialogOptions;
 import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
 
 public class DashboardFragment extends Fragment {
@@ -81,7 +81,7 @@ public class DashboardFragment extends Fragment {
     private RoomDashboardViewModel dashboardViewModel;
     private RoomTransactionsViewModel transactionsViewModel;
 
-    private boolean isOpen = false;
+    private boolean rotationStatus = false;
 
     private final String DATE = stringDate ();
     private final String CURRENCY_ACCOUNT = "UAH";
@@ -139,7 +139,6 @@ public class DashboardFragment extends Fragment {
         initAnimations();
         initClickListeners();
         initPrefManager();
-
         return binding.getRoot();
     }
 
@@ -271,7 +270,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void startAlertDialog(){
-        AlertDialog.Builder builder = genericDialogBuilder(requireContext (),"WARNING",
+        AlertDialog.Builder builder = genericDialogOptions (requireContext (),"WARNING",
                 "You are going to delete all accounts. Proceed?");
 
         builder.setPositiveButton("YES", (dialogInterface, i) -> roomDeleteAllAccounts());
@@ -321,30 +320,37 @@ public class DashboardFragment extends Fragment {
     }
 
     private void uiFabAnimation(){
-        if(isOpen){
-            binding.addAccount.startAnimation (fabClose);
-            binding.deleteAccountData.startAnimation (fabClose);
-            uiFabAnimationRotate(isOpen);
-            isOpen= false;
+        if(rotationStatus){
+            uiFabStartAnimation (binding.addAccount,fabClose);
+            uiFabStartAnimation (binding.deleteAccountData,fabClose);
+            rotationStatus = false;
         }
         else{
-            binding.addAccount.startAnimation (fabOpen);
-            binding.deleteAccountData.startAnimation (fabOpen);
-            uiFabAnimationRotate(isOpen);
-            isOpen= true;
+            uiFabStartAnimation (binding.addAccount,fabOpen);
+            uiFabStartAnimation (binding.deleteAccountData,fabOpen);
+            rotationStatus = true;
         }
+        uiFabAnimationRotate(rotationStatus);
     }
 
     private void uiFabAnimationRotate(boolean buttonStatus){
-        ObjectAnimator.ofFloat(binding.actionButton, "rotation", 0f, 90f).setDuration(200).start();
             if (buttonStatus){
-                binding.actionButton.setImageDrawable
-                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_more_ico_vertical));
+                uiChangeDrawableTo(R.drawable.ic_more_ico_gorizontal);
             } else {
-                binding.actionButton.setImageDrawable
-                        (ContextCompat.getDrawable(requireContext (),R.drawable.ic_more_ico_gorizontal));
+                uiChangeDrawableTo(R.drawable.ic_more_ico_vertical);
             }
+        ObjectAnimator.ofFloat(binding.actionButton, "rotation", 0f, 90f).setDuration(200).start();
     }
+
+    private void uiFabStartAnimation(FloatingActionButton button, Animation animation){
+        button.startAnimation(animation);
+    }
+
+    private void uiChangeDrawableTo(int drawableID){
+        binding.actionButton.setImageDrawable
+                (ContextCompat.getDrawable(requireContext (),drawableID));
+    }
+
 
     private void uiSetSharedPrefValues(){
         binding.balanceView.setText(stringFormat(prefManager.getValue(BALANCE,"0.0")));
@@ -422,24 +428,6 @@ public class DashboardFragment extends Fragment {
     }
 
     }
-
-
-
-/*
-    //   (1) Implement account mechanism :
-    //   (1.1) Add/Remove account --> RecyclerView, DialogFragment, Implement EventBus
-    //   (1.2) Count all accounts balance
-    //       (1.2.1) Count accounts balance when account removed
-    //    (1.3) Permanent account holder with ROOM
-    //        (1.3.1) Create Room persistence and insert data in it
-    //        (1.3.2) remove all data and specific item from room and Recyclerview
-    //        (1.3.3) update  data in the room
-    //   (1.4) LiveData to TransactionFragment
-    //   (1.5) Make LiveData observe permanent
-    //    (1.6) Update item when accountValue change
-    //   (1.7) Save in SharedPreferences all TextView;
-
- */
 
 
 
