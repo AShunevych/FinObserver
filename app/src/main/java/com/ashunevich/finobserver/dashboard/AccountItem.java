@@ -20,9 +20,9 @@ class AccountItem {
      String accountCurrency;
 
     @ColumnInfo(name = "imageID")
-     int imageID;
+    String imageID;
 
-    protected AccountItem(int id, String accountName, double accountValue, String accountCurrency, int imageID) {
+    protected AccountItem(int id, String accountName, double accountValue, String accountCurrency, String imageID) {
         this.accountID = id;
         this.accountName = accountName;
         this.accountValue = accountValue;
@@ -30,7 +30,7 @@ class AccountItem {
         this.imageID = imageID;
     }
 
-    protected AccountItem(String accountName, double accountValue, String accountCurrency, int imageID) {
+    protected AccountItem(String accountName, double accountValue, String accountCurrency, String imageID) {
         this.accountName = accountName;
         this.accountValue = accountValue;
         this.accountCurrency = accountCurrency;
@@ -45,7 +45,7 @@ class AccountItem {
         this.accountID = accountID;
     }
 
-    protected int getImageID() {
+    protected String getImageID() {
         return imageID;
     }
 

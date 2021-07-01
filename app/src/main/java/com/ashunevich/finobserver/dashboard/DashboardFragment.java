@@ -171,7 +171,7 @@ public class DashboardFragment extends Fragment {
             String name = result.getString("accountName");
             double value = result.getDouble("accountValue");
             String currency = result.getString("accountCurrency");
-            int drawablePos = result.getInt("accountDrawablePos");
+            String drawablePos = result.getString("accountImageName");
             if(operationType.matches(KEY_UPDATE)){
                 int id = result.getInt("accountID");
                 roomUpdateAccount (id,name,value,currency,drawablePos);
@@ -281,7 +281,7 @@ public class DashboardFragment extends Fragment {
 
     //Room operations
     private void roomUpdateAccount(int accountId, String accountName, double accountValue,
-                                   String accountCurrency, int accountDrawablePos){
+                                   String accountCurrency, String accountDrawablePos){
         dashboardViewModel.update(new AccountItem(accountId,accountName,accountValue,accountCurrency,accountDrawablePos));
         uiUpdateWithDelay ();
     }
@@ -291,7 +291,7 @@ public class DashboardFragment extends Fragment {
         uiUpdateWithDelay ();
     }
 
-    private void roomInsertAccount(String accountName, double accountValue, String accountCurrency, int accountDrawablePos ){
+    private void roomInsertAccount(String accountName, double accountValue, String accountCurrency, String accountDrawablePos ){
         dashboardViewModel.insert(new AccountItem(accountName,accountValue,accountCurrency,accountDrawablePos));
         uiUpdateWithDelay ();
     }

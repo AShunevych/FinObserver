@@ -2,20 +2,17 @@ package com.ashunevich.finobserver.dashboard;
 
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-
 import android.view.ViewGroup;
-
 import android.widget.TextView;
-
 
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
 import com.ashunevich.finobserver.factories.FactoryRecViewDiffUtil;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -52,7 +49,7 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
     public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
         if(pad_list!=null){
             final AccountItem account  = pad_list.get(position);
-            holder.binding.accountIco.setImageDrawable(returnDrawableByID(account.getImageID()));
+            holder.binding.accountIco.setImageDrawable(ContextCompat.getDrawable(context,getId(account.getImageID())));
             holder.binding.accountType.setText(account.getAccountName());
             holder.binding.accountValue.setText(String.valueOf(account.getAccountValue()));
             holder.binding.accountCurrency.setText(account.getAccountCurrency());
@@ -69,22 +66,32 @@ class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyVie
    private void setBundleArgs (DialogFragment fragment, int position){
         Bundle bundle = new Bundle();
         AccountItem account = getAccountAtPosition(position);
-       bundle.putInt("accountID",account.getAccountID());
-       bundle.putString("accountName",account.getAccountName());
-       bundle.putDouble("accountValue",account.getAccountValue());
-       bundle.putString("accountCurrency",account.getAccountCurrency());
-       bundle.putString("operationKey",KEY_UPDATE);
-       bundle.putInt("imageID",account.getImageID());
+        bundle.putInt("accountID",account.getAccountID());
+        bundle.putString("accountName",account.getAccountName());
+        bundle.putDouble("accountValue",account.getAccountValue());
+        bundle.putString("accountCurrency",account.getAccountCurrency());
+        bundle.putString("operationKey",KEY_UPDATE);
+        bundle.putString("imageID",account.getImageID());
        fragment.setArguments(bundle);
    }
 
-    private Drawable returnDrawableByID(int i){
-        switch (i){
-            case 0 : return ContextCompat.getDrawable(context,R.drawable.ic_wallet_balance_ico);
-            case 1 : return ContextCompat.getDrawable(context,R.drawable.ic_bank_account_icon);
-            default: return ContextCompat.getDrawable(context,R.drawable.ic_other_balance_ico);
+   /*
+   Problem : If resource name will change, drawable, then it will return null;
+       so if i change resource name in Android Studio,
+       it wouldn't automatically update value inside Room and return blank pic;
+        need to think how to fix it
+    */
+
+    private static int getId(String resourceName) {
+        try {
+            Field idField = R.drawable.class.getDeclaredField(resourceName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            throw new RuntimeException("No resource ID found for: "
+                    + resourceName + " / " + e);
         }
     }
+
 
     protected void updateList(List<AccountItem> accounts){
         final FactoryRecViewDiffUtil<AccountItem> diffCallback = new FactoryRecViewDiffUtil<> (this.pad_list, accounts);

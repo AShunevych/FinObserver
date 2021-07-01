@@ -33,6 +33,7 @@ public class AccountDialog extends DialogFragment {
     private DashboardNewaccountBinding binding;
     private int id;
     private String currency,keyType;
+    private TypedArray typedImagesArrays;
 
 
     @Override
@@ -56,7 +57,7 @@ public class AccountDialog extends DialogFragment {
     }
 
     private void initSpinner(){
-        TypedArray typedImagesArrays = getResources().obtainTypedArray(R.array.Icons);
+        typedImagesArrays = getResources().obtainTypedArray(R.array.Icons);
         binding.drawableSpinner.setAdapter(new CustomSpinnerAdapter(AccountDialog.this, typedImagesArrays));
     }
 
@@ -121,7 +122,7 @@ public class AccountDialog extends DialogFragment {
             currency = getResources().getString(R.string.UAH);
         }
         result.putString("accountCurrency",currency);
-        result.putInt("accountDrawablePos", getSelectedItemOnSpinnerPosition(binding.drawableSpinner));
+        result.putString("accountImageName",resourceNameAt(getSelectedItemOnSpinnerPosition(binding.drawableSpinner)));
         if(key.matches(KEY_UPDATE)){
             result.putInt("accountID",id);
         }
@@ -145,6 +146,10 @@ public class AccountDialog extends DialogFragment {
         super.onCancel(dialog);
         submitNegativeResult();
         dialog.cancel();
+    }
+
+    private String resourceNameAt(int pos){
+        return  getResources().getResourceEntryName(typedImagesArrays.getResourceId (pos,0));
     }
 
 
