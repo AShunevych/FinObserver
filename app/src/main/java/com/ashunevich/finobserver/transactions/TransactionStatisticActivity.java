@@ -38,16 +38,16 @@ public class TransactionStatisticActivity extends AppCompatActivity {
     private final List<TransactionStatisticItem> expendituresItems = new ArrayList<>();
     private final List<TransactionStatisticItem> incomeItems  = new ArrayList<>();
     private int [] colors;
+    private int chartColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         binding = TransacationStatisticActivityBinding.inflate (getLayoutInflater ());
         setContentView (binding.getRoot ());
-        colors = getResources ().getIntArray (R.array.CustomColors);
         initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Expenses),expendituresItems);
         initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Income),incomeItems);
-
+        initLoadResources();
         initChartWithDelay();
     }
 
@@ -64,19 +64,28 @@ public class TransactionStatisticActivity extends AppCompatActivity {
 
     private void initChartWithDelay(){
         final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::createCharts, 300);
+        handler.postDelayed(this::initChartSetup, 300);
     }
 
-
-    private void createCharts(){
-        chartConstructor(incomeItems,incomeData,sortedIncomeCategoriesList,binding.incomeChart,getResources ().getString (R.string.incomeUAH));
-        chartConstructor(expendituresItems,expendituresData,sortedExpendituresCategoriesList,binding.expendituresChart,getResources ().getString (R.string.expUAH));
+    private void initLoadResources(){
+        colors = getResources ().getIntArray (R.array.CustomColors);
+        chartColor = ContextCompat.getColor(this, R.color.drawableColor);
     }
 
-    private void chartConstructor(List<TransactionStatisticItem> items,
-                                  List<BarEntry> barEntryList,
-                                  List<String> categoriesList,
-                                  BarChart chart, String chartDescription ){
+    private void initChartSetup(){
+        setupGenericChart (incomeItems,incomeData,
+                sortedIncomeCategoriesList,
+                binding.incomeChart,getResources ().getString (R.string.incomeUAH));
+
+        setupGenericChart (expendituresItems,expendituresData,
+                sortedExpendituresCategoriesList,
+                binding.expendituresChart,getResources ().getString (R.string.expUAH));
+    }
+
+    private void setupGenericChart(List<TransactionStatisticItem> items,
+                                   List<BarEntry> barEntryList,
+                                   List<String> categoriesList,
+                                   BarChart chart, String chartDescription ){
 
         if(items.size () !=0){
             for(int i = 0; i< items.size (); i++) {
@@ -86,31 +95,29 @@ public class TransactionStatisticActivity extends AppCompatActivity {
                 Log.d ("SIZE_OF_DATA_LIST", String.valueOf (barEntryList.size ()));
             }
         }
-        chartConstructorAppearance (chart,categoriesList,chartDescription);
-        BarData barData = chartConstructorBarData (barEntryList,chartDescription);
-        if(barEntryList.size ()<4){
-            barData.setBarWidth(0.5f);
-        }
-        else{
-            barData.setBarWidth (1f);
-        }
 
-        chartConstructorInit (chart,barData);
-        uiShowView(chart);
+        BarData barData = setupChartBarData (barEntryList,chartDescription);
+
+        setupChartBasicOptions (chart, chartDescription);
+        setupChartAxis (chart, categoriesList, chartDescription);
+        setupChartLegend (chart, categoriesList);
+
+        setupChart (chart,barEntryList,barData);
     }
 
-    private void chartConstructorAppearance(BarChart chart, List<String> categoriesList, String description){
-        int chartColor = ContextCompat.getColor(this, R.color.drawableColor);
+    private void setupChartBasicOptions(BarChart chart, String description) {
         int width = chart.getWidth ();
         int height = chart.getHeight ();
-
         chart.getDescription().setEnabled(true);
         chart.getDescription().setText (description);
         chart.getDescription().setTextSize (11f);
         chart.getDescription().setPosition (width-50,height-900);
         chart.getDescription().setTextColor(chartColor);
         chart.setDrawValueAboveBar(false);
+        chart.setTouchEnabled (false);
+    }
 
+    private void setupChartAxis(BarChart chart, List<String> categoriesList, String description) {
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(categoriesList.size ());
         xAxis.setTextSize (10f);
@@ -132,8 +139,21 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         axisRight.setGranularity(5f);
         axisRight.setTextColor(chartColor);
 
+        if(description.equals (getResources ().getString (R.string.expUAH))){
+            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
+            axisLeft.setDrawLabels (true);
+            axisRight.setDrawLabels (false);
+        }
+        else{
+            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
+            axisLeft.setDrawLabels (false);
+            axisRight.setDrawLabels (true);
+        }
+    }
+
+    private void setupChartLegend(BarChart chart, List<String> categoriesList) {
         List<LegendEntry> entries = new ArrayList<> ();
-        for(String s :categoriesList){
+        for(String s : categoriesList){
             entries.add
                     (new LegendEntry
                             (s,Legend.LegendForm.SQUARE,10f,10f,null,
@@ -147,21 +167,24 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         chart.getLegend().setFormToTextSpace (5f);
         chart.getLegend().setWordWrapEnabled (true);
         chart.getLegend().setTextColor (chartColor);
-
-        if(description.equals (getResources ().getString (R.string.expUAH))){
-           chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
-            axisLeft.setDrawLabels (true);
-            axisRight.setDrawLabels (false);
-        }
-        else{
-            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
-            axisLeft.setDrawLabels (false);
-            axisRight.setDrawLabels (true);
-        }
-        chart.setTouchEnabled (false);
     }
 
-    private BarData chartConstructorBarData(List<BarEntry> barEntries, String name) {
+    private void setupChart(BarChart chart,  List<BarEntry> barEntryList, BarData data) {
+        if(barEntryList.size ()<4){
+            data.setBarWidth(0.5f);
+        }
+        else{
+            data.setBarWidth (1f);
+        }
+
+        data.setValueTextSize(10f);
+        chart.setData(data);
+        chart.notifyDataSetChanged();
+        chart.invalidate();
+        uiShowView(chart);
+    }
+
+    private BarData setupChartBarData(List<BarEntry> barEntries, String name) {
         BarDataSet set1 = new BarDataSet(barEntries, name);
         set1.setColors (colors );
 
@@ -169,13 +192,6 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         dataSets.add(set1);
 
         return new BarData(dataSets);
-    }
-
-    private void chartConstructorInit(BarChart chart, BarData data) {
-        data.setValueTextSize(10f);
-        chart.setData(data);
-        chart.notifyDataSetChanged();
-        chart.invalidate();
     }
 
 }
