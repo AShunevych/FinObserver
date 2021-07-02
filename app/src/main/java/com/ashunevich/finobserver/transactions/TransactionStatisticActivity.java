@@ -99,7 +99,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         BarData barData = setupChartBarData (barEntryList,chartDescription);
 
         setupChartBasicOptions (chart, chartDescription);
-        setupChartAxis (chart, categoriesList, chartDescription);
+        setupChartAxis (chart, categoriesList);
         setupChartLegend (chart, categoriesList);
 
         setupChart (chart,barEntryList,barData);
@@ -117,7 +117,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         chart.setTouchEnabled (false);
     }
 
-    private void setupChartAxis(BarChart chart, List<String> categoriesList, String description) {
+    private void setupChartAxis(BarChart chart, List<String> categoriesList) {
         XAxis xAxis = chart.getXAxis();
         xAxis.setLabelCount(categoriesList.size ());
         xAxis.setTextSize (10f);
@@ -139,13 +139,11 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         axisRight.setGranularity(5f);
         axisRight.setTextColor(chartColor);
 
-        if(description.equals (getResources ().getString (R.string.expUAH))){
-            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
+        if(categoriesList == sortedExpendituresCategoriesList){
             axisLeft.setDrawLabels (true);
             axisRight.setDrawLabels (false);
         }
         else{
-            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
             axisLeft.setDrawLabels (false);
             axisRight.setDrawLabels (true);
         }
@@ -167,6 +165,14 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         chart.getLegend().setFormToTextSpace (5f);
         chart.getLegend().setWordWrapEnabled (true);
         chart.getLegend().setTextColor (chartColor);
+
+        if(categoriesList == sortedExpendituresCategoriesList){
+            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
+        }
+        else{
+            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
+        }
+
     }
 
     private void setupChart(BarChart chart,  List<BarEntry> barEntryList, BarData data) {
