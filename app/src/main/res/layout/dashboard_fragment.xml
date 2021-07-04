@@ -7,23 +7,18 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <Button
+        android:id="@+id/newTransactionDialog"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <Button
-            android:id="@+id/newTransactionDialog"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:elevation="2sp"
-            android:paddingHorizontal="16dp"
-            android:text="@string/newTransaction"
-            android:textSize="18sp" />
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:elevation="2sp"
+        android:paddingHorizontal="16dp"
+        android:text="@string/newTransaction"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout3"
@@ -88,7 +83,7 @@
         android:background="@drawable/ic_rectangle_drawable"
         android:elevation="2sp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintBottom_toTopOf="@+id/newTransactionDialog"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent">
