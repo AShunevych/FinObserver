@@ -3,8 +3,6 @@ package com.ashunevich.finobserver.transactions;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import static com.ashunevich.finobserver.utils.Utils.initAfterDelay;
 import static com.ashunevich.finobserver.utils.Utils.returnActiveChipId;
 import static com.ashunevich.finobserver.utils.Utils.uiHideHideShow;
 import static com.ashunevich.finobserver.utils.Utils.uiHideView;
@@ -64,13 +63,15 @@ public class TransactionBoardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        initRecView();
         initDelayForDatabaseRecView();
-        super.onViewCreated(view, savedInstanceState);
 
         setListenerTextWatcher ();
         setButtonListener();
         uiHandlerMechanism (false);
         setListenerCheckBox ();
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
 
@@ -130,30 +131,29 @@ public class TransactionBoardFragment extends Fragment {
 
     }
 
-    private void uiBasicUiStatus(){
+    private void uiSetStartStatus(){
         uiHideHideShow (binding.progressBar,binding.loadingText,binding.transactionView);
     }
 
     //Recycler Utils
-    private void initDatabaseRecView() {
+    private void initRecView(){
         binding.transactionView.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter = new RecyclerViewAdapter(listContentArr);
         binding.transactionView.setAdapter(adapter);
+    }
+
+    private void initDatabaseRecView() {
         modelDatabase = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
-        initViewModel ();
-        uiBasicUiStatus ();
-    }
 
-    private void initDelayForDatabaseRecView(){
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::initDatabaseRecView, 500);
-    }
-
-    private void initViewModel() {
         modelDatabase.getAllTransactions ().observe (requireActivity (), transaction_items -> {
             adapter.updateItemList (transaction_items);
             binding.transactionView.smoothScrollToPosition (0);
         });
+        uiSetStartStatus ();
+    }
+
+    private void initDelayForDatabaseRecView(){
+        initAfterDelay(this::initDatabaseRecView, 400);
     }
 
     private void initFilter(){
@@ -163,7 +163,7 @@ public class TransactionBoardFragment extends Fragment {
         });
     }
 
-        //filter
+    //filter
     private void filterMechanism (String text, Boolean bool){
         filteredList = new ArrayList<>();
         for(TransactionBoardItem item:listContentArr){

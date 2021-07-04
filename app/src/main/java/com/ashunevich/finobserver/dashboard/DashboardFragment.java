@@ -7,10 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
-
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,7 +64,9 @@ import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringFromObje
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.stringSumFromDoubles;
 import static com.ashunevich.finobserver.dashboard.DashboardUtils.doubleFromTextView;
 import static com.ashunevich.finobserver.utils.Utils.genericDialogOptions;
+import static com.ashunevich.finobserver.utils.Utils.initAfterDelay;
 import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
+import static com.ashunevich.finobserver.utils.Utils.uiShowView;
 
 public class DashboardFragment extends Fragment {
 
@@ -144,8 +143,8 @@ public class DashboardFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initViewModels();
-        initRecViewOnStart ();
+        initSetRecView();
+        initLoadData ();
         initDialogFragmentListener ();
         super.onViewCreated(view, savedInstanceState);
     }
@@ -193,16 +192,21 @@ public class DashboardFragment extends Fragment {
 
     private void initSetRecView(){
         binding.accountView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new RecyclerViewAdapter(AccountItemList,getParentFragmentManager());
-        dashboardViewModel.getAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
+        adapter = new RecyclerViewAdapter(AccountItemList, getParentFragmentManager());
         binding.accountView.setAdapter(adapter);
         initRecViewTouchHelper ();
-        binding.accountView.setVisibility (View.VISIBLE);
+        uiShowView(binding.accountView);
     }
 
-    private void initRecViewOnStart(){
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(this::initSetRecView, 250);
+    private void initConnectViewModel(){
+        transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
+        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboardViewModel.class);
+        dashboardViewModel.getAllAccounts().observe(requireActivity(), accounts -> adapter.updateList(accounts));
+    }
+
+
+    private void initLoadData(){
+        initAfterDelay(this::initConnectViewModel,250);
     }
 
     private void initRecViewTouchHelper() {
@@ -218,11 +222,6 @@ public class DashboardFragment extends Fragment {
             }
         });
         helper.attachToRecyclerView(binding.accountView);
-    }
-
-    private void initViewModels(){
-        transactionsViewModel = new ViewModelProvider(requireActivity()).get(RoomTransactionsViewModel.class);
-        dashboardViewModel = new ViewModelProvider(requireActivity()).get(RoomDashboardViewModel.class);
     }
 
     private void initClickListeners(){
@@ -315,8 +314,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void uiUpdateWithDelay(){
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::uiUpdateVisibleSum, 500);
+        initAfterDelay(this::uiUpdateVisibleSum, 500);
     }
 
     private void uiFabAnimation(){

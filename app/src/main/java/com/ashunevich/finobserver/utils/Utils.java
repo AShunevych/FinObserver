@@ -1,6 +1,8 @@
 package com.ashunevich.finobserver.utils;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -25,6 +27,11 @@ public class Utils {
 
     public static int getSelectedItemOnSpinnerPosition(Spinner spinner){
         return spinner.getSelectedItemPosition();
+    }
+
+    public static void initAfterDelay(Runnable runnable,int delay){
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(runnable, delay);
     }
 
     public static void showSnackBar (View view, String text){
