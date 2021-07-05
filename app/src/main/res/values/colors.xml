@@ -14,17 +14,17 @@
     <color name="backGround_70">#fafafa</color>
 
 
-    <color name="n1CustomColor">#e0f7fa</color>
-    <color name="n2CustomColor">#bdbdbd</color>
-    <color name="n3CustomColor">#FFBB86FC</color>
-    <color name="n4CustomColor">#FF03DAC5</color>
-    <color name="n5CustomColor">#FF018786</color>
-    <color name="n6CustomColor">#5472d3</color>
-    <color name="n7CustomColor">#cddc39</color>
-    <color name="n8CustomColor">#cfff95</color>
-    <color name="n9CustomColor">#6b9b37</color>
-    <color name="n10CustomColor">#ffeb3b</color>
-    <color name="n11CustomColor">#ff7043</color>
-    <color name="n12CustomColor">#9f0000</color>
-    <color name="n13CustomColor">#a1887f</color>
+    <color name="n1CustomColor">#06AED5</color>
+    <color name="n2CustomColor">#086788</color>
+    <color name="n3CustomColor">#F0C808</color>
+    <color name="n4CustomColor">#98FA20</color>
+    <color name="n5CustomColor">#FF3A20</color>
+    <color name="n6CustomColor">#DD1C1A</color>
+    <color name="n7CustomColor">#F4B860</color>
+    <color name="n8CustomColor">#7798AB</color>
+    <color name="n9CustomColor">#043565</color>
+    <color name="n10CustomColor">#5158BB</color>
+    <color name="n11CustomColor">#1B5299</color>
+    <color name="n12CustomColor">#F26DF9</color>
+    <color name="n13CustomColor">#C1B098</color>
 </resources>

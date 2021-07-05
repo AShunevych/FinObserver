@@ -1,14 +1,13 @@
 package com.ashunevich.finobserver.transactions;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import com.ashunevich.finobserver.R;
 
 import com.ashunevich.finobserver.databinding.TransacationStatisticActivityBinding;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.components.XAxis;
@@ -26,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import static com.ashunevich.finobserver.utils.Utils.initAfterDelay;
 import static com.ashunevich.finobserver.utils.Utils.uiShowView;
 
 
@@ -48,23 +48,18 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Expenses),expendituresItems);
         initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Income),incomeItems);
         initLoadResources();
-        initChartWithDelay();
+        initAfterDelay (this::initChartSetup, 300);
     }
 
-    private  void initDownloadCategoryDataFromDB(String [] strings, List<TransactionStatisticItem> items){
+    private  void initDownloadCategoryDataFromDB(String [] categoriesNames, List<TransactionStatisticItem> items){
         RoomTransactionsViewModel model = new ViewModelProvider (this).get(RoomTransactionsViewModel.class);
-        for (String s : strings) {
+        for (String s : categoriesNames) {
             model.getAllTransactionInCategory (s, item -> {
                 if (item != null) {
                     items.add (item);
                 }
             });
         }
-    }
-
-    private void initChartWithDelay(){
-        final Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(this::initChartSetup, 300);
     }
 
     private void initLoadResources(){
@@ -92,33 +87,26 @@ public class TransactionStatisticActivity extends AppCompatActivity {
                 TransactionStatisticItem item = items.get (i);
                 barEntryList.add (new BarEntry (i, Double.valueOf (item.getTransactionValue ()).floatValue ()));
                 categoriesList.add (item.getTransactionCategory ());
-                Log.d ("SIZE_OF_DATA_LIST", String.valueOf (barEntryList.size ()));
             }
         }
 
+        setupChartDescription (chart.getDescription (), chartDescription,chart.getWidth (),chart.getHeight ());
+        setupChartAxis (chart.getXAxis (),chart.getAxisLeft (),chart.getAxisRight (), categoriesList);
+        setupChartLegend (chart.getLegend (), categoriesList);
+
         BarData barData = setupChartBarData (barEntryList,chartDescription);
-
-        setupChartBasicOptions (chart, chartDescription);
-        setupChartAxis (chart, categoriesList);
-        setupChartLegend (chart, categoriesList);
-
         setupChart (chart,barEntryList,barData);
     }
 
-    private void setupChartBasicOptions(BarChart chart, String description) {
-        int width = chart.getWidth ();
-        int height = chart.getHeight ();
-        chart.getDescription().setEnabled(true);
-        chart.getDescription().setText (description);
-        chart.getDescription().setTextSize (11f);
-        chart.getDescription().setPosition (width-50,height-900);
-        chart.getDescription().setTextColor(chartColor);
-        chart.setDrawValueAboveBar(false);
-        chart.setTouchEnabled (false);
+    private void setupChartDescription(Description chartDescription, String description, int width, int height ) {
+        chartDescription.setEnabled(true);
+        chartDescription.setText (description);
+        chartDescription.setTextSize (10f);
+        chartDescription.setPosition (width-50,height-900);
+        chartDescription.setTextColor(chartColor);
     }
 
-    private void setupChartAxis(BarChart chart, List<String> categoriesList) {
-        XAxis xAxis = chart.getXAxis();
+    private void setupChartAxis(XAxis xAxis,YAxis axisLeft, YAxis axisRight, List<String> categoriesList) {
         xAxis.setLabelCount(categoriesList.size ());
         xAxis.setTextSize (10f);
         xAxis.setAxisMaximum (categoriesList.size());
@@ -127,14 +115,12 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         xAxis.setDrawLabels (false);
         xAxis.setTextColor (chartColor);
 
-        YAxis axisLeft = chart.getAxisLeft();
         axisLeft.setAxisMinimum(0);
         axisLeft.setGranularity(5f);
         axisLeft.setTextColor(chartColor);
         axisLeft.setDrawGridLines (false);
         axisLeft.setDrawAxisLine (false);
 
-        YAxis axisRight = chart.getAxisRight();
         axisRight.setAxisMinimum(0);
         axisRight.setGranularity(5f);
         axisRight.setTextColor(chartColor);
@@ -149,28 +135,30 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         }
     }
 
-    private void setupChartLegend(BarChart chart, List<String> categoriesList) {
+    private void setupChartLegend(Legend chartLegend, List<String> categoriesList) {
         List<LegendEntry> entries = new ArrayList<> ();
-        for(String s : categoriesList){
+
+        for(int i=0;i<categoriesList.size ();i++){
             entries.add
                     (new LegendEntry
-                            (s,Legend.LegendForm.SQUARE,10f,10f,null,
-                                    colors[categoriesList.indexOf (s)]));
+                            (categoriesList.get (i),Legend.LegendForm.SQUARE,10f,10f,null,
+                                    colors[i]));
+            Log.d ("TAG", String.valueOf (categoriesList.size()));
         }
 
-        chart.getLegend().setCustom (entries);
-        chart.getLegend().setEnabled (true);
-        chart.getLegend().setTextSize (10f);
-        chart.getLegend().setHorizontalAlignment (Legend.LegendHorizontalAlignment.LEFT);
-        chart.getLegend().setFormToTextSpace (5f);
-        chart.getLegend().setWordWrapEnabled (true);
-        chart.getLegend().setTextColor (chartColor);
+        chartLegend.setCustom (entries);
+        chartLegend.setEnabled (true);
+        chartLegend.setTextSize (10f);
+        chartLegend.setHorizontalAlignment (Legend.LegendHorizontalAlignment.LEFT);
+        chartLegend.setFormToTextSpace (5f);
+        chartLegend.setWordWrapEnabled (true);
+        chartLegend.setTextColor (chartColor);
 
         if(categoriesList == sortedExpendituresCategoriesList){
-            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
+            chartLegend.setVerticalAlignment (Legend.LegendVerticalAlignment.BOTTOM);
         }
         else{
-            chart.getLegend ().setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
+            chartLegend.setVerticalAlignment (Legend.LegendVerticalAlignment.TOP);
         }
 
     }
@@ -183,7 +171,8 @@ public class TransactionStatisticActivity extends AppCompatActivity {
             data.setBarWidth (1f);
         }
 
-        data.setValueTextSize(10f);
+        chart.setDrawValueAboveBar(false);
+        chart.setTouchEnabled (false);
         chart.setData(data);
         chart.notifyDataSetChanged();
         chart.invalidate();
@@ -192,7 +181,8 @@ public class TransactionStatisticActivity extends AppCompatActivity {
 
     private BarData setupChartBarData(List<BarEntry> barEntries, String name) {
         BarDataSet set1 = new BarDataSet(barEntries, name);
-        set1.setColors (colors );
+        set1.setColors (colors);
+        set1.setValueTextSize (10f);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
