@@ -45,13 +45,13 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         super.onCreate (savedInstanceState);
         binding = TransacationStatisticActivityBinding.inflate (getLayoutInflater ());
         setContentView (binding.getRoot ());
-        initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Expenses),expendituresItems);
-        initDownloadCategoryDataFromDB(getResources ().getStringArray (R.array.Income),incomeItems);
+        initLoadDataFromDB (getResources ().getStringArray (R.array.Expenses),expendituresItems);
+        initLoadDataFromDB (getResources ().getStringArray (R.array.Income),incomeItems);
         initLoadResources();
         initAfterDelay (this::initChartSetup, 300);
     }
 
-    private  void initDownloadCategoryDataFromDB(String [] categoriesNames, List<TransactionStatisticItem> items){
+    private  void initLoadDataFromDB(String [] categoriesNames, List<TransactionStatisticItem> items){
         RoomTransactionsViewModel model = new ViewModelProvider (this).get(RoomTransactionsViewModel.class);
         for (String s : categoriesNames) {
             model.getAllTransactionInCategory (s, item -> {
@@ -68,19 +68,19 @@ public class TransactionStatisticActivity extends AppCompatActivity {
     }
 
     private void initChartSetup(){
-        setupGenericChart (incomeItems,incomeData,
+        setupChartFactory (incomeItems,incomeData,
                 sortedIncomeCategoriesList,
                 binding.incomeChart,getResources ().getString (R.string.incomeUAH));
 
-        setupGenericChart (expendituresItems,expendituresData,
+        setupChartFactory (expendituresItems,expendituresData,
                 sortedExpendituresCategoriesList,
                 binding.expendituresChart,getResources ().getString (R.string.expUAH));
     }
 
-    private void setupGenericChart(List<TransactionStatisticItem> items,
-                                   List<BarEntry> barEntryList,
-                                   List<String> categoriesList,
-                                   BarChart chart, String chartDescription ){
+    private void setupChartFactory(List<TransactionStatisticItem> items,
+                                  List<BarEntry> barEntryList,
+                                  List<String> categoriesList,
+                                  BarChart chart, String chartDescription ){
 
         if(items.size () !=0){
             for(int i = 0; i< items.size (); i++) {
@@ -94,7 +94,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         setupChartAxis (chart.getXAxis (),chart.getAxisLeft (),chart.getAxisRight (), categoriesList);
         setupChartLegend (chart.getLegend (), categoriesList);
 
-        BarData barData = setupChartBarData (barEntryList,chartDescription);
+        BarData barData = setupBarData (barEntryList,chartDescription);
         setupChart (chart,barEntryList,barData);
     }
 
@@ -179,7 +179,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         uiShowView(chart);
     }
 
-    private BarData setupChartBarData(List<BarEntry> barEntries, String name) {
+    private BarData setupBarData(List<BarEntry> barEntries, String name) {
         BarDataSet set1 = new BarDataSet(barEntries, name);
         set1.setColors (colors);
         set1.setValueTextSize (10f);
