@@ -3,7 +3,7 @@ package com.ashunevich.finobserver.data;
 import androidx.room.ColumnInfo;
 
 
-public class TransactionStatisticItem {
+public class StatisticItem {
 
     @ColumnInfo(name = "value")
     double transactionValue;
@@ -16,7 +16,7 @@ public class TransactionStatisticItem {
         return transactionCategory;
     }
 
-    public TransactionStatisticItem(String transactionCategory, double transactionValue) {
+    public StatisticItem(String transactionCategory, double transactionValue) {
         this.transactionValue = transactionValue;
         this.transactionCategory = transactionCategory;
     }

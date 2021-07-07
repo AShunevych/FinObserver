@@ -17,7 +17,7 @@ public interface TransactionsDAO extends FactoryDAO<TransactionBoardItem> {
     void deleteAll();
 
     @Query ("SELECT category, SUM (value) as value FROM transactions WHERE category =:transactionCategory GROUP BY category ")
-    TransactionStatisticItem getAllTransactionInCategory(String transactionCategory);
+    StatisticItem getAllTransactionInCategory(String transactionCategory);
 
 
 }

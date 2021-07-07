@@ -3,8 +3,8 @@ package com.ashunevich.finobserver;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.ashunevich.finobserver.data.StatisticItem;
 import com.ashunevich.finobserver.databinding.TransacationStatisticActivityBinding;
-import com.ashunevich.finobserver.data.TransactionStatisticItem;
 import com.ashunevich.finobserver.viewmodel.RoomTransactionsViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
@@ -35,8 +35,8 @@ public class TransactionStatisticActivity extends AppCompatActivity {
     private final List<String> sortedIncomeCategoriesList = new ArrayList<> ();
     private final List<BarEntry> expendituresData = new ArrayList<>();
     private final List<BarEntry> incomeData = new ArrayList<>();
-    private final List<TransactionStatisticItem> expendituresItems = new ArrayList<>();
-    private final List<TransactionStatisticItem> incomeItems  = new ArrayList<>();
+    private final List<StatisticItem> expendituresItems = new ArrayList<>();
+    private final List<StatisticItem> incomeItems  = new ArrayList<>();
     private int [] colors;
     private int chartColor;
 
@@ -51,7 +51,7 @@ public class TransactionStatisticActivity extends AppCompatActivity {
         initAfterDelay (this::initChartSetup, 300);
     }
 
-    private  void initLoadDataFromDB(String [] categoriesNames, List<TransactionStatisticItem> items){
+    private  void initLoadDataFromDB(String [] categoriesNames, List<StatisticItem> items){
         RoomTransactionsViewModel model = new ViewModelProvider (this).get(RoomTransactionsViewModel.class);
         for (String s : categoriesNames) {
             model.getAllTransactionInCategory (s, item -> {
@@ -77,14 +77,14 @@ public class TransactionStatisticActivity extends AppCompatActivity {
                 binding.expendituresChart,getResources ().getString (R.string.expUAH));
     }
 
-    private void setupChartFactory(List<TransactionStatisticItem> items,
+    private void setupChartFactory(List<StatisticItem> items,
                                   List<BarEntry> barEntryList,
                                   List<String> categoriesList,
                                   BarChart chart, String chartDescription ){
 
         if(items.size () !=0){
             for(int i = 0; i< items.size (); i++) {
-                TransactionStatisticItem item = items.get (i);
+                StatisticItem item = items.get (i);
                 barEntryList.add (new BarEntry (i, Double.valueOf (item.getTransactionValue ()).floatValue ()));
                 categoriesList.add (item.getTransactionCategory ());
             }

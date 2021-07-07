@@ -50,6 +50,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import static com.ashunevich.finobserver.utility.ConstantsUtils.BALANCE;
+import static com.ashunevich.finobserver.utility.ConstantsUtils.DIALOG_STATIC;
+import static com.ashunevich.finobserver.utility.ConstantsUtils.EXPENDITURES;
+import static com.ashunevich.finobserver.utility.ConstantsUtils.INCOME;
+import static com.ashunevich.finobserver.utility.ConstantsUtils.KEY_CREATE;
+import static com.ashunevich.finobserver.utility.ConstantsUtils.KEY_UPDATE;
+import static com.ashunevich.finobserver.utility.ConstantsUtils.TOTAL;
 import static com.ashunevich.finobserver.utility.Utils.setTransferText;
 import static com.ashunevich.finobserver.utility.Utils.stringDate;
 import static com.ashunevich.finobserver.utility.Utils.intFromImageType;
@@ -112,6 +119,7 @@ public class DashboardFragment extends Fragment {
                         }
                         uiUpdateWithDelay ();
                     }
+
                 });
         if (!EventBus.getDefault().isRegistered(this)) { EventBus.getDefault().register(this); }
 
@@ -160,22 +168,26 @@ public class DashboardFragment extends Fragment {
     //init methods
     private void initDialogFragmentListener(){
 
-        getParentFragmentManager().setFragmentResultListener(ConstantsUtils.DIALOG_STATIC, getViewLifecycleOwner(), (requestKey, result) -> {
+        getParentFragmentManager().setFragmentResultListener(DIALOG_STATIC, getViewLifecycleOwner(), (requestKey, result) -> {
             String operationType = result.getString("operationType");
             Log.d("OPERATION KEY", operationType);
             String name = result.getString("accountName");
             double value = result.getDouble("accountValue");
             String currency = result.getString("accountCurrency");
             String drawablePos = result.getString("accountImageName");
-            if(operationType.matches(ConstantsUtils.KEY_UPDATE)){
+            if(operationType.matches(KEY_UPDATE)){
                 int id = result.getInt("accountID");
                 roomUpdateAccount (id,name,value,currency,drawablePos);
             }
-            else if (operationType.matches(ConstantsUtils.KEY_CREATE)){
+            else if (operationType.matches(KEY_CREATE)){
                 roomInsertAccount (name,value,currency,drawablePos);
             }
             else{
                 Toast.makeText(requireContext(),"Operation Canceled",Toast.LENGTH_SHORT).show();
+            }
+
+            if(rotationStatus){
+                uiFabAnimation();
             }
 
         });
@@ -259,7 +271,7 @@ public class DashboardFragment extends Fragment {
     private void startDialogFragment(){
         DialogFragment newAccountDialogFragment = new DashboardNewAccountDialog ();
         Bundle bundle = new Bundle();
-        bundle.putString("operationKey", ConstantsUtils.KEY_CREATE);
+        bundle.putString("operationKey", KEY_CREATE);
         newAccountDialogFragment.setArguments(bundle);
         newAccountDialogFragment.show(requireActivity().getSupportFragmentManager(), "createDialog");
     }
@@ -272,6 +284,7 @@ public class DashboardFragment extends Fragment {
         builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
+        uiFabAnimation ();
     }
 
     //Room operations
@@ -315,16 +328,24 @@ public class DashboardFragment extends Fragment {
 
     private void uiFabAnimation(){
         if(rotationStatus){
-            uiFabStartAnimation (binding.addAccount,fabClose);
-            uiFabStartAnimation (binding.deleteAccountData,fabClose);
-            rotationStatus = false;
+            uiCloseAnimation();
         }
         else{
-            uiFabStartAnimation (binding.addAccount,fabOpen);
-            uiFabStartAnimation (binding.deleteAccountData,fabOpen);
-            rotationStatus = true;
+            uiOpenAnimation();
         }
         uiFabAnimationRotate(rotationStatus);
+    }
+
+    private void uiCloseAnimation(){
+        uiFabStartAnimation (binding.addAccount,fabClose);
+        uiFabStartAnimation (binding.deleteAccountData,fabClose);
+        rotationStatus = false;
+    }
+
+    private void uiOpenAnimation(){
+        uiFabStartAnimation (binding.addAccount,fabOpen);
+        uiFabStartAnimation (binding.deleteAccountData,fabOpen);
+        rotationStatus = true;
     }
 
     private void uiFabAnimationRotate(boolean buttonStatus){
@@ -347,17 +368,17 @@ public class DashboardFragment extends Fragment {
 
 
     private void uiSetSharedPrefValues(){
-        binding.balanceView.setText(stringFormat(prefManager.getValue(ConstantsUtils.BALANCE,"0.0")));
-        binding.incomeView.setText(stringFormat(prefManager.getValue(ConstantsUtils.INCOME,"0.0")));
-        binding.expendView.setText(stringFormat(prefManager.getValue(ConstantsUtils.EXPENDITURES,"0.0")));
-        binding.totalBalanceValue.setText(stringFormat(prefManager.getValue(ConstantsUtils.TOTAL,"0.0")));
+        binding.balanceView.setText(stringFormat(prefManager.getValue(BALANCE,"0.0")));
+        binding.incomeView.setText(stringFormat(prefManager.getValue(INCOME,"0.0")));
+        binding.expendView.setText(stringFormat(prefManager.getValue(EXPENDITURES,"0.0")));
+        binding.totalBalanceValue.setText(stringFormat(prefManager.getValue(TOTAL,"0.0")));
     }
 
     private void uiUpdateSharedPref(){
-        prefManager.setValue(ConstantsUtils.BALANCE, stringFromTextView (binding.balanceView));
-        prefManager.setValue(ConstantsUtils.INCOME, stringFromTextView (binding.incomeView));
-        prefManager.setValue(ConstantsUtils.EXPENDITURES, stringFromTextView (binding.expendView));
-        prefManager.setValue(ConstantsUtils.TOTAL, stringFromTextView (binding.totalBalanceValue));
+        prefManager.setValue(BALANCE, stringFromTextView (binding.balanceView));
+        prefManager.setValue(INCOME, stringFromTextView (binding.incomeView));
+        prefManager.setValue(EXPENDITURES, stringFromTextView (binding.expendView));
+        prefManager.setValue(TOTAL, stringFromTextView (binding.totalBalanceValue));
     }
 
 

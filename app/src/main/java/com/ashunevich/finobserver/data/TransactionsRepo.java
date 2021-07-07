@@ -28,7 +28,7 @@ public class TransactionsRepo {
          singleThreadExecutor.execute(() -> mTransactionsDao.insert(item));
     }
 
-    public  void getAllTransactionInCategory (String category, TransactionStatisticListener listener){
+    public  void getAllTransactionInCategory (String category, StatisticListener listener){
         singleThreadExecutor.execute(() -> listener.onReturned(mTransactionsDao.getAllTransactionInCategory (category)));
     }
 
