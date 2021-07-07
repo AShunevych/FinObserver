@@ -16,11 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 
-import com.ashunevich.finobserver.dashboard.DashboardFragment;
-import com.ashunevich.finobserver.dashboard.RoomDashboardViewModel;
-import com.ashunevich.finobserver.transactions.RoomTransactionsViewModel;
-import com.ashunevich.finobserver.transactions.TransactionBoardFragment;
-import com.ashunevich.finobserver.utils.PostPOJO;
+import com.ashunevich.finobserver.viewmodel.RoomDashboardViewModel;
+import com.ashunevich.finobserver.viewmodel.RoomTransactionsViewModel;
+import com.ashunevich.finobserver.utility.PostPOJO;
 import com.ashunevich.finobserver.databinding.ActivityMainBinding;
 
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -31,8 +29,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ashunevich.finobserver.utils.Utils.genericDialogOptions;
-import static com.ashunevich.finobserver.utils.Utils.showSnackBar;
+import static com.ashunevich.finobserver.utility.Utils.genericDialogOptions;
+import static com.ashunevich.finobserver.utility.ViewUtils.uiShowSnackBar;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -98,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
              transactionsRoomData.deleteAll();
              dashboardRoomData.deleteAll();
              EventBus.getDefault().post(new PostPOJO(ZERO_VALUE));
-             showSnackBar(binding.mainLayout,"All data was deleted.");
+             uiShowSnackBar (binding.mainLayout,"All data was deleted.");
          });
 
         builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());

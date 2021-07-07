@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/okButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView7"
+        android:layout_alignEnd="@+id/drawableSpinner"
+        android:layout_marginTop="16dp"
+        android:text="@string/ok"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cancelButton" />
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/newAccountValue"
+        android:layout_alignBottom="@+id/okButton"
+        android:text="@string/cancel"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/newAccountName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/acc_name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/okButton"
+        app:layout_constraintStart_toStartOf="@+id/cancelButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/newAccountValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newAccountName"
+        android:layout_alignStart="@+id/newAccountName"
+        android:layout_alignEnd="@+id/newAccountName"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="@string/tValue"
+        android:inputType="number|numberDecimal" />
+
+    <Spinner
+        android:id="@+id/drawableSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/newAccountValue"
+        android:layout_alignBottom="@+id/textView7"
+        android:layout_marginStart="16dp"
+        android:layout_toEndOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/newAccountValue"
+        android:layout_alignStart="@+id/newAccountValue"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/acc_icon"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+</RelativeLayout>

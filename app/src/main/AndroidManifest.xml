@@ -14,13 +14,13 @@
         tools:ignore="AllowBackup">
 
         <activity
-            android:name=".dashboard.DashboardNewTransaction"
+            android:name=".DashboardNewTransaction"
             android:label="New transaction"
             android:theme="@style/Theme.FinObserver">
         </activity>
 
         <activity
-            android:name=".transactions.TransactionStatisticActivity"
+            android:name=".TransactionStatisticActivity"
             android:label="Statistic"
             android:theme="@style/Theme.FinObserver">
             <meta-data
