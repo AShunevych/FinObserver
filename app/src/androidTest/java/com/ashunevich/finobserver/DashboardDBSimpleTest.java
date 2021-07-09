@@ -47,11 +47,14 @@ public class DashboardDBSimpleTest {
                 new DashboardAccountItem
         ("name",25.00,"UAH","Someid");
 
+        Log.d("Account ID to insert",String.valueOf (item.getAccountID()));
         userDao.insert(item);
 
         List<DashboardAccountItem> listItems = userDao.getAllAcountTest ();
 
-        assertThat(listItems.get (0).getAccountName (), equalTo(item.getAccountName ()));
+        Log.d("AccountID at pos 0 in list",String.valueOf (listItems.get (0).getAccountID ()));
+
+        assertThat(listItems.get (0).getAccountID (), equalTo(1));
     }
 
     @Test
@@ -95,7 +98,7 @@ public class DashboardDBSimpleTest {
 
         userDao.delete (listItems.get (0));
 
-        assertThat (listItems.get (0).getAccountValue (),equalTo (item2.getAccountValue ()));
+        assertThat (item2.getAccountValue (),equalTo (listItems.get (0).getAccountValue ()));
     }
 
 
