@@ -157,7 +157,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void setChipsGroupListener() {
         binding.transactionType.setOnCheckedChangeListener ((group, checkedId) -> {
             switch (uiReturnActiveChipId (group)) {
-                case R.id.incomeChip: setChipViewHandlerPos (1);uIDisableView (binding.resumeDialog);;
+                case R.id.incomeChip: setChipViewHandlerPos (1);uIDisableView (binding.resumeDialog);
                     break;
                 case R.id.spendingChip: setChipViewHandlerPos (2);uIDisableView (binding.resumeDialog);
                     break;
