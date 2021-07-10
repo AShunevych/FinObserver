@@ -13,4 +13,6 @@ public class ConstantsUtils {//shared prefs constants
     public static final String KEY_CREATE = "CREATE";
     public static final String KEY_CANCEL = "CANCEL";
     public static final String DIALOG_STATIC = "DIALOG";
+
+    public final static String ZERO_VALUE = "0.0";
 }

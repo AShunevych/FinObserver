@@ -61,7 +61,6 @@ import static com.ashunevich.finobserver.utility.Utils.setTransferText;
 import static com.ashunevich.finobserver.utility.Utils.stringDate;
 import static com.ashunevich.finobserver.utility.Utils.intFromImageType;
 import static com.ashunevich.finobserver.utility.Utils.stringExtractionFromDoubles;
-import static com.ashunevich.finobserver.utility.Utils.stringFormat;
 import static com.ashunevich.finobserver.utility.Utils.stringFromTextView;
 import static com.ashunevich.finobserver.utility.Utils.stringFromObject;
 import static com.ashunevich.finobserver.utility.Utils.stringSumFromDoubles;
@@ -70,6 +69,7 @@ import static com.ashunevich.finobserver.utility.Utils.genericDialogOptions;
 import static com.ashunevich.finobserver.utility.Utils.initAfterDelay;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiShowSnackBar;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiShowView;
+import static com.ashunevich.finobserver.utility.ViewUtils.uiViewSetText;
 
 public class DashboardFragment extends Fragment {
 
@@ -317,7 +317,7 @@ public class DashboardFragment extends Fragment {
 
     //UI
     private void uiUpdateVisibleSum(){
-        binding.totalBalanceValue.setText(adapter.getSumOfAllItems (binding.accountView));
+        uiViewSetText (binding.totalBalanceValue,adapter.getSumOfAllItems (binding.accountView));
         binding.accountView.smoothScrollToPosition(0);
         uiUpdateSharedPref ();
     }
@@ -368,10 +368,16 @@ public class DashboardFragment extends Fragment {
 
 
     private void uiSetSharedPrefValues(){
+        uiViewSetText (binding.balanceView,prefManager.getValue(BALANCE,"0.0"));
+        uiViewSetText (binding.incomeView,prefManager.getValue(INCOME,"0.0"));
+        uiViewSetText (binding.expendView,prefManager.getValue(EXPENDITURES,"0.0"));
+        uiViewSetText (binding.totalBalanceValue,prefManager.getValue(TOTAL,"0.0"));
+        /*
         binding.balanceView.setText(stringFormat(prefManager.getValue(BALANCE,"0.0")));
         binding.incomeView.setText(stringFormat(prefManager.getValue(INCOME,"0.0")));
         binding.expendView.setText(stringFormat(prefManager.getValue(EXPENDITURES,"0.0")));
         binding.totalBalanceValue.setText(stringFormat(prefManager.getValue(TOTAL,"0.0")));
+         */
     }
 
     private void uiUpdateSharedPref(){
@@ -386,10 +392,11 @@ public class DashboardFragment extends Fragment {
     @Subscribe
     public void eventReceiver(PostPOJO postPOJO){
         String zeroString = stringFromObject (postPOJO);
-        binding.balanceView.setText(zeroString);
-        binding.incomeView.setText(zeroString);
-        binding.expendView.setText(zeroString);
-        binding.totalBalanceValue.setText(zeroString);
+        uiViewSetText(binding.balanceView,zeroString);
+        uiViewSetText(binding.incomeView,zeroString);
+        uiViewSetText(binding.expendView,zeroString);
+        uiViewSetText(binding.totalBalanceValue,zeroString);
+
         uiUpdateSharedPref ();
     }
 
@@ -407,11 +414,11 @@ public class DashboardFragment extends Fragment {
         balanceValue = doubleFromTextView (binding.balanceView);
 
         if (transactionType.matches("Income")) {
-            binding.incomeView.setText(stringSumFromDoubles (accountTransactionEstimate,incomeValue));
-            binding.balanceView.setText(stringSumFromDoubles (accountTransactionEstimate,balanceValue));
+            uiViewSetText(binding.incomeView,stringSumFromDoubles (accountTransactionEstimate,incomeValue));
+            uiViewSetText(binding.balanceView,stringSumFromDoubles (accountTransactionEstimate,balanceValue));
         } else {
-            binding.expendView.setText(stringSumFromDoubles (accountTransactionEstimate,expValue));
-            binding.balanceView.setText(stringExtractionFromDoubles (accountTransactionEstimate,balanceValue));
+            uiViewSetText(binding.incomeView,stringSumFromDoubles (accountTransactionEstimate,expValue));
+            uiViewSetText(binding.balanceView,stringExtractionFromDoubles (accountTransactionEstimate,balanceValue));
         }
 
         roomUpdateAccountAfterTransaction(accountID,accountValue);

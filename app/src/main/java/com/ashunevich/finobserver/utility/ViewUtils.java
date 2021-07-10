@@ -1,6 +1,7 @@
 package com.ashunevich.finobserver.utility;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -36,6 +37,12 @@ public class ViewUtils {
         chipGroup.clearCheck ();
     }
 
+    public static void uiUncheckAllChipGroups(ChipGroup chipGroup1,ChipGroup chipGroup2,ChipGroup chipGroup3){
+        uiUncheckChipGroup(chipGroup1);
+        uiUncheckChipGroup(chipGroup2);
+        uiUncheckChipGroup(chipGroup3);
+    }
+
     public static void uiHideHideShow(View x, View y, View z) {
         uiHideView (x);
         uiHideView (y);
@@ -44,5 +51,13 @@ public class ViewUtils {
 
     public static void uIDisableView(View x){
         x.setEnabled (false);
+    }
+
+    public static void uiEnableView(View x){
+        x.setEnabled (true);
+    }
+
+    public static void uiViewSetText(TextView x,String text){
+        x.setText (text);
     }
 }

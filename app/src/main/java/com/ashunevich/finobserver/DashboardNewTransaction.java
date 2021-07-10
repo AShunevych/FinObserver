@@ -24,6 +24,8 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.ashunevich.finobserver.utility.ViewUtils.uIDisableView;
+import static com.ashunevich.finobserver.utility.ViewUtils.uiEnableView;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiReturnActiveChipId;
 import static com.ashunevich.finobserver.utility.Utils.doubleExtraction;
 import static com.ashunevich.finobserver.utility.Utils.stringAsTextFromSpinner;
@@ -35,6 +37,7 @@ import static com.ashunevich.finobserver.utility.Utils.doubleSum;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiHideHideShow;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiHideView;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiShowView;
+import static com.ashunevich.finobserver.utility.ViewUtils.uiUncheckAllChipGroups;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiUncheckChipGroup;
 
 public class DashboardNewTransaction extends AppCompatActivity {
@@ -119,23 +122,19 @@ public class DashboardNewTransaction extends AppCompatActivity {
         uiHideView (binding.SpendingChipGroup);
         uiHideView (binding.IncomeChipGroup);
         uiHideView (binding.targetAccount);
-        uiDisableSubmitButton ();
+        uIDisableView (binding.resumeDialog);
         binding.transactionType.setVisibility (View.INVISIBLE);
-        uiUncheckChipGroup (binding.IncomeChipGroup);
-        uiUncheckChipGroup (binding.SpendingChipGroup);
-        uiUncheckChipGroup (binding.transactionType);
+        uiUncheckAllChipGroups(binding.IncomeChipGroup,binding.SpendingChipGroup,binding.transactionType);
     }
 
     private void setChipViewHandlerPos(int UIHandlingPos) {
         switch (UIHandlingPos) {
             case 1:
-                uiDisableSubmitButton ();
                 uiHideHideShow(binding.SpendingChipGroup,binding.targetAccount,binding.IncomeChipGroup);
                 uiSetText (getResources ().getString (R.string.cat));
                 uiUncheckChipGroup (binding.SpendingChipGroup);
                 break;
             case 2:
-                uiDisableSubmitButton ();
                 uiHideHideShow(binding.IncomeChipGroup,binding.targetAccount,binding.SpendingChipGroup);
                 uiSetText (getResources ().getString (R.string.cat));
                 uiUncheckChipGroup (binding.IncomeChipGroup);
@@ -158,23 +157,23 @@ public class DashboardNewTransaction extends AppCompatActivity {
     private void setChipsGroupListener() {
         binding.transactionType.setOnCheckedChangeListener ((group, checkedId) -> {
             switch (uiReturnActiveChipId (group)) {
-                case R.id.incomeChip: setChipViewHandlerPos (1);
+                case R.id.incomeChip: setChipViewHandlerPos (1);uIDisableView (binding.resumeDialog);;
                     break;
-                case R.id.spendingChip: setChipViewHandlerPos (2);
+                case R.id.spendingChip: setChipViewHandlerPos (2);uIDisableView (binding.resumeDialog);
                     break;
-                case R.id.transferChip: setChipViewHandlerPos (3);
+                case R.id.transferChip: setChipViewHandlerPos (3);uiEnableView (binding.resumeDialog);
                     break;
             }
         });
 
         binding.IncomeChipGroup.setOnCheckedChangeListener ((group, checkedId) -> {
             categoryChip = stringFromActiveChip (group);
-            uiEnableSubmitButton ();
+            uiEnableView(binding.resumeDialog);
         });
 
         binding.SpendingChipGroup.setOnCheckedChangeListener ((group, checkedId) -> {
             categoryChip = stringFromActiveChip (group);
-            uiEnableSubmitButton ();
+            uiEnableView(binding.resumeDialog);
         });
     }
 
@@ -296,13 +295,6 @@ public class DashboardNewTransaction extends AppCompatActivity {
     }
 
     //switches
-    private void uiEnableSubmitButton() {
-        binding.resumeDialog.setEnabled (true);
-    }
-
-    private void uiDisableSubmitButton() {
-        binding.resumeDialog.setEnabled (false);
-    }
 
     private void uiSetText(String text) {
         binding.categoryTextView.setText (text);
@@ -314,7 +306,7 @@ public class DashboardNewTransaction extends AppCompatActivity {
         }
         else{
             setChipViewHandlerPos (4);
-            uiDisableSubmitButton();
+            uIDisableView (binding.resumeDialog);
         }
 
     }

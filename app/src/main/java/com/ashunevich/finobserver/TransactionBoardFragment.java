@@ -30,6 +30,7 @@ import static com.ashunevich.finobserver.utility.ViewUtils.uiHideHideShow;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiHideView;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiShowView;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiUncheckChipGroup;
+import static com.ashunevich.finobserver.utility.ViewUtils.uiViewSetText;
 
 
 public class TransactionBoardFragment extends Fragment {
@@ -186,7 +187,7 @@ public class TransactionBoardFragment extends Fragment {
 
     //Utils
     private void clearText(){
-        binding.findByAccount.setText ("");
+        uiViewSetText (binding.findByAccount,"");
     }
 
 

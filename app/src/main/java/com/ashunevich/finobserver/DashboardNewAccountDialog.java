@@ -27,6 +27,7 @@ import static com.ashunevich.finobserver.utility.Utils.enableSubmitIfReady;
 import static com.ashunevich.finobserver.utility.Utils.stringFromTextView;
 import static com.ashunevich.finobserver.utility.Utils.doubleFromTextView;
 import static com.ashunevich.finobserver.utility.Utils.getSelectedItemOnSpinnerPosition;
+import static com.ashunevich.finobserver.utility.ViewUtils.uIDisableView;
 
 public class DashboardNewAccountDialog extends DialogFragment {
     private DashboardCreateAccountDialogBinding binding;
@@ -90,7 +91,7 @@ public class DashboardNewAccountDialog extends DialogFragment {
     }
 
     private void initUIStatus(){
-        binding.okButton.setEnabled(false);
+        uIDisableView(binding.okButton);
         Objects.requireNonNull(getDialog()).setCanceledOnTouchOutside(true);
     }
 

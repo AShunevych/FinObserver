@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import static com.ashunevich.finobserver.utility.Utils.stringFormat;
+
 public class DashboardSharedPrefManager {
     protected Context mContext;
     protected SharedPreferences mSettings;
@@ -23,7 +25,7 @@ public class DashboardSharedPrefManager {
     }
 
     public String getValue(String key, String defaultValue) {
-        return mSettings.getString(key, defaultValue);
+        return stringFormat(mSettings.getString(key, defaultValue));
     }
 
 }

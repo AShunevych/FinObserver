@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.ashunevich.finobserver.utility.ConstantsUtils.ZERO_VALUE;
 import static com.ashunevich.finobserver.utility.Utils.genericDialogOptions;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiShowSnackBar;
 
@@ -41,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private final List<Integer> drawables = new ArrayList<>();
     private RoomTransactionsViewModel transactionsRoomData;
     private RoomDashboardViewModel dashboardRoomData;
-    private final static String ZERO_VALUE = "0.0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
