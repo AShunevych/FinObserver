@@ -35,7 +35,7 @@ public class DashboardDBSimpleTest {
         userDao = db.dashboard_dao ();
     }
 
-
+   //CRUD test
     @After
     public void closeDb() {
         db.close();
@@ -44,8 +44,7 @@ public class DashboardDBSimpleTest {
     @Test
     public void writeUserAndReadInList() {
         DashboardAccountItem item =
-                new DashboardAccountItem
-        ("name",25.00,"UAH","Someid");
+                newItem ("NAme",1000.00);
 
         Log.d("Account ID to insert",String.valueOf (item.getAccountID()));
         userDao.insert(item);
@@ -70,7 +69,7 @@ public class DashboardDBSimpleTest {
 
         List<DashboardAccountItem> listItems = userDao.getAllAcountTest ();
 
-        Log.d ("SIZE_AFTER_INSERt",String.valueOf (listItems.size ()));
+        Log.d ("SIZE_AFTER_INSERT",String.valueOf (listItems.size ()));
         assertThat (listItems.size (),equalTo (2));
 
         userDao.deleteAll ();
@@ -101,6 +100,37 @@ public class DashboardDBSimpleTest {
         assertThat (item2.getAccountValue (),equalTo (listItems.get (0).getAccountValue ()));
     }
 
+    @Test
+    public void updateItemValue(){
+        DashboardAccountItem item =
+                newItem ("NAme",1000.0);
+
+        userDao.insert(item);
+
+        userDao.updateAccountAfterTransaction (userDao.getAllAcountTest ().get (0).getAccountID (),500);
+
+        DashboardAccountItem item2 = userDao.getAllAcountTest ().get (0);
+
+        assertThat(item2.getAccountValue (), equalTo(500.0));
+    }
+
+    @Test
+    public void updateSingleItem(){
+        DashboardAccountItem item =
+                newItem ("NAme",1000.0);
+        userDao.insert(item);
+
+        userDao.update(new DashboardAccountItem (1,"NotName",100.0,"USD","SomeId2"));
+
+        DashboardAccountItem item2 = userDao.getAllAcountTest ().get (0);
+
+        assertThat(item2.getAccountID (), equalTo(1));
+        assertThat(item2.getAccountName (), equalTo("NotName"));
+        assertThat(item2.getAccountValue (), equalTo(100.0));
+        assertThat(item2.getAccountCurrency (), equalTo("USD"));
+        assertThat(item2.getImageID (), equalTo("SomeId2"));
+
+    }
 
     public DashboardAccountItem newItem(String name,Double value){
         return new DashboardAccountItem (name,value,"UAH","SomeId");
