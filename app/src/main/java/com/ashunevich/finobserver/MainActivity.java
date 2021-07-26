@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.ashunevich.finobserver.utility.ConstantsUtils.ZERO_VALUE;
+import static com.ashunevich.finobserver.utility.Constants.ZERO_VALUE;
 import static com.ashunevich.finobserver.utility.Utils.genericDialogOptions;
 import static com.ashunevich.finobserver.utility.ViewUtils.uiShowSnackBar;
 

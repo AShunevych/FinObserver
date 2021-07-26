@@ -11,7 +11,7 @@ import com.ashunevich.finobserver.DashboardNewAccountDialog;
 import com.ashunevich.finobserver.R;
 import com.ashunevich.finobserver.data.DashboardAccountItem;
 import com.ashunevich.finobserver.databinding.DashboardAccountItemBinding;
-import com.ashunevich.finobserver.utility.ConstantsUtils;
+import com.ashunevich.finobserver.utility.Constants;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -70,7 +70,7 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
         bundle.putString("accountName",account.getAccountName());
         bundle.putDouble("accountValue",account.getAccountValue());
         bundle.putString("accountCurrency",account.getAccountCurrency());
-        bundle.putString("operationKey", ConstantsUtils.KEY_UPDATE);
+        bundle.putString("operationKey", Constants.KEY_UPDATE);
         bundle.putString("imageID",account.getImageID());
        fragment.setArguments(bundle);
    }

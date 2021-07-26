@@ -1,6 +1,6 @@
 package com.ashunevich.finobserver.utility;
 
-public class ConstantsUtils {//shared prefs constants
+public class Constants {//shared prefs constants
     public static String PREFERENCE_NAME = "APP_PREF";
     public static final String BALANCE = "BALANCE";
     public static final String INCOME = "INCOME";

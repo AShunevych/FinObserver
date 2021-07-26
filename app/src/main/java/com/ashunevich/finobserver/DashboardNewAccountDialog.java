@@ -15,7 +15,7 @@ import android.view.WindowManager;
 
 import com.ashunevich.finobserver.databinding.DashboardCreateAccountDialogBinding;
 import com.ashunevich.finobserver.adapters.ImageViewSpinnerAdapter;
-import com.ashunevich.finobserver.utility.ConstantsUtils;
+import com.ashunevich.finobserver.utility.Constants;
 
 import java.util.Objects;
 
@@ -85,7 +85,7 @@ public class DashboardNewAccountDialog extends DialogFragment {
     private void initKeyType(){
         assert getArguments() != null;
         keyType = getArguments().getString("operationKey");
-        if (keyType.matches(ConstantsUtils.KEY_UPDATE)){
+        if (keyType.matches(Constants.KEY_UPDATE)){
             initTextFromBundle();
         }
     }
@@ -135,17 +135,17 @@ public class DashboardNewAccountDialog extends DialogFragment {
         }
         result.putString("accountCurrency",currency);
         result.putString("accountImageName",resourceNameAt(getSelectedItemOnSpinnerPosition(binding.drawableSpinner)));
-        if(key.matches(ConstantsUtils.KEY_UPDATE)){
+        if(key.matches(Constants.KEY_UPDATE)){
             result.putInt("accountID",id);
         }
         result.putString("operationType",keyType);
-        getParentFragmentManager().setFragmentResult(ConstantsUtils.DIALOG_STATIC,result);
+        getParentFragmentManager().setFragmentResult(Constants.DIALOG_STATIC,result);
     }
 
     private void submitNegativeResult(){
         Bundle result = new Bundle();
-        result.putString("operationType", ConstantsUtils.KEY_CANCEL);
-        getParentFragmentManager().setFragmentResult(ConstantsUtils.DIALOG_STATIC,result);
+        result.putString("operationType", Constants.KEY_CANCEL);
+        getParentFragmentManager().setFragmentResult(Constants.DIALOG_STATIC,result);
     }
 
     //Dialog

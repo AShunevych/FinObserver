@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.ashunevich.finobserver.data.DashboardAccountItem;
 import com.ashunevich.finobserver.data.DashboardSharedPrefManager;
 import com.ashunevich.finobserver.adapters.DashboardRecyclerViewAdapater;
-import com.ashunevich.finobserver.utility.ConstantsUtils;
+import com.ashunevich.finobserver.utility.Constants;
 import com.ashunevich.finobserver.viewmodel.RoomDashboardViewModel;
 import com.ashunevich.finobserver.viewmodel.RoomTransactionsViewModel;
 import com.ashunevich.finobserver.data.TransactionBoardItem;
@@ -50,13 +50,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import static com.ashunevich.finobserver.utility.ConstantsUtils.BALANCE;
-import static com.ashunevich.finobserver.utility.ConstantsUtils.DIALOG_STATIC;
-import static com.ashunevich.finobserver.utility.ConstantsUtils.EXPENDITURES;
-import static com.ashunevich.finobserver.utility.ConstantsUtils.INCOME;
-import static com.ashunevich.finobserver.utility.ConstantsUtils.KEY_CREATE;
-import static com.ashunevich.finobserver.utility.ConstantsUtils.KEY_UPDATE;
-import static com.ashunevich.finobserver.utility.ConstantsUtils.TOTAL;
+import static com.ashunevich.finobserver.utility.Constants.BALANCE;
+import static com.ashunevich.finobserver.utility.Constants.DIALOG_STATIC;
+import static com.ashunevich.finobserver.utility.Constants.EXPENDITURES;
+import static com.ashunevich.finobserver.utility.Constants.INCOME;
+import static com.ashunevich.finobserver.utility.Constants.KEY_CREATE;
+import static com.ashunevich.finobserver.utility.Constants.KEY_UPDATE;
+import static com.ashunevich.finobserver.utility.Constants.TOTAL;
 import static com.ashunevich.finobserver.utility.Utils.setTransferText;
 import static com.ashunevich.finobserver.utility.Utils.stringDate;
 import static com.ashunevich.finobserver.utility.Utils.intFromImageType;
@@ -240,7 +240,7 @@ public class DashboardFragment extends Fragment {
     }
 
     private void initPrefManager(){
-        prefManager = new DashboardSharedPrefManager (requireActivity(), ConstantsUtils.PREFERENCE_NAME);
+        prefManager = new DashboardSharedPrefManager (requireActivity(), Constants.PREFERENCE_NAME);
         uiSetSharedPrefValues ();
     }
 
