@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -16,6 +14,7 @@ import android.widget.Toast;
 
 
 import com.ashunevich.finobserver.databinding.TransactionDialogBinding;
+import com.ashunevich.finobserver.utility.TextWatcherUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -178,20 +177,9 @@ public class DashboardNewTransaction extends AppCompatActivity {
     }
 
     private void setTextWatcher() {
-        binding.transactionEstimate.addTextChangedListener (new TextWatcher () {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                uiChipValueStatus (binding.transactionEstimate);
-            }
-        });
+        new TextWatcherUtils ().
+                setAfterTextChangedWatcher (binding.transactionEstimate).
+                setCallback (editable -> uiChipValueStatus (binding.transactionEstimate));
     }
 
     private void setCLickListeners() {

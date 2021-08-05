@@ -4,9 +4,7 @@ package com.ashunevich.finobserver;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,7 @@ import android.view.WindowManager;
 import com.ashunevich.finobserver.databinding.DashboardCreateAccountDialogBinding;
 import com.ashunevich.finobserver.adapters.ImageViewSpinnerAdapter;
 import com.ashunevich.finobserver.utility.Constants;
+import com.ashunevich.finobserver.utility.TextWatcherUtils;
 
 import java.util.Objects;
 
@@ -64,8 +63,13 @@ public class DashboardNewAccountDialog extends DialogFragment {
 
     //init methods
     private void initTextWatchers(){
-        binding.newAccountName.addTextChangedListener(watcher);
-        binding.newAccountValue.addTextChangedListener(watcher);
+        new TextWatcherUtils ().
+                setAfterTextChangedWatcher (binding.newAccountName).
+                setCallback (editable ->  enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue));
+
+        new TextWatcherUtils ().
+                setAfterTextChangedWatcher (binding.newAccountValue).
+                setCallback (editable ->  enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue));
     }
 
     private void initSpinner(){
@@ -101,23 +105,6 @@ public class DashboardNewAccountDialog extends DialogFragment {
     }
 
     //Utils
-    TextWatcher watcher = new TextWatcher() {
-           @Override
-           public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-           }
-
-           @Override
-           public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-           }
-
-           @Override
-           public void afterTextChanged(Editable editable) {
-               enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue);
-           }
-       };
-
     //submit result
     private void submitToActivity() {
         if(!TextUtils.isEmpty(stringFromTextView (binding.newAccountName))
@@ -155,9 +142,8 @@ public class DashboardNewAccountDialog extends DialogFragment {
     }
 
     public void onCancel(@NonNull DialogInterface dialog) {
-        super.onCancel(dialog);
         submitNegativeResult();
-        dialog.cancel();
+        super.onDismiss(dialog);
     }
 
     private String resourceNameAt(int pos){

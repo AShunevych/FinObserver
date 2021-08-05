@@ -3,8 +3,6 @@ package com.ashunevich.finobserver;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,7 @@ import android.view.ViewGroup;
 import com.ashunevich.finobserver.adapters.TransactionBoardRecyclerViewAdapter;
 import com.ashunevich.finobserver.data.TransactionBoardItem;
 import com.ashunevich.finobserver.databinding.TransactionsFragmentBinding;
+import com.ashunevich.finobserver.utility.TextWatcherUtils;
 import com.ashunevich.finobserver.viewmodel.RoomTransactionsViewModel;
 
 import java.util.ArrayList;
@@ -80,22 +79,9 @@ public class TransactionBoardFragment extends Fragment {
 
     //Listeners
     private void setListenerTextWatcher(){
-        binding.findByAccount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                filterMechanism (editable.toString(),FILTER_TYPE);
-            }
-        });
+        new TextWatcherUtils ().
+                setAfterTextChangedWatcher (binding.findByAccount).
+                setCallback (editable ->  filterMechanism (editable.toString(),FILTER_TYPE));
     }
 
     @SuppressLint("NonConstantResourceId")

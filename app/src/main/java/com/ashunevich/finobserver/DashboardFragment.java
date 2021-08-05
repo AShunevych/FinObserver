@@ -54,6 +54,7 @@ import static com.ashunevich.finobserver.utility.Constants.BALANCE;
 import static com.ashunevich.finobserver.utility.Constants.DIALOG_STATIC;
 import static com.ashunevich.finobserver.utility.Constants.EXPENDITURES;
 import static com.ashunevich.finobserver.utility.Constants.INCOME;
+import static com.ashunevich.finobserver.utility.Constants.KEY_CANCEL;
 import static com.ashunevich.finobserver.utility.Constants.KEY_CREATE;
 import static com.ashunevich.finobserver.utility.Constants.KEY_UPDATE;
 import static com.ashunevich.finobserver.utility.Constants.TOTAL;
@@ -170,20 +171,15 @@ public class DashboardFragment extends Fragment {
 
         getParentFragmentManager().setFragmentResultListener(DIALOG_STATIC, getViewLifecycleOwner(), (requestKey, result) -> {
             String operationType = result.getString("operationType");
-            Log.d("OPERATION KEY", operationType);
             String name = result.getString("accountName");
             double value = result.getDouble("accountValue");
             String currency = result.getString("accountCurrency");
             String drawablePos = result.getString("accountImageName");
-            if(operationType.matches(KEY_UPDATE)){
-                int id = result.getInt("accountID");
-                roomUpdateAccount (id,name,value,currency,drawablePos);
-            }
-            else if (operationType.matches(KEY_CREATE)){
-                roomInsertAccount (name,value,currency,drawablePos);
-            }
-            else{
-                Toast.makeText(requireContext(),"Operation Canceled",Toast.LENGTH_SHORT).show();
+
+            switch (operationType){
+                case KEY_UPDATE: roomUpdateAccount (result.getInt("accountID"),name,value,currency,drawablePos);break;
+                case KEY_CREATE : roomInsertAccount (name,value,currency,drawablePos);break;
+                case KEY_CANCEL: Log.d("Op Cancelled", "CANCELLED");break;
             }
 
             if(rotationStatus){
