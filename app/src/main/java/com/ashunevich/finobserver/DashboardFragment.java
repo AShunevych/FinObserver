@@ -51,6 +51,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import static com.ashunevich.finobserver.utility.Constants.BALANCE;
+import static com.ashunevich.finobserver.utility.Constants.CURRENCY_ACCOUNT;
 import static com.ashunevich.finobserver.utility.Constants.DIALOG_STATIC;
 import static com.ashunevich.finobserver.utility.Constants.EXPENDITURES;
 import static com.ashunevich.finobserver.utility.Constants.INCOME;
@@ -87,7 +88,7 @@ public class DashboardFragment extends Fragment {
     private boolean rotationStatus = false;
 
     private final String DATE = stringDate ();
-    private final String CURRENCY_ACCOUNT = "UAH";
+
 
     //late init
     protected int accountID,accountImageType;

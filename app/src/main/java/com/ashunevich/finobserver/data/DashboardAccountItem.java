@@ -11,13 +11,13 @@ public class DashboardAccountItem {
     int accountID;
 
     @ColumnInfo(name = "accountName")
-     String accountName;
+    String accountName;
 
     @ColumnInfo(name = "accountValue")
-     double accountValue;
+    double accountValue;
 
     @ColumnInfo(name = "accountCurrency")
-     String accountCurrency;
+    String accountCurrency;
 
     @ColumnInfo(name = "imageID")
     String imageID;
