@@ -26,7 +26,7 @@ import static com.ashunevich.finobserver.utility.Constants.KEY_UPDATE;
 import static com.ashunevich.finobserver.utility.Utils.stringSetDoubleFormat;
 
 
-public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<DashboardRecyclerViewAdapater.MyViewHolder>  {
+public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<DashboardRecyclerViewAdapater.DashboardViewHolder>  {
     private final List<DashboardAccountItem> pad_list;
     Context context;
     FragmentManager manager;
@@ -38,15 +38,15 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
     //This method inflates view present in the RecyclerView
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new MyViewHolder(DashboardAccountItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+        return new DashboardViewHolder (DashboardAccountItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
     //Binding the data using get() method of POJO object
     @Override
-    public void onBindViewHolder(@NonNull final MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final DashboardViewHolder holder, int position) {
         if(pad_list!=null){
             final DashboardAccountItem account  = pad_list.get(position);
             holder.binding.accountIco.setImageDrawable(ContextCompat.getDrawable(context,getId(account.getImageID())));
@@ -115,9 +115,9 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
     }
 
     //View holder class, where all view components are defined
-    static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class DashboardViewHolder extends RecyclerView.ViewHolder {
         private final DashboardAccountItemBinding binding;
-        public MyViewHolder(DashboardAccountItemBinding binding) {
+        public DashboardViewHolder(DashboardAccountItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }

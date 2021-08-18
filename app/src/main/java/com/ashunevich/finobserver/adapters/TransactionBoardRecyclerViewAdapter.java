@@ -12,11 +12,12 @@ import com.ashunevich.finobserver.data.TransactionBoardItem;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<TransactionBoardRecyclerViewAdapter.MyViewHolder>  {
+public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<TransactionBoardRecyclerViewAdapter.TransactionViewHolder>  {
     private List<TransactionBoardItem> pad_list;
     Context context;
 
@@ -26,15 +27,15 @@ public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<Tr
     //This method inflates view present in the RecyclerView
     @NonNull
     @Override
-    public TransactionBoardRecyclerViewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new TransactionBoardRecyclerViewAdapter.MyViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+        return new TransactionViewHolder (TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
     //Binding the data using get() method of POJO object
     @Override
-    public void onBindViewHolder(final TransactionBoardRecyclerViewAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final TransactionViewHolder holder, int position) {
         final TransactionBoardItem item  = pad_list.get(position);
       holder.binding.transactionTypeImage.setImageDrawable(getTypeImage(item.getImageInt()));
          holder.binding.transactionValue.setText(String.valueOf(item.getTransactionValue()));
@@ -53,9 +54,10 @@ public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<Tr
     }
 
     //View holder class, where all view components are defined
-    static class MyViewHolder extends RecyclerView.ViewHolder {
+    @VisibleForTesting
+    public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         private final TransactionItemBinding binding;
-        public MyViewHolder(TransactionItemBinding binding) {
+        public TransactionViewHolder(TransactionItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -87,7 +89,7 @@ public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<Tr
 
     public void filter(List<TransactionBoardItem> filter) {
         this.pad_list = filter;
-        notifyDataSetChanged();
+        notifyDataSetChanged ();
     }
 
 
