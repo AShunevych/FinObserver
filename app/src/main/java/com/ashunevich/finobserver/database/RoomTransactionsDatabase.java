@@ -2,12 +2,18 @@ package com.ashunevich.finobserver.database;
 
 import android.content.Context;
 
+import com.ashunevich.finobserver.data.DashboardAccountItem;
+import com.ashunevich.finobserver.data.DashboardDAO;
 import com.ashunevich.finobserver.data.TransactionBoardItem;
 import com.ashunevich.finobserver.data.TransactionsDAO;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import static com.ashunevich.finobserver.utility.Utils.singleThreadExecutor;
 
 @Database(entities = {TransactionBoardItem.class},version = 1,exportSchema = false)
 public abstract class RoomTransactionsDatabase extends RoomDatabase {
@@ -21,6 +27,7 @@ public abstract class RoomTransactionsDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             RoomTransactionsDatabase.class, "transactions")
+                            .addCallback (sRoomDatabaseCallback)
                             .fallbackToDestructiveMigration()
                             .build();
                 }
@@ -28,4 +35,27 @@ public abstract class RoomTransactionsDatabase extends RoomDatabase {
         }
         return INSTANCE;
     }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+
+            singleThreadExecutor.execute(() -> {
+                // Populate the database in the background.
+                TransactionsDAO dao = INSTANCE.transactions_dao ();
+                dao.deleteAll();
+                for(int i =0;i<8;i++){
+                   TransactionBoardItem item = new TransactionBoardItem (
+                           "someAcc","someCat",
+                           25.0*i,"UAH","19 JUNE 2002",0,"Income");
+                    TransactionBoardItem item2 = new TransactionBoardItem (
+                            "someAcc2","someCat2",
+                            5.0+i,"UAH","18 JULY 2003",1,"Expenditures");
+                    dao.insert (item);
+                    dao.insert (item2);
+                }
+                });
+        }
+    };
 }
