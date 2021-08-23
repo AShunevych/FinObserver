@@ -13,7 +13,7 @@ public class TextWatcherUtils {
     }
 
     public TextWatcherUtils setAfterTextChangedWatcher(final EditText editText){
-        editText.addTextChangedListener (new TextWatcher () {
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -26,7 +26,7 @@ public class TextWatcherUtils {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                instance.afterTextChanged (editable);
+                instance.afterTextChanged(editable);
             }
         });
         return this;

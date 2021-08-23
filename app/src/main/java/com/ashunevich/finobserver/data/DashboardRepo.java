@@ -24,7 +24,7 @@ public class DashboardRepo {
         return mAllAccounts;
     }
 
-    public void insert (DashboardAccountItem account) {
+    public void insert(DashboardAccountItem account) {
          singleThreadExecutor.execute(() -> mDashboardDao.insert(account));
     }
 
@@ -41,7 +41,7 @@ public class DashboardRepo {
     }
 
     public void updateAccountAfterTransaction(int id, double value){
-        singleThreadExecutor.execute(() -> mDashboardDao.updateAccountAfterTransaction (id,value));
+        singleThreadExecutor.execute(() -> mDashboardDao.updateAccountAfterTransaction(id,value));
     }
      /*
     // !-----DEPRECATED ASYNC TASK CODE----!
@@ -51,7 +51,7 @@ public class DashboardRepo {
     }
 
      //!--- INSERT OPERATION --!
-   public void insert (Dashboard_Account account) {
+   public void insert(Dashboard_Account account) {
         new insertAsyncTask(mDashboardDao).execute(account);
     }
     private static class insertAsyncTask extends AsyncTask<Dashboard_Account, Void, Void> {

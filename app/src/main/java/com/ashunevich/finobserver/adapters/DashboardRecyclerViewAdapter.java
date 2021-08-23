@@ -26,12 +26,12 @@ import static com.ashunevich.finobserver.utility.Constants.KEY_UPDATE;
 import static com.ashunevich.finobserver.utility.Utils.stringSetDoubleFormat;
 
 
-public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<DashboardRecyclerViewAdapater.DashboardViewHolder>  {
+public class DashboardRecyclerViewAdapter extends RecyclerView.Adapter<DashboardRecyclerViewAdapter.DashboardViewHolder>  {
     private final List<DashboardAccountItem> pad_list;
     Context context;
     FragmentManager manager;
 
-    public DashboardRecyclerViewAdapater(List<DashboardAccountItem> data, FragmentManager manager){
+    public DashboardRecyclerViewAdapter (List<DashboardAccountItem> data, FragmentManager manager){
             this.manager = manager;
         this.pad_list = data;
     }
@@ -40,7 +40,7 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
     @Override
     public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new DashboardViewHolder (DashboardAccountItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+        return new DashboardViewHolder(DashboardAccountItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
@@ -56,14 +56,14 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
         }
 
         holder.itemView.setOnClickListener(view -> {
-            DialogFragment UpdateAccountDialogFragment = new DashboardNewAccountDialog ();
+            DialogFragment UpdateAccountDialogFragment = new DashboardNewAccountDialog();
             setBundleArgs(UpdateAccountDialogFragment,position);
             UpdateAccountDialogFragment.show(manager,"UpdateDialog");
         });
 
     }
 
-   private void setBundleArgs (DialogFragment fragment, int position){
+   private void setBundleArgs(DialogFragment fragment, int position){
         Bundle bundle = new Bundle();
         DashboardAccountItem account = getAccountAtPosition(position);
         bundle.putInt("accountID",account.getAccountID());
@@ -86,7 +86,7 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
         try {
             Field idField = R.drawable.class.getDeclaredField(resourceName);
             return idField.getInt(idField);
-        } catch (Exception e) {
+        } catch(Exception e) {
             throw new RuntimeException("No resource ID found for: "
                     + resourceName + " / " + e);
         }
@@ -94,7 +94,7 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
 
 
     public void updateList(List<DashboardAccountItem> accounts){
-        final RecyclerViewDiffUtil<DashboardAccountItem> diffCallback = new RecyclerViewDiffUtil<> (this.pad_list, accounts);
+        final RecyclerViewDiffUtil<DashboardAccountItem> diffCallback = new RecyclerViewDiffUtil<>(this.pad_list, accounts);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.pad_list.clear();
@@ -103,13 +103,13 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
     }
 
     //Setting the List
-    public DashboardAccountItem getAccountAtPosition (int position) {
+    public DashboardAccountItem getAccountAtPosition(int position) {
         return pad_list.get(position);
     }
 
     @Override
     public int getItemCount() {
-        if (pad_list != null)
+        if(pad_list != null)
             return pad_list.size();
         else return 0;
     }
@@ -126,13 +126,13 @@ public class DashboardRecyclerViewAdapater extends RecyclerView.Adapter<Dashboar
     
     public String getSumOfAllItems(RecyclerView viewRec){
         double totalPrice = 0;
-        for (int i = 0; i<viewRec.getChildCount(); i++)
+        for(int i = 0; i<viewRec.getChildCount(); i++)
         {
             RecyclerView.ViewHolder holder = viewRec.getChildViewHolder(viewRec.getChildAt(i));
             TextView view = holder.itemView.findViewById(R.id.accountValue);
             totalPrice += Double.parseDouble(view.getText().toString());
         }
-        return stringSetDoubleFormat (totalPrice);
+        return stringSetDoubleFormat(totalPrice);
     }
 
 }

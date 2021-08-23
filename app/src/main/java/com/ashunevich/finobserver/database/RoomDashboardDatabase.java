@@ -20,14 +20,14 @@ public abstract class RoomDashboardDatabase extends RoomDatabase {
         private static RoomDashboardDatabase INSTANCE;
 
         public static RoomDashboardDatabase getDatabase(final Context context) {
-                if (INSTANCE == null) {
-                        synchronized (RoomDashboardDatabase.class) {
-                                if (INSTANCE == null) {
+                if(INSTANCE == null) {
+                        synchronized(RoomDashboardDatabase.class) {
+                                if(INSTANCE == null) {
                                         INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                                 RoomDashboardDatabase.class, "account_database")
-                                             //   .createFromAsset ("assets/account_database")
+                                             //   .createFromAsset("assets/account_database")
                                                 .fallbackToDestructiveMigration()
-                                                .addCallback (sRoomDatabaseCallback)
+                                                .addCallback(sRoomDatabaseCallback)
                                                 .build();
                                 }
                         }
@@ -42,13 +42,13 @@ public abstract class RoomDashboardDatabase extends RoomDatabase {
 
                         singleThreadExecutor.execute(() -> {
                                 // Populate the database in the background.
-                                DashboardDAO dao = INSTANCE.dashboard_dao ();
+                                DashboardDAO dao = INSTANCE.dashboard_dao();
                                 dao.deleteAll();
                                 for(int i =0;i<8;i++){
                                         DashboardAccountItem item =
-                                                new DashboardAccountItem ("name " + i,
+                                                new DashboardAccountItem("name " + i,
                                                         25.0*i,"UAH","ic_bank_account_icon");
-                                        dao.insert (item);
+                                        dao.insert(item);
                                 }
                         });
                 }

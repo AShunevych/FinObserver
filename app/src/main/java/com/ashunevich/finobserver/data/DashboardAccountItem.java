@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity (tableName = "active_accounts")
+@Entity(tableName = "active_accounts")
 public class DashboardAccountItem {
 
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     int accountID;
 
     @ColumnInfo(name = "accountName")

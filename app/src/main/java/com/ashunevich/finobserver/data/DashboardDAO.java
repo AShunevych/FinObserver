@@ -21,6 +21,6 @@ public interface DashboardDAO extends FactoryDAO<DashboardAccountItem> {
     @Query("SELECT * FROM active_accounts ORDER BY accountID DESC" )
     List<DashboardAccountItem> getAllAcountTest();
 
-    @Query ("UPDATE active_accounts SET accountValue =:value WHERE accountID =:id ")
+    @Query("UPDATE active_accounts SET accountValue =:value WHERE accountID =:id ")
     void updateAccountAfterTransaction(int id, double value);
 }

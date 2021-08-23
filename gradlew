@@ -33,18 +33,18 @@ DEFAULT_JVM_OPTS=""
 # Use the maximum available, or set MAX_FD != -1 to use that value.
 MAX_FD="maximum"
 
-warn () {
+warn() {
     echo "$*"
 }
 
-die () {
+die() {
     echo
     echo "$*"
     echo
     exit 1
 }
 
-# OS specific support (must be 'true' or 'false').
+# OS specific support(must be 'true' or 'false').
 cygwin=false
 msys=false
 darwin=false
@@ -141,21 +141,21 @@ if $cygwin ; then
         i=$((i+1))
     done
     case $i in
-        (0) set -- ;;
-        (1) set -- "$args0" ;;
-        (2) set -- "$args0" "$args1" ;;
-        (3) set -- "$args0" "$args1" "$args2" ;;
-        (4) set -- "$args0" "$args1" "$args2" "$args3" ;;
-        (5) set -- "$args0" "$args1" "$args2" "$args3" "$args4" ;;
-        (6) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" ;;
-        (7) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
-        (8) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
-        (9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
+       (0) set -- ;;
+       (1) set -- "$args0" ;;
+       (2) set -- "$args0" "$args1" ;;
+       (3) set -- "$args0" "$args1" "$args2" ;;
+       (4) set -- "$args0" "$args1" "$args2" "$args3" ;;
+       (5) set -- "$args0" "$args1" "$args2" "$args3" "$args4" ;;
+       (6) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" ;;
+       (7) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
+       (8) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
+       (9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
     esac
 fi
 
 # Escape application args
-save () {
+save() {
     for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/" ; done
     echo " "
 }

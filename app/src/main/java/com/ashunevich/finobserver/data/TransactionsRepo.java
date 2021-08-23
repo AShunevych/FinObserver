@@ -24,22 +24,22 @@ public class TransactionsRepo {
         return mAllTransactions;
     }
 
-    public void insertTransaction (TransactionBoardItem item){
+    public void insertTransaction(TransactionBoardItem item){
          singleThreadExecutor.execute(() -> mTransactionsDao.insert(item));
     }
 
-    public  void getAllTransactionInCategory (String category, StatisticListener listener){
-        singleThreadExecutor.execute(() -> listener.onReturned(mTransactionsDao.getAllTransactionInCategory (category)));
+    public  void getAllTransactionInCategory(String category, StatisticListener listener){
+        singleThreadExecutor.execute(() -> listener.onReturned(mTransactionsDao.getAllTransactionInCategory(category)));
     }
 
-    public void deleteAllTransactions (){
+    public void deleteAllTransactions(){
          singleThreadExecutor.execute(mTransactionsDao::deleteAll);
     }
 /*
   // !-----DEPRECATED ASYNC TASK CODE----!
 
   //!--- INSERT OPERATION ---!
-    public void insertTransaction (Transaction_Item item){
+    public void insertTransaction(Transaction_Item item){
             new insertAsyncTask(mTransactionsDao).execute(item);
     }
 
@@ -58,7 +58,7 @@ public class TransactionsRepo {
     }
 
      //!--- DELETE ALL ITEMS OPERATION ---!
-    public void deleteAllTransactions ( ){
+    public void deleteAllTransactions( ){
         new deleteAllAsyncTask(mTransactionsDao).execute();
     }
     private static class deleteAllAsyncTask extends AsyncTask<Transaction_Item,Void, Void>{

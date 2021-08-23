@@ -29,10 +29,10 @@ public class DashboardDBSimpleTest {
 
     @Before
     public void setupOptions() {
-        context = ApplicationProvider.getApplicationContext ();
-        db = Room.inMemoryDatabaseBuilder (context, RoomDashboardDatabase.class).
-                build ();
-        userDao = db.dashboard_dao ();
+        context = ApplicationProvider.getApplicationContext();
+        db = Room.inMemoryDatabaseBuilder(context, RoomDashboardDatabase.class).
+                build();
+        userDao = db.dashboard_dao();
     }
 
    //CRUD test
@@ -44,96 +44,96 @@ public class DashboardDBSimpleTest {
     @Test
     public void writeUserAndReadInList() {
         DashboardAccountItem item =
-                newItem ("NAme",1000.00);
+                newItem("NAme",1000.00);
 
-        Log.d("Account ID to insert",String.valueOf (item.getAccountID()));
+        Log.d("Account ID to insert",String.valueOf(item.getAccountID()));
         userDao.insert(item);
 
-        List<DashboardAccountItem> listItems = userDao.getAllAcountTest ();
+        List<DashboardAccountItem> listItems = userDao.getAllAcountTest();
 
-        Log.d("AccountID at pos 0 in list",String.valueOf (listItems.get (0).getAccountID ()));
+        Log.d("AccountID at pos 0 in list",String.valueOf(listItems.get(0).getAccountID()));
 
-        assertThat(listItems.get (0).getAccountID (), equalTo(1));
+        assertThat(listItems.get(0).getAccountID(), equalTo(1));
     }
 
     @Test
     public void deleteAllFromDB(){
         DashboardAccountItem item =
-                newItem ("NAme",1000.00);
+                newItem("NAme",1000.00);
 
         DashboardAccountItem item2 =
-                newItem ("NAme2",2500.00);
+                newItem("NAme2",2500.00);
 
         userDao.insert(item);
         userDao.insert(item2);
 
-        List<DashboardAccountItem> listItems = userDao.getAllAcountTest ();
+        List<DashboardAccountItem> listItems = userDao.getAllAcountTest();
 
-        Log.d ("SIZE_AFTER_INSERT",String.valueOf (listItems.size ()));
-        assertThat (listItems.size (),equalTo (2));
+        Log.d("SIZE_AFTER_INSERT",String.valueOf(listItems.size()));
+        assertThat(listItems.size(),equalTo(2));
 
-        userDao.deleteAll ();
+        userDao.deleteAll();
 
-        List<DashboardAccountItem> listItemsAfterDelete = userDao.getAllAcountTest ();
+        List<DashboardAccountItem> listItemsAfterDelete = userDao.getAllAcountTest();
 
-        assertThat (listItemsAfterDelete.size (),equalTo (0));
-        Log.d ("SIZE_AFTER_DELETE",String.valueOf (listItemsAfterDelete.size ()));
+        assertThat(listItemsAfterDelete.size(),equalTo(0));
+        Log.d("SIZE_AFTER_DELETE",String.valueOf(listItemsAfterDelete.size()));
     }
 
     @Test
     public  void deleteItemByPos(){
         DashboardAccountItem item =
-                newItem ("NAme",1000.00);
+                newItem("NAme",1000.00);
 
         DashboardAccountItem item2 =
-                newItem ("NAme2",2500.00);
+                newItem("NAme2",2500.00);
 
         userDao.insert(item);
         userDao.insert(item2);
 
-        List<DashboardAccountItem> listItems = userDao.getAllAcountTest ();
+        List<DashboardAccountItem> listItems = userDao.getAllAcountTest();
 
-        assertThat (listItems.size (),equalTo (2));
+        assertThat(listItems.size(),equalTo(2));
 
-        userDao.delete (listItems.get (0));
+        userDao.delete(listItems.get(0));
 
-        assertThat (item2.getAccountValue (),equalTo (listItems.get (0).getAccountValue ()));
+        assertThat(item2.getAccountValue(),equalTo(listItems.get(0).getAccountValue()));
     }
 
     @Test
     public void updateItemValue(){
         DashboardAccountItem item =
-                newItem ("NAme",1000.0);
+                newItem("NAme",1000.0);
 
         userDao.insert(item);
 
-        userDao.updateAccountAfterTransaction (userDao.getAllAcountTest ().get (0).getAccountID (),500);
+        userDao.updateAccountAfterTransaction(userDao.getAllAcountTest().get(0).getAccountID(),500);
 
-        DashboardAccountItem item2 = userDao.getAllAcountTest ().get (0);
+        DashboardAccountItem item2 = userDao.getAllAcountTest().get(0);
 
-        assertThat(item2.getAccountValue (), equalTo(500.0));
+        assertThat(item2.getAccountValue(), equalTo(500.0));
     }
 
     @Test
     public void updateSingleItem(){
         DashboardAccountItem item =
-                newItem ("NAme",1000.0);
+                newItem("NAme",1000.0);
         userDao.insert(item);
 
-        userDao.update(new DashboardAccountItem (1,"NotName",100.0,"USD","SomeId2"));
+        userDao.update(new DashboardAccountItem(1,"NotName",100.0,"USD","SomeId2"));
 
-        DashboardAccountItem item2 = userDao.getAllAcountTest ().get (0);
+        DashboardAccountItem item2 = userDao.getAllAcountTest().get(0);
 
-        assertThat(item2.getAccountID (), equalTo(1));
-        assertThat(item2.getAccountName (), equalTo("NotName"));
-        assertThat(item2.getAccountValue (), equalTo(100.0));
-        assertThat(item2.getAccountCurrency (), equalTo("USD"));
-        assertThat(item2.getImageID (), equalTo("SomeId2"));
+        assertThat(item2.getAccountID(), equalTo(1));
+        assertThat(item2.getAccountName(), equalTo("NotName"));
+        assertThat(item2.getAccountValue(), equalTo(100.0));
+        assertThat(item2.getAccountCurrency(), equalTo("USD"));
+        assertThat(item2.getImageID(), equalTo("SomeId2"));
 
     }
 
     public DashboardAccountItem newItem(String name,Double value){
-        return new DashboardAccountItem (name,value,"UAH","SomeId");
+        return new DashboardAccountItem(name,value,"UAH","SomeId");
     }
 
 

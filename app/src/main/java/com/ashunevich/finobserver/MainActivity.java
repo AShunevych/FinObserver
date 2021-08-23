@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final List<String> tabNames = new ArrayList<>();
     private final List<Integer> drawables = new ArrayList<>();
+    private final List<String> tabTags = new ArrayList<>();
     private RoomTransactionsViewModel transactionsRoomData;
     private RoomDashboardViewModel dashboardRoomData;
 
@@ -50,19 +51,20 @@ public class MainActivity extends AppCompatActivity {
 
     setContentView(binding.getRoot());
     init();
-    initModels ();
+    initModels();
     }
 
     private void init(){
-    binding.viewPager.setAdapter(new PageAdapter (getSupportFragmentManager (), getLifecycle ()));
+    binding.viewPager.setAdapter(new PageAdapter(getSupportFragmentManager(), getLifecycle()));
     tabNames.addAll(Arrays.asList(getResources().getStringArray(R.array.tabNames)));
-
+    tabTags.addAll(Arrays.asList(getResources().getStringArray(R.array.tabTags)));
     drawables.add(R.drawable.ic_dashboard_ico);
     drawables.add(R.drawable.ic_transactions_ico);
 
-    TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager, (tab, position) -> {
+    TabLayoutMediator tabLayoutMediator= new TabLayoutMediator(binding.tabLayout, binding.viewPager,(tab, position) -> {
                   tab.setIcon(drawables.get(position));
                    tab.setText(tabNames.get(position));
+                   tab.setTag(tabTags.get(position));
         });
     tabLayoutMediator.attach();
     }
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.deleteData) {
+        if(item.getItemId() == R.id.deleteData) {
             createAlertDialog();
         }
         return true;
@@ -89,17 +91,17 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void createAlertDialog(){
-        AlertDialog.Builder builder = genericDialogOptions (this,"WARNING",
+        AlertDialog.Builder builder = genericDialogOptions(this,"WARNING",
                 "You are going to erase all data. Proceed?");
 
-         builder.setPositiveButton("YES", (dialogInterface, i) -> {
+         builder.setPositiveButton("YES",(dialogInterface, i) -> {
              transactionsRoomData.deleteAll();
              dashboardRoomData.deleteAll();
              EventBus.getDefault().post(new PostPOJO(ZERO_VALUE));
-             uiShowSnackBar (binding.mainLayout,"All data was deleted.");
+             uiShowSnackBar(binding.mainLayout,"All data was deleted.");
          });
 
-        builder.setNegativeButton("NO", (dialogInterface, i) -> dialogInterface.cancel());
+        builder.setNegativeButton("NO",(dialogInterface, i) -> dialogInterface.cancel());
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
@@ -122,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             fragments = new ArrayList<>();
-            fragments.add(0, new DashboardFragment ());
-            fragments.add(1,new TransactionBoardFragment ());
+            fragments.add(0, new DashboardFragment());
+            fragments.add(1,new TransactionBoardFragment());
             return fragments.size();
         }
     }

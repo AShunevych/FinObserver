@@ -52,8 +52,8 @@ public class DashboardNewAccountDialog extends DialogFragment {
 
 
     public void setAttributes() {
-        setStyle (STYLE_NORMAL, R.style.RelativeDialog);
-        Window window = Objects.requireNonNull (getDialog ()).getWindow();
+        setStyle(STYLE_NORMAL, R.style.RelativeDialog);
+        Window window = Objects.requireNonNull(getDialog()).getWindow();
         assert window != null;
 
         WindowManager.LayoutParams layoutParams = window.getAttributes();
@@ -63,18 +63,18 @@ public class DashboardNewAccountDialog extends DialogFragment {
 
     //init methods
     private void initTextWatchers(){
-        new TextWatcherUtils ().
-                setAfterTextChangedWatcher (binding.newAccountName).
-                setCallback (editable ->  enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue));
+        new TextWatcherUtils().
+                setAfterTextChangedWatcher(binding.newAccountName).
+                setCallback(editable ->  enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue));
 
-        new TextWatcherUtils ().
-                setAfterTextChangedWatcher (binding.newAccountValue).
-                setCallback (editable ->  enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue));
+        new TextWatcherUtils().
+                setAfterTextChangedWatcher(binding.newAccountValue).
+                setCallback(editable ->  enableSubmitIfReady(binding.okButton,binding.newAccountName,binding.newAccountValue));
     }
 
     private void initSpinner(){
         typedImagesArrays = getResources().obtainTypedArray(R.array.Icons);
-        binding.drawableSpinner.setAdapter(new ImageViewSpinnerAdapter (DashboardNewAccountDialog.this, typedImagesArrays));
+        binding.drawableSpinner.setAdapter(new ImageViewSpinnerAdapter(DashboardNewAccountDialog.this, typedImagesArrays));
     }
 
     private void initTextFromBundle(){
@@ -89,7 +89,7 @@ public class DashboardNewAccountDialog extends DialogFragment {
     private void initKeyType(){
         assert getArguments() != null;
         keyType = getArguments().getString("operationKey");
-        if (keyType.matches(Constants.KEY_UPDATE)){
+        if(keyType.matches(Constants.KEY_UPDATE)){
             initTextFromBundle();
         }
     }
@@ -107,16 +107,16 @@ public class DashboardNewAccountDialog extends DialogFragment {
     //Utils
     //submit result
     private void submitToActivity() {
-        if(!TextUtils.isEmpty(stringFromTextView (binding.newAccountName))
-                && !TextUtils.isEmpty(stringFromTextView (binding.newAccountValue))){
+        if(!TextUtils.isEmpty(stringFromTextView(binding.newAccountName))
+                && !TextUtils.isEmpty(stringFromTextView(binding.newAccountValue))){
             submitPositiveResult(keyType);
         }
     }
 
     private void submitPositiveResult(String key){
         Bundle result = new Bundle();
-        result.putString("accountName", stringFromTextView (binding.newAccountName));
-        result.putDouble("accountValue", doubleFromTextView (binding.newAccountValue));
+        result.putString("accountName", stringFromTextView(binding.newAccountName));
+        result.putDouble("accountValue", doubleFromTextView(binding.newAccountValue));
         if(currency == null){
             currency = getResources().getString(R.string.UAH);
         }
@@ -147,7 +147,7 @@ public class DashboardNewAccountDialog extends DialogFragment {
     }
 
     private String resourceNameAt(int pos){
-        return  getResources().getResourceEntryName(typedImagesArrays.getResourceId (pos,0));
+        return  getResources().getResourceEntryName(typedImagesArrays.getResourceId(pos,0));
     }
 
 

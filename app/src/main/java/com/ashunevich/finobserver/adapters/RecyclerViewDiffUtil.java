@@ -17,7 +17,7 @@ public class RecyclerViewDiffUtil<T> extends DiffUtil.Callback {
 
     @Override
     public int getOldListSize() {
-        return oldList.size ();
+        return oldList.size();
     }
 
     @Override

@@ -22,12 +22,12 @@ public abstract class RoomTransactionsDatabase extends RoomDatabase {
     private static RoomTransactionsDatabase INSTANCE;
 
     public static RoomTransactionsDatabase getDatabase(final Context context) {
-        if (INSTANCE == null) {
-            synchronized (RoomTransactionsDatabase.class) {
-                if (INSTANCE == null) {
+        if(INSTANCE == null) {
+            synchronized(RoomTransactionsDatabase.class) {
+                if(INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             RoomTransactionsDatabase.class, "transactions")
-                            .addCallback (sRoomDatabaseCallback)
+                            .addCallback(sRoomDatabaseCallback)
                             .fallbackToDestructiveMigration()
                             .build();
                 }
@@ -43,17 +43,13 @@ public abstract class RoomTransactionsDatabase extends RoomDatabase {
 
             singleThreadExecutor.execute(() -> {
                 // Populate the database in the background.
-                TransactionsDAO dao = INSTANCE.transactions_dao ();
+                TransactionsDAO dao = INSTANCE.transactions_dao();
                 dao.deleteAll();
-                for(int i =0;i<8;i++){
-                   TransactionBoardItem item = new TransactionBoardItem (
-                           "someAcc","someCat",
-                           25.0*i,"UAH","19 JUNE 2002",0,"Income");
-                    TransactionBoardItem item2 = new TransactionBoardItem (
-                            "someAcc2","someCat2",
-                            5.0+i,"UAH","18 JULY 2003",1,"Expenditures");
-                    dao.insert (item);
-                    dao.insert (item2);
+                for(int i =0;i<10000;i++){
+                   TransactionBoardItem item = new TransactionBoardItem(
+                           "account  "+ i,"someCat",
+                           25.0*i,"UAH","19 JUNE 200 ",0,"Income");
+                    dao.insert(item);
                 }
                 });
         }

@@ -51,5 +51,10 @@
         <item>Transaction</item>
     </string-array>
 
+    <string-array name="tabTags">
+        <item>tagDashboardTab</item>
+        <item>tagTransactionTab</item>
+    </string-array>
+
 
 </resources>

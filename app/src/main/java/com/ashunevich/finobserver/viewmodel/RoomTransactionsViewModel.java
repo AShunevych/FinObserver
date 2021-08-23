@@ -17,7 +17,7 @@ public class RoomTransactionsViewModel extends AndroidViewModel {
 
     public RoomTransactionsViewModel(Application application){
         super(application);
-        mRepo = new TransactionsRepo (application);
+        mRepo = new TransactionsRepo(application);
         mAllTransactions  = mRepo.getAllTransactions();
     }
 
@@ -25,8 +25,8 @@ public class RoomTransactionsViewModel extends AndroidViewModel {
         return mAllTransactions;
     }
 
-    public void getAllTransactionInCategory (String category, StatisticListener listener){
-        mRepo.getAllTransactionInCategory (category, listener);
+    public void getAllTransactionInCategory(String category, StatisticListener listener){
+        mRepo.getAllTransactionInCategory(category, listener);
     }
 
 

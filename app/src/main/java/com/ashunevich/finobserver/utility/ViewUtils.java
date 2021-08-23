@@ -12,29 +12,29 @@ import java.util.List;
 
 public class ViewUtils {
     public static void uiShowSnackBar(View view, String text) {
-        Snackbar.make (view, text, BaseTransientBottomBar.LENGTH_SHORT).show ();
+        Snackbar.make(view, text, BaseTransientBottomBar.LENGTH_SHORT).show();
     }
 
     public static int uiReturnActiveChipId(ChipGroup chipGroup) {
         int idChip = 0;
-        List<Integer> ids = chipGroup.getCheckedChipIds ();
-        for (Integer id : ids) {
-            Chip chip = chipGroup.findViewById (id);
-            idChip = chip.getId ();
+        List<Integer> ids = chipGroup.getCheckedChipIds();
+        for(Integer id : ids) {
+            Chip chip = chipGroup.findViewById(id);
+            idChip = chip.getId();
         }
         return idChip;
     }
 
     public static void uiHideView(View v) {
-        v.setVisibility (View.GONE);
+        v.setVisibility(View.GONE);
     }
 
     public static void uiShowView(View v) {
-        v.setVisibility (View.VISIBLE);
+        v.setVisibility(View.VISIBLE);
     }
 
     public static void uiUncheckChipGroup(ChipGroup chipGroup) {
-        chipGroup.clearCheck ();
+        chipGroup.clearCheck();
     }
 
     public static void uiUncheckAllChipGroups(ChipGroup chipGroup1,ChipGroup chipGroup2,ChipGroup chipGroup3){
@@ -44,20 +44,20 @@ public class ViewUtils {
     }
 
     public static void uiHideHideShow(View x, View y, View z) {
-        uiHideView (x);
-        uiHideView (y);
-        uiShowView (z);
+        uiHideView(x);
+        uiHideView(y);
+        uiShowView(z);
     }
 
     public static void uIDisableView(View x){
-        x.setEnabled (false);
+        x.setEnabled(false);
     }
 
     public static void uiEnableView(View x){
-        x.setEnabled (true);
+        x.setEnabled(true);
     }
 
     public static void uiViewSetText(TextView x,String text){
-        x.setText (text);
+        x.setText(text);
     }
 }

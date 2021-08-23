@@ -29,7 +29,7 @@ public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<Tr
     @Override
     public TransactionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         context = parent.getContext();
-        return new TransactionViewHolder (TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
+        return new TransactionViewHolder(TransactionItemBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false));
     }
 
@@ -68,7 +68,7 @@ public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<Tr
         if(i == 0){
             return ContextCompat.getDrawable(context, R.drawable.ic_arrow_up_ico);
         }
-        else if (i==1){
+        else if(i==1){
             return ContextCompat.getDrawable(context, R.drawable.ic_arrow_down_ico);
         }
         else{
@@ -78,18 +78,18 @@ public class TransactionBoardRecyclerViewAdapter extends RecyclerView.Adapter<Tr
 
     //Setting the arraylist
      public void updateItemList(List<TransactionBoardItem> items){
-         final RecyclerViewDiffUtil<TransactionBoardItem> diffCallback = new RecyclerViewDiffUtil<> (this.pad_list, items);
+         final RecyclerViewDiffUtil<TransactionBoardItem> diffCallback = new RecyclerViewDiffUtil<>(this.pad_list, items);
          final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
 
-         this.pad_list.clear ();
+         this.pad_list.clear();
         this.pad_list.addAll(items);
         diffResult.dispatchUpdatesTo(this);
     }
 
     public void filter(List<TransactionBoardItem> filter) {
         this.pad_list = filter;
-        notifyDataSetChanged ();
+        notifyDataSetChanged();
     }
 
 

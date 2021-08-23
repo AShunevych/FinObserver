@@ -21,7 +21,7 @@ public class RoomDashboardViewModel extends AndroidViewModel {
 
     public RoomDashboardViewModel(@NonNull Application application) {
         super(application);
-        mRepo = new DashboardRepo (application);
+        mRepo = new DashboardRepo(application);
         mAllAccounts = mRepo.getAllAccounts();
     }
 
@@ -39,6 +39,6 @@ public class RoomDashboardViewModel extends AndroidViewModel {
 
     public  void update(DashboardAccountItem account) { mRepo.updateEntity(account);}
 
-    public void updateAccountAfterTransaction(int id, double value){ mRepo.updateAccountAfterTransaction (id,value);}
+    public void updateAccountAfterTransaction(int id, double value){ mRepo.updateAccountAfterTransaction(id,value);}
 
 }

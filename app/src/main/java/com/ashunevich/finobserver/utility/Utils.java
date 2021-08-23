@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.test.espresso.idling.CountingIdlingResource;
 
 
 public class Utils {
@@ -53,7 +54,7 @@ public class Utils {
        if(type.matches("Income")){
            return 0;
        }
-       else if (type.matches("Expenses")){
+       else if(type.matches("Expenses")){
            return 1;
        }
        else{
@@ -70,7 +71,7 @@ public class Utils {
         return textView.getText().toString();
     }
 
-    public static String stringSumFromDoubles(double a, double b){return stringSetDoubleFormat (a+b); }
+    public static String stringSumFromDoubles(double a, double b){return stringSetDoubleFormat(a+b); }
 
     public static String stringExtractionFromDoubles(double a, double b){return String.valueOf(b-a); }
 
@@ -81,7 +82,7 @@ public class Utils {
     public static String stringFromActiveChip(ChipGroup chipGroup){
         String text = null;
         List<Integer> ids = chipGroup.getCheckedChipIds();
-        for (Integer id:ids){
+        for(Integer id:ids){
             Chip chip = chipGroup.findViewById(id);
             text = chip.getText().toString();
         }
@@ -96,11 +97,11 @@ public class Utils {
         DecimalFormatSymbols otherSymbols = new DecimalFormatSymbols(Locale.getDefault());
         otherSymbols.setDecimalSeparator('.');
         DecimalFormat formatter = new DecimalFormat("###.##",otherSymbols);
-        return (formatter.format(a));
+        return(formatter.format(a));
     }
 
     public static String stringFormat(String x){
-        return stringSetDoubleFormat(Double.parseDouble (x));
+        return stringSetDoubleFormat(Double.parseDouble(x));
     }
 
     public static String setTransferText(String accountName){
@@ -132,6 +133,10 @@ public class Utils {
     public static String stringDate(){
         SimpleDateFormat df = new SimpleDateFormat("d MMMM, yyyy ", Locale.UK);
         return df.format(Calendar.getInstance().getTime());
+    }
+
+    public static CountingIdlingResource countingIdlingResource(){
+        return new CountingIdlingResource("countingRes");
     }
 
 }

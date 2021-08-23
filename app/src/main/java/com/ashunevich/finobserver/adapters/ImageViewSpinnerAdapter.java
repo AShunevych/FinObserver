@@ -25,7 +25,7 @@ public class ImageViewSpinnerAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return spinnerImages.length ();
+        return spinnerImages.length();
     }
 
     @Override
@@ -43,21 +43,21 @@ public class ImageViewSpinnerAdapter extends BaseAdapter {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         CustomAccountSpinneritemBinding binding;
-        if (convertView == null) {
-            binding = CustomAccountSpinneritemBinding.inflate(activity.getLayoutInflater (), parent, false);
+        if(convertView == null) {
+            binding = CustomAccountSpinneritemBinding.inflate(activity.getLayoutInflater(), parent, false);
             convertView = binding.getRoot();
             convertView.setTag(binding);
         }
         else{
-            binding = (CustomAccountSpinneritemBinding) convertView.getTag();
+            binding =(CustomAccountSpinneritemBinding) convertView.getTag();
         }
-        binding.imIcon.setImageResource (spinnerImages.getResourceId (position,0));
+        binding.imIcon.setImageResource(spinnerImages.getResourceId(position,0));
 
         return convertView;
     }
 
         @Override
-        public View getDropDownView ( int position, @Nullable View convertView,
+        public View getDropDownView( int position, @Nullable View convertView,
         @NonNull ViewGroup parent){
             return getView(position, convertView, parent);
         }
