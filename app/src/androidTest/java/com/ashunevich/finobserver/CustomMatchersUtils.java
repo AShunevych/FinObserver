@@ -90,6 +90,7 @@ public class CustomMatchersUtils {
 			}
 		};
 	}
+
 	public static Matcher<RecyclerView.ViewHolder> withItemSubject(final String subject) {
 		Checks.checkNotNull(subject);
 		return new BoundedMatcher<RecyclerView.ViewHolder, DashboardRecyclerViewAdapter.DashboardViewHolder>(
@@ -97,7 +98,7 @@ public class CustomMatchersUtils {
 
 			@Override
 			protected boolean matchesSafely(DashboardRecyclerViewAdapter.DashboardViewHolder viewHolder) {
-				TextView subjectTextView = (TextView)viewHolder.itemView.findViewById(R.id.accountType);
+				TextView subjectTextView = viewHolder.itemView.findViewById(R.id.accountType);
 
 				return ((subject.equals(subjectTextView.getText().toString())));
 			}

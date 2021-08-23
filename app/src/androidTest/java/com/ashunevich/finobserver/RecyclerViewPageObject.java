@@ -4,6 +4,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -44,12 +45,10 @@ public class RecyclerViewPageObject {
 	}
 
 	public void scrollToItemWithText(String text) {
-		onView(withId(id)).perform(RecyclerViewActions.actionOnHolderItem (withItemSubject (text),click ()));
+		onView(withId(id)).perform(RecyclerViewActions.scrollTo(hasDescendant(withText(text))));
 	}
 
-	public void checkIfItemExist(String text) {
-		onView(withId(id)).perform(RecyclerViewActions.scrollTo (hasDescendant (withText (text))));
-	}
+
 
 
 }

@@ -31,7 +31,6 @@ public class TransactionRecyclerViewTest {
     private final int tabLayoutId = R.id.tabLayout;
     private final int viewPagerId = R.id.viewPager;
 
-    IdlingResource resource = countingIdlingResource();
     RecyclerView recyclerView;
     LinearLayoutManager manager;
     /**
@@ -53,17 +52,17 @@ public class TransactionRecyclerViewTest {
             manager =(LinearLayoutManager) recyclerView.getLayoutManager();
             itemCount = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
         });
-        IdlingRegistry.getInstance().register(resource);
+        IdlingRegistry.getInstance().register(TransactionBoardFragment.transactionRes);
     }
 
     @After
     public void teardown() {
-        IdlingRegistry.getInstance().unregister(resource);
+        IdlingRegistry.getInstance().unregister(TransactionBoardFragment.transactionRes);
     }
 
     @Test
     public void testRecViewIsDisplayed() {
-        RecyclerViewPageObject robot = new RecyclerViewPageObject (resId);
+        RecyclerViewPageObject robot = new RecyclerViewPageObject (this.resId);
         robot.checkIfDisplayed();
     }
 
@@ -73,7 +72,7 @@ public class TransactionRecyclerViewTest {
         LoadingPageObject loadingPageObject = new LoadingPageObject ();
         loadingPageObject.setVisibleAndCheck();
 
-        RecyclerViewPageObject robot = new RecyclerViewPageObject (resId);
+        RecyclerViewPageObject robot = new RecyclerViewPageObject (this.resId);
         robot.checkIfDisplayed();
         robot.scrollToBottom(itemCount);
 
