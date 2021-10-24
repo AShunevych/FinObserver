@@ -64,6 +64,7 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text="sometext"
         app:layout_constraintEnd_toEndOf="@+id/transactionView"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/checkBox"

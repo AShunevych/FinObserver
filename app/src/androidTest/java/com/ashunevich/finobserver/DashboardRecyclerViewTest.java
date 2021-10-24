@@ -41,17 +41,6 @@ public class DashboardRecyclerViewTest {
     public ActivityScenarioRule<MainActivity> activityRule =
             new ActivityScenarioRule<>(MainActivity.class);
 
-/*
-    public ActivityTestRule<MainActivity> activityTestRule =
-            new ActivityTestRule<>(MainActivity.class,false,false);
-
-    public GrantPermissionRule mRuntimePermissionRule = GrantPermissionRule
-            .grant(Manifest.permission.CAMERA);
-
-    @Rule
-    public RuleChain chain = RuleChain.emptyRuleChain().
-            around(mRuntimePermissionRule).around(activityTestRule);
-*/
 
     @Before
     public void setup()  {
@@ -60,6 +49,7 @@ public class DashboardRecyclerViewTest {
              manager =(LinearLayoutManager) recyclerView.getLayoutManager();
              itemCount = Objects.requireNonNull(recyclerView.getAdapter()).getItemCount();
         });
+
         IdlingRegistry.getInstance().register(DashboardFragment.dashBoardRes);
     }
 
